@@ -1,0 +1,26 @@
+{
+  "name": "rehydrate-example",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "bsb -make-world -w",
+    "build": "webpack -w",
+    "clean": "bsb -clean-world && rm src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bs-platform": "^1.4.1",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "reason": "https://github.com/facebook/Reason.git",
+    "reason-js": "^0.0.14",
+    "rehydrate": "https://github.com/reasonml/rehydrate.git"
+  },
+  "devDependencies": {
+    "webpack": "^1.14.0"
+  }
+}

@@ -1,0 +1,19 @@
+/* This is the BuckleScript configuration file. Note that this is a comment;
+  BuckleScript comes with a JSON parser that supports comments and trailing
+  comma. If this screws with your editor highlighting, please tell us by filing
+  an issue! */
+{
+  "name" : "rehydrate-example",
+  "version": "0.0.0",
+  "ppx-flags": ["reason/reactjs_jsx_ppx.native"],
+  "bsc-flags": ["-w", "-40", "-bs-sort-imports", "-bin-annot"],
+  "refmt": "reason/refmt_impl.native",
+  "generate-merlin": true,
+  "bs-dependencies": ["rehydrate", "reason-js"],
+  "sources": [
+    {
+      "dir": "src",
+      "public": "all",
+    },
+  ],
+}
