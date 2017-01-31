@@ -16,7 +16,7 @@
     "bs-platform": "^1.4.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason": "https://github.com/facebook/Reason.git",
+    "reason": "1.6.0",
     "reason-js": "^0.0.14",
     "rehydrate": "https://github.com/reasonml/rehydrate.git"
   },
