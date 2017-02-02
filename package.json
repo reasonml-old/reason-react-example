@@ -13,11 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bs-platform": "^1.4.1",
+    "bs-platform": "https://github.com/bloomberg/bucklescript.git",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason": "1.6.0",
-    "reason-js": "^0.0.14",
+    "reason": "https://github.com/facebook/reason.git",
+    "reason-js": "^0.0.15",
     "rehydrate": "https://github.com/reasonml/rehydrate.git"
   },
   "devDependencies": {
