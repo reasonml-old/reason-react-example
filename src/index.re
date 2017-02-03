@@ -1,4 +1,4 @@
-module WHoleThing = {
+module WholeThing = {
   module Foo = {
     include ReactRe.Component;
     let name = "Foo";
@@ -9,4 +9,4 @@ module WHoleThing = {
   let createElement ::message => wrapProps {message: message};
 };
 
-let () = ReactDOMRe.render <WHoleThing message="hello" /> (ReasonJs.Document.getElementById "index");
+let () = ReactDOMRe.render <WholeThing message="hello" /> (ReasonJs.Document.getElementById "index");
