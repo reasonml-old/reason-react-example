@@ -4,9 +4,8 @@
   an issue! */
 {
   "name" : "rehydrate-example",
-  "ppx-flags": ["reason/reactjs_jsx_ppx.native"],
+  "ppx-flags": ["reactjs_jsx_ppx"],
   "bsc-flags": ["-w", "-40"],
-  "refmt": "reason/refmt_impl.native",
   "bs-dependencies": ["rehydrate", "reason-js"],
   "sources": [
     "src",

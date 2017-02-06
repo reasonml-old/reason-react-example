@@ -13,12 +13,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bs-platform": "https://github.com/bloomberg/bucklescript.git",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason": "https://github.com/facebook/reason.git",
-    "reason-js": "^0.0.15",
-    "rehydrate": "https://github.com/reasonml/rehydrate.git"
+    "reason-js": "BuckleTypes/reason-js#esy",
+    "rehydrate": "reasonml/rehydrate#esy",
+    "reason": "facebook/reason#esy",
+    "bs-platform": "esy-ocaml/bucklescript#esy",
+    "ocaml": "esy-ocaml/ocaml#esy"
+  },
+  "peerDependencies": {
+    "reason-js": "BuckleTypes/reason-js#esy",
+    "reason": "facebook/reason#esy",
+    "bs-platform": "esy-ocaml/bucklescript#esy",
+    "ocaml": "esy-ocaml/ocaml#esy"
   },
   "devDependencies": {
     "webpack": "^1.14.0"
