@@ -25,9 +25,11 @@
     "reason-js": "BuckleTypes/reason-js#esy",
     "reason": "facebook/reason#esy",
     "bs-platform": "esy-ocaml/bucklescript#esy",
-    "ocaml": "esy-ocaml/ocaml#esy"
+    "ocaml": "esy-ocaml/ocaml#esy",
+    "ninja-build-system": "reasonml/ninja.git#v1.7.2-esy"
   },
   "devDependencies": {
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "ninja-build-system": "reasonml/ninja.git#v1.7.2-esy"
   }
 }
