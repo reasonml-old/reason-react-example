@@ -17,19 +17,16 @@
     "react-dom": "^15.4.2",
     "reason-js": "BuckleTypes/reason-js.git#esy",
     "rehydrate": "reasonml/rehydrate.git#esy",
-    "reason": "facebook/reason.git#esy",
+    "reason": "chenglou/reason.git#esy",
     "bs-platform": "esy-ocaml/bucklescript.git#esy",
-    "ocaml": "esy-ocaml/ocaml.git#esy"
+    "@opam-alpha/utop": "*"
   },
   "peerDependencies": {
     "reason-js": "BuckleTypes/reason-js.git#esy",
-    "reason": "facebook/reason.git#esy",
-    "bs-platform": "esy-ocaml/bucklescript.git#esy",
-    "ocaml": "esy-ocaml/ocaml.git#esy",
-    "ninja-build-system": "reasonml/ninja.git#v1.7.2-esy"
+    "reason": "chenglou/reason.git#esy",
+    "bs-platform": "esy-ocaml/bucklescript.git#esy"
   },
   "devDependencies": {
-    "webpack": "^1.14.0",
-    "ninja-build-system": "reasonml/ninja.git#v1.7.2-esy"
+    "webpack": "^1.14.0"
   }
 }
