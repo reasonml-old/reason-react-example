@@ -13,18 +13,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@opam-alpha/utop": "*",
+    "bs-platform": "esy-ocaml/bucklescript#esy",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason-js": "BuckleTypes/reason-js.git#esy",
-    "rehydrate": "reasonml/rehydrate.git#esy",
-    "reason": "chenglou/reason.git#esy",
-    "bs-platform": "esy-ocaml/bucklescript.git#esy",
-    "@opam-alpha/utop": "*"
+    "reason": "facebook/reason#esy",
+    "reason-js": "BuckleTypes/reason-js#esy",
+    "rehydrate": "reasonml/rehydrate#esy"
   },
   "peerDependencies": {
-    "reason-js": "BuckleTypes/reason-js.git#esy",
-    "reason": "chenglou/reason.git#esy",
-    "bs-platform": "esy-ocaml/bucklescript.git#esy"
+    "reason-js": "BuckleTypes/reason-js#esy",
+    "reason": "facebook/reason#esy",
+    "bs-platform": "esy-ocaml/bucklescript#esy"
   },
   "devDependencies": {
     "webpack": "^1.14.0"
