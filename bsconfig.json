@@ -5,7 +5,7 @@
 {
   "name" : "rehydrate-example",
   "ppx-flags": ["reactjs_jsx_ppx"],
-  "bsc-flags": ["-w", "-40"],
+  "bsc-flags": ["-w", "-40", "-I", "$bs_platform__install/lib/ocaml"],
   "bs-dependencies": ["rehydrate", "reason-js"],
   "sources": [
     "src",
