@@ -16,8 +16,7 @@
     "bs-platform": "https://github.com/bloomberg/bucklescript.git",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason": "https://github.com/facebook/reason.git",
-    "reason-js": "^0.0.15",
+    "reason-js": "^0.0.16",
     "rehydrate": "https://github.com/reasonml/rehydrate.git"
   },
   "devDependencies": {
