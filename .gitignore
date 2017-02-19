@@ -1,5 +1,7 @@
+.DS_Store
 .merlin
 /node_modules/
 /lib/
 *.js
 npm-debug.log
+/_build/
