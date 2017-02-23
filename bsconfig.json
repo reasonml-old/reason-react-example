@@ -4,7 +4,7 @@
   an issue! */
 {
   "name" : "rehydrate-example",
-  "ppx-flags": ["reactjs_jsx_ppx"],
+  "reason" : { "react-jsx" : true},
   "bs-dependencies": ["rehydrate", "reason-js"],
   "sources": [
     "src",
