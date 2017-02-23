@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "eval $(dependencyEnv) && nopam",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "bsb -make-world -w",
     "build": "webpack -w",
-    "clean": "bsb -clean-world && rm src/index.js"
+    "clean": "bsb -clean-world && rm src/index.js",
+    "env": "eval $(dependencyEnv) && env"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +22,9 @@
     "rehydrate": "https://github.com/reasonml/rehydrate.git"
   },
   "devDependencies": {
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "@opam-alpha/merlin": "^ 2.5.0",
+    "dependency-env": "^0.1.1",
+    "nopam": "^0.1.0"
   }
 }
