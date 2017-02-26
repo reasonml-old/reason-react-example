@@ -9,4 +9,5 @@ module WholeThing = {
   let createElement ::message => wrapProps {message: message};
 };
 
-let () = ReactDOMRe.render <WholeThing message="hello" /> (ReasonJs.Document.getElementById "index");
+let () =
+  ReactDOMRe.render <WholeThing message="hello" /> (ReasonJs.Document.getElementById "index");
