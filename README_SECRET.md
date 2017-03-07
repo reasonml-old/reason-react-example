@@ -13,4 +13,4 @@ npm start
 npm run build
 ```
 
-After you see the webpack compilation succeed (the `npm run build` step), open up `src/index.html`! Then modify `src/index.re` and refresh the page to see the changes.
+After you see the webpack compilation succeed (the `npm run build` step), open up the html files in `src/*`! Then modify whichever file in `src` and refresh the page to see the changes.
