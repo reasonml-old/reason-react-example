@@ -14,10 +14,13 @@
   "license": "ISC",
   "dependencies": {
     "bs-platform": "https://github.com/bloomberg/bucklescript.git",
-    "react": "^15.4.2",
+    "director": "^1.2.0",
     "react-dom": "^15.4.2",
+    "react": "^15.4.2",
     "reason-js": "^0.0.16",
-    "rehydrate": "https://github.com/reasonml/rehydrate.git"
+    "rehydrate": "https://github.com/reasonml/rehydrate.git",
+    "todomvc-app-css": "^2.0.0",
+    "todomvc-common": "^1.0.1"
   },
   "devDependencies": {
     "webpack": "^1.14.0"

@@ -7,6 +7,10 @@
   "reason" : { "react-jsx" : true},
   "bs-dependencies": ["rehydrate", "reason-js"],
   "sources": [
-    "src",
+    {
+      "dir": "src",
+      "subdirs": ["interop", "logo", "simple", "todomvc"],
+      "files": ["index.re"],
+    }
   ],
 }

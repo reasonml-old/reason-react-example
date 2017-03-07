@@ -2,6 +2,6 @@
 .merlin
 /node_modules/
 /lib/
-*.js
+/bundledOutputs/
 npm-debug.log
 /_build/
