@@ -10,7 +10,6 @@
     {
       "dir": "src",
       "subdirs": ["interop", "logo", "simple", "todomvc"],
-      "files": ["index.re"],
     }
   ],
 }
