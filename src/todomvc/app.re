@@ -45,7 +45,7 @@ module Top = {
         | nonEmptyValue =>
           let todos =
             state.todos @ [
-              {id: string_of_float (ReasonJs.Date.now ()), title: nonEmptyValue, completed: false}
+              {id: string_of_float (Js.Date.now ()), title: nonEmptyValue, completed: false}
             ];
           saveLocally todos;
           Some {...state, newTodo: "", todos}

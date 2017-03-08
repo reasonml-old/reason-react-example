@@ -12,12 +12,12 @@ module Logo = {
     drag: mouseUpDrag,
     degrees: 0.0,
     velocity: 0.1,
-    lastMs: ReasonJs.Date.now ()
+    lastMs: Js.Date.now ()
   };
   let componentDidMount {setState} => {
     let rec onAnimationFrame () => {
       let stateSetter {state} => {
-        let now = ReasonJs.Date.now ();
+        let now = Js.Date.now ();
         /* How many 16ms virtual frames elapsed, even if clock runs at 30hz */
         let idealFramesSinceLast = 1. +. (now -. state.lastMs) /. 16.;
         let nextDegrees = state.degrees +. (baseVel +. state.velocity) *. idealFramesSinceLast;
