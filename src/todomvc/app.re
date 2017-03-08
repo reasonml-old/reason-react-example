@@ -9,12 +9,12 @@ let namespace = "reason-react-todos";
 let saveLocally todos => ReasonJs.LocalStorage.setItem namespace (ReasonJs.JSON.stringify todos);
 
 module Top = {
-  include ReactRe.CreateComponent  {
+  module TodoApp = {
     include ReactRe.Component.Stateful;
     let name = "TodoAppRe";
     type props = unit;
     type state = {
-      nowShowing: TodoFooter.showingState,
+      nowShowing: TodoFooter.TodoFooter.showingState,
       editing: option string,
       newTodo: string,
       todos: list TodoItem.todo
@@ -167,6 +167,7 @@ module Top = {
       </div>
     };
   };
+  include ReactRe.CreateComponent TodoApp;
   let createElement = wrapProps ();
 };
 
