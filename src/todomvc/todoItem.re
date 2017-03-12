@@ -10,20 +10,20 @@ module TodoItem = {
   type props = {
     todo,
     editing: bool,
-    onDestroy: ReactRe.event => unit,
+    onDestroy: unit => unit,
     onSave: string => unit,
     onEdit: unit => unit,
-    onToggle: ReactRe.event => unit,
-    onCancel: ReactRe.event => unit
+    onToggle: unit => unit,
+    onCancel: unit => unit
   };
   type state = {editText: string};
   type instanceVars = {mutable editFieldRef: option ReactRe.reactRef};
   let getInstanceVars () => {editFieldRef: None};
   let getInitialState props => {editText: props.todo.title};
-  let handleSubmit {props, state} event =>
+  let handleSubmit {props, state} _ =>
     switch (String.trim state.editText) {
     | "" =>
-      props.onDestroy event;
+      props.onDestroy ();
       None
     | nonEmptyValue =>
       props.onSave nonEmptyValue;
@@ -34,18 +34,18 @@ module TodoItem = {
     Some {editText: props.todo.title}
   };
   let handleKeyDown ({props} as componentBag) event =>
-    if (event##which === escapeKey) {
-      props.onCancel event;
+    if (ReactRe.KeyboardEvent.which event === escapeKey) {
+      props.onCancel ();
       Some {editText: props.todo.title}
     } else if (
-      event##which === enterKey
+      ReactRe.KeyboardEvent.which event === enterKey
     ) {
-      handleSubmit componentBag event
+      handleSubmit componentBag ()
     } else {
       None
     };
   let handleChange {props} event =>
-    props.editing ? Some {editText: ReasonJs.Document.value event##target} : None;
+    props.editing ? Some {editText: ReasonJs.Document.value (ReactRe.FormEvent.target event)} : None;
   let setEditFieldRef {instanceVars} r => instanceVars.editFieldRef = Some r;
 
   /**
@@ -73,10 +73,10 @@ module TodoItem = {
           className="toggle"
           _type="checkbox"
           checked=(Js.Boolean.to_js_boolean todo.completed)
-          onChange=onToggle
+          onChange=(fun _ => onToggle ())
         />
         <label onDoubleClick=(updater handleEdit)> (ReactRe.stringToElement todo.title) </label>
-        <button className="destroy" onClick=onDestroy />
+        <button className="destroy" onClick=(fun _ => onDestroy ()) />
       </div>
       <input
         ref=(refSetter setEditFieldRef)
