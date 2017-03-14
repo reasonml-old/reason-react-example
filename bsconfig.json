@@ -3,9 +3,9 @@
   comma. If this screws with your editor highlighting, please tell us by filing
   an issue! */
 {
-  "name" : "rehydrate-example",
+  "name" : "reason-react-example",
   "reason" : { "react-jsx" : true},
-  "bs-dependencies": ["rehydrate", "reason-js"],
+  "bs-dependencies": ["reason-react", "reason-js"],
   "sources": [
     {
       "dir": "src",

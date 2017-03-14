@@ -1,5 +1,5 @@
 {
-  "name": "rehydrate-example",
+  "name": "reason-react-example",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -18,7 +18,7 @@
     "react-dom": "^15.4.2",
     "react": "^15.4.2",
     "reason-js": "^0.0.16",
-    "rehydrate": "https://github.com/reasonml/rehydrate.git",
+    "reason-react": "https://github.com/reasonml/reason-react.git",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.1"
   },
