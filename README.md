@@ -1,4 +1,4 @@
-This is a repo with examples usages of [Reason-React]. Reason-React's docs are [here](https://github.com/reasonml/rehydrate/blob/master/documentation.md).
+This is a repo with examples usages of [Reason-React]. Reason-React's docs are [here](https://github.com/reasonml/reason-react/blob/master/documentation.md).
 Have something you don't understand? Join us on [Discord](discord.gg/reasonml)!
 
 ```
