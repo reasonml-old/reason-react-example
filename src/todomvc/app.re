@@ -177,6 +177,6 @@ switch (
   ReasonJs.HtmlCollection.item
     0 (ReasonJs.Document.getElementsByClassName "todoapp" ReasonJs.Dom.document)
 ) {
-| None => Js.log "Unable to find root 'todoapp' element, cannot start React app"
+| None => raise (Invalid_argument "Root element 'todoapp' not found in document")
 | Some el => ReactDOMRe.render <Top /> el
 };
