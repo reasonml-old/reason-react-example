@@ -1,5 +1,3 @@
-external domAsHtmlElement : ReasonJs.Dom.element => ReasonJs.Dom.htmlElement = "%identity";
-
 type router = Js.t {. init : (string => unit) [@bs.meth]};
 
 external routerMake : Js.t {..} => router = "Router" [@@bs.module "director"] [@@bs.new];
@@ -39,7 +37,10 @@ module Top = {
       None
     };
     let handleChange {state} event =>
-      Some {...state, newTodo: ReasonJs.HtmlElement.value (domAsHtmlElement event##target)};
+      switch (ReasonJs.Dom.Element.asHtmlElement event##target) {
+      | Some el => Some {...state, newTodo: ReasonJs.HtmlElement.value el}
+      | None => raise (Failure "Invalid event target passed to app handleChange")
+      };
     let handleNewTodoKeyDown {state} event =>
       if (event##keyCode === enterKey) {
         event##preventDefault ();
@@ -56,12 +57,15 @@ module Top = {
       } else {
         None
       };
-    let toggleAll {state} event => {
-      let checked = ReasonJs.HtmlElement.checked (domAsHtmlElement event##target);
-      let todos = List.map (fun todo => {...todo, TodoItem.completed: checked}) state.todos;
-      saveLocally todos;
-      Some {...state, todos}
-    };
+    let toggleAll {state} (event: ReactRe.event) =>
+      switch (ReasonJs.Dom.Element.asHtmlElement event##target) {
+      | Some el =>
+        let checked = ReasonJs.HtmlElement.checked el;
+        let todos = List.map (fun todo => {...todo, TodoItem.completed: checked}) state.todos;
+        saveLocally todos;
+        Some {...state, todos}
+      | None => raise (Failure "Invalid event target passed to app toggleAll")
+      };
     let toggle todoToToggle {state} _ => {
       let todos =
         List.map
