@@ -1,5 +1,5 @@
 This is a repo with examples usages of [Reason-React]. Reason-React's docs are [here](https://github.com/reasonml/reason-react/blob/master/documentation.md).
-Have something you don't understand? Join us on [Discord](discord.gg/reasonml)!
+Have something you don't understand? Join us on [Discord](https://discord.gg/reasonml)!
 
 ```
 git clone https://github.com/chenglou/reason-react-example.git
