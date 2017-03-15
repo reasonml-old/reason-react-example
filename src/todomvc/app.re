@@ -1,3 +1,5 @@
+external domAsHtmlElement : ReasonJs.Dom.element => ReasonJs.Dom.htmlElement = "%identity";
+
 type router = Js.t {. init : (string => unit) [@bs.meth]};
 
 external routerMake : Js.t {..} => router = "Router" [@@bs.module "director"] [@@bs.new];
@@ -6,7 +8,8 @@ let enterKey = 13;
 
 let namespace = "reason-react-todos";
 
-let saveLocally todos => ReasonJs.LocalStorage.setItem namespace (ReasonJs.JSON.stringify todos);
+let saveLocally todos =>
+  ReasonJs.Storage.setItem namespace (ReasonJs.Json.stringify todos) ReasonJs.Storage.localStorage;
 
 module Top = {
   module TodoApp = {
@@ -21,9 +24,9 @@ module Top = {
     };
     let getInitialState _ /* props */ => {
       let todos =
-        switch (Js.Null.to_opt (ReasonJs.LocalStorage.getItem namespace)) {
+        switch (ReasonJs.Storage.getItem namespace ReasonJs.Storage.localStorage) {
         | None => []
-        | Some todos => ReasonJs.JSON.parse todos
+        | Some todos => ReasonJs.Json.parse todos
         };
       {nowShowing: AllTodos, editing: None, newTodo: "", todos}
     };
@@ -36,7 +39,7 @@ module Top = {
       None
     };
     let handleChange {state} event =>
-      Some {...state, newTodo: ReasonJs.Document.value event##target};
+      Some {...state, newTodo: ReasonJs.HtmlElement.value (domAsHtmlElement event##target)};
     let handleNewTodoKeyDown {state} event =>
       if (event##keyCode === enterKey) {
         event##preventDefault ();
@@ -54,9 +57,8 @@ module Top = {
         None
       };
     let toggleAll {state} event => {
-      let checked = ReasonJs.Document.checked event##target;
-      let todos =
-        List.map (fun todo => {...todo, TodoItem.completed: Js.to_bool checked}) state.todos;
+      let checked = ReasonJs.HtmlElement.checked (domAsHtmlElement event##target);
+      let todos = List.map (fun todo => {...todo, TodoItem.completed: checked}) state.todos;
       saveLocally todos;
       Some {...state, todos}
     };
@@ -171,4 +173,10 @@ module Top = {
   let createElement = wrapProps ();
 };
 
-ReactDOMRe.render <Top /> (ReasonJs.Document.getElementsByClassName "todoapp").(0);
+switch (
+  ReasonJs.HtmlCollection.item
+    0 (ReasonJs.Document.getElementsByClassName "todoapp" ReasonJs.Dom.document)
+) {
+| None => Js.log "Unable to find root 'todoapp' element, cannot start React app"
+| Some el => ReactDOMRe.render <Top /> el
+};
