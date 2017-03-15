@@ -5,3 +5,4 @@
 /bundledOutputs/
 npm-debug.log
 /_build/
+.vscode
