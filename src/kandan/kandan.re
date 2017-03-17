@@ -72,7 +72,22 @@ module Kandan = {
       List.find (fun haystack => State.(haystack.id) === channel.id) State.(state.channels);
     let otherChannels =
       List.filter (fun haystack => State.(haystack.id) !== channel.id) State.(state.channels);
-    let newChannel = {...currentChannel, mediaState: newState};
+    let newChannel =
+      switch newState {
+      | NotLoaded
+      | Paused => {...currentChannel, mediaState: newState, media: currentChannel.media}
+      | Playing =>
+        let media =
+          switch (currentChannel.media.src, List.length currentChannel.playlist) {
+          /* Media selected, use that */
+          | (Some _, _) => currentChannel.media
+          /* No media selected, but none in the playlist */
+          | (None, 0) => currentChannel.media
+          /* No media selected,  pick the first media in channel playlist */
+          | (None, _) => List.nth currentChannel.playlist 0
+          };
+        {...currentChannel, mediaState: newState, media}
+      };
     let newChannels = List.append otherChannels [newChannel];
     Some {...state, channels: newChannels}
   };
