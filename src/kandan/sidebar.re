@@ -13,11 +13,6 @@ module Sidebar = {
     onVolumeAdjusted: float => ReactRe.event => unit,
     volume: float
   };
-  let findNextMedia channel offset => {
-    open State;
-    let idx = max 0 (min (channel.media.order + offset) (List.length channel.playlist));
-    List.nth channel.playlist idx
-  };
   let render {props} => {
     let {users, channel, onSongSelected, onMediaStateUpdated} = props;
     let me = List.hd users;
@@ -130,7 +125,7 @@ module Sidebar = {
             <div className="dropzone">
               <i
                 className="fa fa-step-backward"
-                onClick=(fun event => onSongSelected (findNextMedia channel (-1)) event)
+                onClick=(fun event => onSongSelected (Utils.findNextMedia channel (-1)) event)
                 style={"cursor": "pointer"}
               />
               (ReactRe.stringToElement "  ")
@@ -161,7 +156,7 @@ module Sidebar = {
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-step-forward"
-                onClick=(fun event => onSongSelected (findNextMedia channel 1) event)
+                onClick=(fun event => onSongSelected (Utils.findNextMedia channel 1) event)
                 style={"cursor": "pointer"}
               />
               (ReactRe.stringToElement "  ")

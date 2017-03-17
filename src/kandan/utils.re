@@ -77,3 +77,10 @@ let setPageTitle title =>
   | None => ()
   | Some doc => ReasonJs.HtmlDocument.setTitle doc title
   };
+
+let findNextMedia channel offset => {
+  open State;
+  let idx = max 0 (min (channel.media.order + offset) (List.length channel.playlist));
+  Js.log ("Index: " ^ string_of_int idx);
+  List.nth channel.playlist idx
+};

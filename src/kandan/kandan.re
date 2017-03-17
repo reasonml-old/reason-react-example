@@ -254,6 +254,30 @@ module Kandan = {
         (["ctrl+?"], UserMenuToggled state.userMenuOpen),
         (["/"], SearchFormFocused true),
         (["ctrl+-"], VolumeDecremented 0.1),
+        (
+          ["ctrl+shift+<"],
+          try (SongSelected currentChannel (Utils.findNextMedia currentChannel (-1))) {
+          | _ => Log "No previous media in channel"
+          }
+        ),
+        (
+          ["ctrl+shift+>"],
+          try (SongSelected currentChannel (Utils.findNextMedia currentChannel 1)) {
+          | _ => Log "No previous media in channel"
+          }
+        ),
+        (
+          ["ctrl+p"],
+          MediaStateUpdated
+            currentChannel
+            (
+              switch currentChannel.mediaState {
+              | NotLoaded => NotLoaded
+              | Paused => Playing
+              | Playing => Paused
+              }
+            )
+        ),
         (["ctrl+shift+="], VolumeIncremented 0.1),
         (["ctrl+1"], ChannelSelectedByIndex 0),
         (["ctrl+2"], ChannelSelectedByIndex 1),
