@@ -6,7 +6,8 @@ let enterKey = 13;
 
 let namespace = "reason-react-todos";
 
-let saveLocally todos => ReasonJs.LocalStorage.setItem namespace (ReasonJs.JSON.stringify todos);
+let saveLocally todos =>
+  ReasonJs.Storage.setItem namespace (ReasonJs.Json.stringify todos) ReasonJs.Storage.localStorage;
 
 module Top = {
   module TodoApp = {
@@ -21,9 +22,9 @@ module Top = {
     };
     let getInitialState _ /* props */ => {
       let todos =
-        switch (Js.Null.to_opt (ReasonJs.LocalStorage.getItem namespace)) {
+        switch (ReasonJs.Storage.getItem namespace ReasonJs.Storage.localStorage) {
         | None => []
-        | Some todos => ReasonJs.JSON.parse todos
+        | Some todos => ReasonJs.Json.parse todos
         };
       {nowShowing: AllTodos, editing: None, newTodo: "", todos}
     };
@@ -36,7 +37,10 @@ module Top = {
       None
     };
     let handleChange {state} event =>
-      Some {...state, newTodo: ReasonJs.Document.value event##target};
+      switch (ReasonJs.Dom.Element.asHtmlElement event##target) {
+      | Some el => Some {...state, newTodo: ReasonJs.HtmlElement.value el}
+      | None => raise (Failure "Invalid event target passed to app handleChange")
+      };
     let handleNewTodoKeyDown {state} event =>
       if (event##keyCode === enterKey) {
         event##preventDefault ();
@@ -53,13 +57,15 @@ module Top = {
       } else {
         None
       };
-    let toggleAll {state} event => {
-      let checked = ReasonJs.Document.checked event##target;
-      let todos =
-        List.map (fun todo => {...todo, TodoItem.completed: Js.to_bool checked}) state.todos;
-      saveLocally todos;
-      Some {...state, todos}
-    };
+    let toggleAll {state} (event: ReactRe.event) =>
+      switch (ReasonJs.Dom.Element.asHtmlElement event##target) {
+      | Some el =>
+        let checked = ReasonJs.HtmlElement.checked el;
+        let todos = List.map (fun todo => {...todo, TodoItem.completed: checked}) state.todos;
+        saveLocally todos;
+        Some {...state, todos}
+      | None => raise (Failure "Invalid event target passed to app toggleAll")
+      };
     let toggle todoToToggle {state} _ => {
       let todos =
         List.map
@@ -171,4 +177,10 @@ module Top = {
   let createElement = wrapProps ();
 };
 
-ReactDOMRe.render <Top /> (ReasonJs.Document.getElementsByClassName "todoapp").(0);
+switch (
+  ReasonJs.HtmlCollection.item
+    0 (ReasonJs.Document.getElementsByClassName "todoapp" ReasonJs.Dom.document)
+) {
+| None => raise (Invalid_argument "Root element 'todoapp' not found in document")
+| Some el => ReactDOMRe.render <Top /> el
+};

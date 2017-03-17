@@ -44,8 +44,12 @@ module TodoItem = {
     } else {
       None
     };
-  let handleChange {props} event =>
-    props.editing ? Some {editText: ReasonJs.Document.value event##target} : None;
+  let handleChange {props} (event: ReactRe.event) =>
+    switch (props.editing, ReasonJs.Dom.Element.asHtmlElement event##target) {
+    | (true, Some el) => Some {editText: ReasonJs.HtmlElement.value el}
+    | (true, None) => raise (Failure "Invalid event target passed to todoItem handleChange")
+    | _ => None
+    };
   let setEditFieldRef {instanceVars} r => instanceVars.editFieldRef = Some r;
 
   /**
