@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "bsb -make-world -w",
-    "build": "webpack -w",
+    "start": "node qnd.js",
     "clean": "bsb -clean-world && rm src/index.js"
   },
   "keywords": [],
@@ -23,6 +22,6 @@
   },
   "devDependencies": {
     "bs-platform": "^1.5.2",
-    "webpack": "^1.14.0"
+    "qnd": "^0.1.0"
   }
 }
