@@ -9,7 +9,7 @@ module TodoFooter = {
     count: int,
     completedCount: int,
     nowShowing: showingState,
-    onClearCompleted: ReactRe.event => unit
+    onClearCompleted: ReactRe.mouseEvent => unit
   };
   let render {props} => {
     let activeTodoWord = props.count === 1 ? "item" : "items";
