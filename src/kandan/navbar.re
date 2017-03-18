@@ -4,12 +4,14 @@ module Navbar = {
   type props = {
     selectedChannelId: State.channelId,
     channels: list State.channel,
-    onChannelSelected: State.channel => ReactRe.event => unit,
+    onChannelSelected: State.channel => unit,
     focused: bool,
-    onFocus: bool => ReactRe.event => unit,
-    onSearchUpdated: ReactRe.event => unit,
+    onFocus: bool => unit,
+    onSearchUpdated: option string => unit,
     searchTerm: option string
   };
+  let _onFocus onFocus focused _event => onFocus focused;
+  let _onChannelSelected onChannelSelected channel _event => onChannelSelected channel;
   let render {props} => {
     let tabs =
       props.channels |>
@@ -17,7 +19,7 @@ module Navbar = {
         fun (channel: State.channel) =>
           <li
             key=(string_of_int channel.id)
-            onClick=(props.onChannelSelected channel)
+            onClick=(_onChannelSelected props.onChannelSelected channel)
             className=(
                         "protected example" ^ (
                           if (props.selectedChannelId === State.(channel.id)) {
@@ -35,8 +37,8 @@ module Navbar = {
     <nav className=("nav" ^ (props.focused ? " search-focus" : ""))>
       <form action="/search" className="search" method="get">
         <input
-          onBlur=(props.onFocus false)
-          onFocus=(props.onFocus true)
+          onBlur=(_onFocus props.onFocus false)
+          onFocus=(_onFocus props.onFocus true)
           className="query"
           name="query"
           _type="text"
@@ -46,11 +48,24 @@ module Navbar = {
                   | Some term => term
                   }
                 )
-          onChange=props.onSearchUpdated
+          onChange=(
+                     fun event => {
+                       let x =
+                         switch (
+                           ReasonJs.HtmlElement.value (
+                             Utils.domAsHtmlElement (ReactEventRe.Form.target event)
+                           )
+                         ) {
+                         | "" => None
+                         | term => Some term
+                         };
+                       props.onSearchUpdated x
+                     }
+                   )
           onKeyDown=(
                       fun event =>
-                        if (event##which == 13) {
-                          event##preventDefault ()
+                        if (ReactEventRe.Keyboard.which event == 13) {
+                          ReactEventRe.Keyboard.preventDefault event
                         }
                     )
         />

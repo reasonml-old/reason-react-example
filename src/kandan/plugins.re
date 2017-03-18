@@ -50,7 +50,11 @@ let pastie (message: State.message) => {
              }
            )
            <br />
-           <a className="pastie-link" href="#" onClick=(fun _ => ()) style={"cursor": "pointer"}>
+           <a
+             className="pastie-link"
+             href="#"
+             onClick=(fun _ => ())
+             style=(ReactDOMRe.Style.make cursor::"pointer" ())>
              (ReactRe.stringToElement "View pastie")
            </a>
          </pre>
@@ -194,10 +198,12 @@ let embedRgb
               <span
                 className="color-preview"
                 title=("rgb(" ^ r ^ "," ^ g ^ "," ^ b ^ ")")
-                style={
-                        "borderRadius": "12px",
-                        "backgroundColor": "rgb(" ^ r ^ "," ^ g ^ "," ^ b ^ ")"
-                      }
+                style=(
+                        ReactDOMRe.Style.make
+                          borderRadius::"12px"
+                          backgroundColor::("rgb(" ^ r ^ "," ^ g ^ "," ^ b ^ ")")
+                          ()
+                      )
               />
           | Some _damn => assert false
           }
@@ -230,7 +236,7 @@ let embedHex
               <span
                 className="color-preview"
                 title=("#" ^ hex)
-                style={"borderRadius": "12px", "backgroundColor": "#" ^ hex}
+                style=(ReactDOMRe.Style.make borderRadius::"12px" backgroundColor::("#" ^ hex) ())
               />
           | Some _damn => assert false
           }
@@ -314,7 +320,9 @@ let embedQuote
     let (_, pieces) = processPlugins me users channel message activityPieces quotePlugins;
     let pieces = renderableOfActivityPieces pieces;
     pieces.(0) =
-      <div className="quote-color" style={"backgroundColor": "rgb(131, 104, 214)"}>
+      <div
+        className="quote-color"
+        style=(ReactDOMRe.Style.make backgroundColor::"rgb(131, 104, 214)" ())>
         (ReactRe.stringToElement "")
       </div>;
     let final = Array.make (Array.length pieces * 2 - 1) dummyElement;
@@ -356,7 +364,7 @@ let extractImages (message: State.message) :array ReactRe.reactElement =>
           <div className="image-preview">
             <a target="_blank" href=src>
               <img
-                style={"maxWidth": "100%", "maxHeight": "100%"}
+                style=(ReactDOMRe.Style.make maxWidth::"100%" maxHeight::"10%" ())
                 title=src
                 className="image-embed"
                 src
@@ -379,7 +387,7 @@ let extractYoutubes (message: State.message) :array ReactRe.reactElement =>
           width="560"
           height="315"
           src=("http://www.youtube.com/embed/" ^ videoId)
-          allowFullScreen=Js.true_
+          /* allowFullScreen=Js.true_ */
         />
       </div>
     |]

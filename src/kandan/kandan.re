@@ -1,3 +1,5 @@
+let fullHeight = ReactDOMRe.Style.make height::"100%" ();
+
 let scrollToLatestMessage target channelId =>
   switch (ReasonJs.Dom.Element.querySelector ("#channels-" ^ string_of_int channelId) target) {
   | None => ()
@@ -205,11 +207,11 @@ module Kandan = {
     newState
   };
   let killEventAndRedispatch action componentBag event => {
-    event##preventDefault ();
+    ReactEventRe.Synthetic.preventDefault event;
     dispatchEventless action componentBag ()
   };
   /* Used when calling from a React handler. Most of the time they'll delegate to the eventless dispatcher, but they may need to do something to an event first */
-  let dispatchEventful (action: State.action) componentBag (event: ReactRe.event) => {
+  let dispatchEventful (action: State.action) componentBag (event: ReactEventRe.Synthetic.t) => {
     open State;
     Js.log ("New EF action: " ^ stringOfAction action);
     let (effectAlreadyProcessed, newState) =
@@ -218,9 +220,6 @@ module Kandan = {
       | VolumeDecremented _
       | VolumeIncremented _
       | VolumeMuteToggled => (true, killEventAndRedispatch action componentBag event)
-      | SearchUpdated None =>
-        let term = ReasonJs.Dom.HtmlElement.value (Utils.domAsHtmlElement event##target);
-        (true, dispatchEventless (SearchUpdated (Some term)) componentBag ())
       /* eventless */
       | _ => (true, dispatchEventless action componentBag ())
       };
@@ -239,7 +238,7 @@ module Kandan = {
     newState
   };
   let render {state, updater} => {
-    let dispatch action => updater (dispatchEventful action);
+    let _dispatch action => updater (dispatchEventful action);
     let dispatchEL action => updater (dispatchEventless action);
     let sortedChannels =
       List.sort
@@ -321,8 +320,8 @@ module Kandan = {
             />
         )
         state.channels;
-    <div id="app" style={"height": "100%"}>
-      <div className style={"height": "100%"}>
+    <div id="app" style=fullHeight>
+      <div className style=fullHeight>
         (ReactRe.arrayToElement (Array.of_list audioChannels))
         <Key_queue keyMap onMatch=dispatchEL />
         <Sidebar
@@ -330,13 +329,13 @@ module Kandan = {
           users=State.(state.users)
           me
           menuOpen=state.userMenuOpen
-          onUserMenuToggled=(fun opened => dispatch State.(UserMenuToggled opened))
-          onSongSelected=(fun media => dispatch State.(SongSelected currentChannel media))
+          onUserMenuToggled=(fun opened => dispatchEL State.(UserMenuToggled opened) ())
+          onSongSelected=(fun media => dispatchEL State.(SongSelected currentChannel media) ())
           onMediaStateUpdated=(
                                 fun (newState: State.mediaPlayerState) =>
-                                  dispatch State.(MediaStateUpdated currentChannel newState)
+                                  dispatchEL State.(MediaStateUpdated currentChannel newState) ()
                               )
-          onVolumeAdjusted=(fun volume => dispatch State.(VolumeSet volume))
+          onVolumeAdjusted=(fun volume => dispatchEL State.(VolumeSet volume) ())
           lastVolume=state.lastVolume
           volume=state.volume
         />
@@ -347,19 +346,19 @@ module Kandan = {
           leftSidebarOpen=state.leftSidebarOpen
           rightSidebarOpen=state.rightSidebarOpen
           searchTerm=state.search
-          onFocus=(fun focused => dispatch State.(ChatBoxFocused focused))
-          onMessageSubmitted=(fun channel msg => dispatch State.(MsgSubmitted channel me msg))
-          onLeftSidebarToggled=(fun opened => dispatch State.(SidebarToggled Left opened))
-          onRightSidebarToggled=(fun opened => dispatch State.(SidebarToggled Right opened))
+          onFocus=(fun focused => dispatchEL State.(ChatBoxFocused focused) ())
+          onMessageSubmitted=(fun channel msg => dispatchEL State.(MsgSubmitted channel me msg) ())
+          onLeftSidebarToggled=(fun opened => dispatchEL State.(SidebarToggled Left opened) ())
+          onRightSidebarToggled=(fun opened => dispatchEL State.(SidebarToggled Right opened) ())
         />
         <Navbar
           selectedChannelId=state.selectedChannelId
           channels=sortedChannels
           focused=state.searchFormFocused
           searchTerm=state.search
-          onSearchUpdated=(dispatch (SearchUpdated None))
-          onFocus=(fun focused => dispatch State.(SearchFormFocused focused))
-          onChannelSelected=(fun channel => dispatch State.(ChannelSelected channel))
+          onSearchUpdated=(fun term => dispatchEL (SearchUpdated term) ())
+          onFocus=(fun focused => dispatchEL State.(SearchFormFocused focused) ())
+          onChannelSelected=(fun channel => dispatchEL State.(ChannelSelected channel) ())
         />
         <div className="at-view" id="at-view"> <ul id="at-view-ul" /> </div>
       </div>

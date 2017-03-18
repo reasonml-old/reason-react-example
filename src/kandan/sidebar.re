@@ -1,3 +1,5 @@
+let cursorPointer = ReactDOMRe.Style.make cursor::"pointer" ();
+
 module Sidebar = {
   include ReactRe.Component;
   let name = "Sidebar";
@@ -7,14 +9,18 @@ module Sidebar = {
     lastVolume: float,
     me: State.user,
     menuOpen: bool,
-    onUserMenuToggled: bool => ReactRe.event => unit,
-    onMediaStateUpdated: State.mediaPlayerState => ReactRe.event => unit,
-    onSongSelected: State.media => ReactRe.event => unit,
-    onVolumeAdjusted: float => ReactRe.event => unit,
+    onUserMenuToggled: bool => unit,
+    onMediaStateUpdated: State.mediaPlayerState => unit,
+    onSongSelected: State.media => unit,
+    onVolumeAdjusted: float => unit,
     volume: float
   };
+  let _onUserMenuToggled onUserMenuToggled opened _ => onUserMenuToggled opened;
+  let _onMediaStateUpdated onMediaStateUpdated state _ => onMediaStateUpdated state;
+  let _onSongSelected onSongSelected media _ => onSongSelected media;
+  let _onVolumeAdjusted onVolumeAdjusted volume _ => onVolumeAdjusted volume;
   let render {props} => {
-    let {users, channel, onSongSelected, onMediaStateUpdated} = props;
+    let {users, channel} = props;
     let me = List.hd users;
     let channelUsers =
       users |>
@@ -42,15 +48,20 @@ module Sidebar = {
                 | Some src => src
                 }
               )
-        style={
-                "backgroundColor":
-                  switch (media == channelMedia) {
-                  | false => ""
-                  | true => "#c6c9d6"
-                  }
-              }
+        style=(
+                ReactDOMRe.Style.make
+                  backgroundColor::(
+                    switch (media == channelMedia) {
+                    | false => ""
+                    | true => "#c6c9d6"
+                    }
+                  )
+                  ()
+              )
         key=(string_of_int media.order)>
-        <a style={"cursor": "pointer"} onClick=(fun event => onSongSelected media event)>
+        <a
+          style=cursorPointer
+          onClick=(fun event => _onSongSelected props.onSongSelected media event)>
           (
             ReactRe.stringToElement (
               string_of_int (media.order + 1) ^
@@ -74,9 +85,12 @@ module Sidebar = {
         <a
           className="user-menu-toggle"
           href="#"
-          onClick=(props.onUserMenuToggled (not props.menuOpen))>
+          onClick=(_onUserMenuToggled props.onUserMenuToggled (not props.menuOpen))>
           <img className="avatar" src=(Utils.gravatarUrl State.(me.email)) />
-          <i className="icon-angle button right" style={"height": "inherit"} />
+          <i
+            className="icon-angle button right"
+            style=(ReactDOMRe.Style.make height::"inherit" ())
+          />
           <span> (ReactRe.stringToElement (Utils.nameOfUser me)) </span>
         </a>
         <ul className="user-menu">
@@ -125,8 +139,12 @@ module Sidebar = {
             <div className="dropzone">
               <i
                 className="fa fa-step-backward"
-                onClick=(fun event => onSongSelected (Utils.findNextMedia channel (-1)) event)
-                style={"cursor": "pointer"}
+                onClick=(
+                          fun event =>
+                            _onSongSelected
+                              props.onSongSelected (Utils.findNextMedia channel (-1)) event
+                        )
+                style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
               <i
@@ -141,7 +159,8 @@ module Sidebar = {
                           )
                 onClick=(
                           fun event =>
-                            onMediaStateUpdated
+                            _onMediaStateUpdated
+                              props.onMediaStateUpdated
                               (
                                 switch props.channel.mediaState {
                                 | Playing => Paused
@@ -151,31 +170,38 @@ module Sidebar = {
                               )
                               event
                         )
-                style={"cursor": "pointer"}
+                style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-step-forward"
-                onClick=(fun event => onSongSelected (Utils.findNextMedia channel 1) event)
-                style={"cursor": "pointer"}
+                onClick=(
+                          fun event =>
+                            _onSongSelected
+                              props.onSongSelected (Utils.findNextMedia channel 1) event
+                        )
+                style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-volume-off"
-                onClick=(props.onVolumeAdjusted (props.volume == 0.0 ? props.lastVolume : 0.0))
-                style={"cursor": "pointer"}
+                onClick=(
+                          _onVolumeAdjusted
+                            props.onVolumeAdjusted (props.volume == 0.0 ? props.lastVolume : 0.0)
+                        )
+                style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-volume-down"
-                onClick=(props.onVolumeAdjusted (max 0.0 (props.volume -. 0.1)))
-                style={"cursor": "pointer"}
+                onClick=(_onVolumeAdjusted props.onVolumeAdjusted (max 0.0 (props.volume -. 0.1)))
+                style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-volume-up"
-                onClick=(props.onVolumeAdjusted (min 1.0 (props.volume +. 0.1)))
-                style={"cursor": "pointer"}
+                onClick=(_onVolumeAdjusted props.onVolumeAdjusted (min 1.0 (props.volume +. 0.1)))
+                style=cursorPointer
               />
             </div>
           </div>
@@ -201,7 +227,7 @@ module Sidebar = {
               id="file_upload"
               method="post"
               name="file_upload">
-              <div style={"display": "inline", "padding": 0, "margin": 0} />
+              <div style=(ReactDOMRe.Style.make display::"inline" padding::"0" margin::"0" ()) />
               <input id="channel_id_1" name="channel_id[1]" _type="hidden" />
               <input id="file" name="file" _type="file" />
               <div className="dropzone">

@@ -9,37 +9,47 @@ module Main_area = {
     channel: State.channel,
     users: list State.user,
     me: State.user,
-    onFocus: bool => ReactRe.event => unit,
-    onLeftSidebarToggled: bool => ReactRe.event => unit,
-    onRightSidebarToggled: bool => ReactRe.event => unit,
-    onMessageSubmitted: State.channel => State.message => ReactRe.event => unit,
+    onFocus: bool => unit,
+    onLeftSidebarToggled: bool => unit,
+    onRightSidebarToggled: bool => unit,
+    onMessageSubmitted: State.channel => State.message => unit,
     leftSidebarOpen: bool,
     rightSidebarOpen: bool,
     searchTerm: option string
   };
+  let _onFocus onFocus focused _ => onFocus focused;
+  let _onLeftSidebarToggled onLeftSidebarToggled opened _ => onLeftSidebarToggled opened;
+  let _onRightSidebarToggled onRightSidebarToggled opened _ => onRightSidebarToggled opened;
+  let _onMessageSubmitted onMessageSubmitted channel message _ =>
+    onMessageSubmitted channel message;
   type state = {editText: string};
   let getInitialState _props => {editText: ""};
   let handleSubmit {props, state} event =>
     switch (String.trim state.editText) {
     | "" => None
     | _ =>
-      props.onMessageSubmitted
+      _onMessageSubmitted
+        props.onMessageSubmitted
         props.channel
         State.{createdAt: Js.Date.now (), content: state.editText, userId: props.me.id}
         event;
       Some {editText: ""}
     };
   let handleButtonSubmit componentBag event => handleSubmit componentBag event;
-  let handleKeyUp componentBag (event: ReactRe.event) =>
-    if (event##which === enterKey && not event##shiftKey) {
+  let handleKeyUp componentBag (event: ReactEventRe.Keyboard.t) =>
+    if (
+      ReactEventRe.Keyboard.which event === enterKey && not (ReactEventRe.Keyboard.shiftKey event)
+    ) {
       handleSubmit componentBag event
     } else {
       None
     };
-  let handleChange _ (event: ReactRe.event) =>
-    Some {editText: ReasonJs.HtmlElement.value (Utils.domAsHtmlElement event##target)};
+  let handleChange _ (event: ReactEventRe.Form.t) =>
+    Some {
+      editText:
+        ReasonJs.HtmlElement.value (Utils.domAsHtmlElement (ReactEventRe.Form.target event))
+    };
   let render {props, state, updater} => {
-    let {onFocus, onLeftSidebarToggled, onRightSidebarToggled} = props;
     let activityItem (activity: State.message) => {
       let user =
         List.find (fun (user: State.user) => State.(user.id === activity.userId)) props.users;
@@ -97,13 +107,13 @@ module Main_area = {
         <a
           className="nav-toggle button left"
           href="#"
-          onClick=(onLeftSidebarToggled (not props.leftSidebarOpen))>
+          onClick=(_onLeftSidebarToggled props.onLeftSidebarToggled (not props.leftSidebarOpen))>
           <i className="icon-comments" />
         </a>
         <a
           className="sidebar-toggle button right"
           href="#"
-          onClick=(onRightSidebarToggled (not props.rightSidebarOpen))>
+          onClick=(_onRightSidebarToggled props.onRightSidebarToggled (not props.rightSidebarOpen))>
           <i className="icon-reorder" />
         </a>
         <a className="logo" href="#/">
@@ -116,8 +126,8 @@ module Main_area = {
           <div className="chatbox">
             <textarea
               className="chat-input"
-              onBlur=(onFocus false)
-              onFocus=(onFocus true)
+              onBlur=(_onFocus props.onFocus false)
+              onFocus=(_onFocus props.onFocus true)
               value=state.editText
               onChange=(updater handleChange)
               onKeyUp=(updater handleKeyUp)

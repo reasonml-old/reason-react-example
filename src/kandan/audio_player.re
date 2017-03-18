@@ -64,7 +64,7 @@ module Audio_player = {
     None
   };
   let render {props, refSetter} =>
-    <div style={"display": "block"}>
+    <div style=(ReactDOMRe.Style.make display::"block" ())>
       <audio
         className=("audio-player audio-" ^ string_of_int props.channel.id)
         src=(

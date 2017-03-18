@@ -91,7 +91,7 @@ let state =
       },
       {
         id: 2,
-        title: "Lobby?",
+        title: "Lobby",
         loading: false,
         userIds:
           State.UserIdSet.empty |> State.UserIdSet.add 1 |> State.UserIdSet.add 2 |>
