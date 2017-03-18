@@ -36,14 +36,14 @@ module Top = {
       router##init "/";
       None
     };
-    let handleChange {state} event =>
-      switch (ReasonJs.Dom.Element.asHtmlElement event##target) {
+    let handleChange {state} (event: ReactEventRe.Form.t) =>
+      switch (ReasonJs.Dom.Element.asHtmlElement (ReactEventRe.Form.target event)) {
       | Some el => Some {...state, newTodo: ReasonJs.HtmlElement.value el}
       | None => raise (Failure "Invalid event target passed to app handleChange")
       };
-    let handleNewTodoKeyDown {state} event =>
-      if (event##keyCode === enterKey) {
-        event##preventDefault ();
+    let handleNewTodoKeyDown {state} (event: ReactEventRe.Keyboard.t) =>
+      if (ReactEventRe.Keyboard.keyCode event === enterKey) {
+        ReactEventRe.Keyboard.preventDefault event;
         switch (String.trim state.newTodo) {
         | "" => None
         | nonEmptyValue =>
@@ -57,8 +57,8 @@ module Top = {
       } else {
         None
       };
-    let toggleAll {state} (event: ReactRe.event) =>
-      switch (ReasonJs.Dom.Element.asHtmlElement event##target) {
+    let toggleAll {state} (event: ReactEventRe.Form.t) =>
+      switch (ReasonJs.Dom.Element.asHtmlElement (ReactEventRe.Form.target event)) {
       | Some el =>
         let checked = ReasonJs.HtmlElement.checked el;
         let todos = List.map (fun todo => {...todo, TodoItem.completed: checked}) state.todos;

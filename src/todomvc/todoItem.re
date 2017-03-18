@@ -4,26 +4,39 @@ let enterKey = 13;
 
 type todo = {id: string, title: string, completed: bool};
 
+external asKeyboardEvent : ReactEventRe.Synthetic.t => ReactEventRe.Keyboard.t = "%identity";
+
+external asFocusEvent : ReactEventRe.Synthetic.t => ReactEventRe.Focus.t = "%identity";
+
+external keyboardAsSyntheticEvent : ReactEventRe.Keyboard.t => ReactEventRe.Synthetic.t =
+  "%identity";
+
+external formAsSyntheticEvent : ReactEventRe.Form.t => ReactEventRe.Synthetic.t = "%identity";
+
+external mouseAsSyntheticEvent : ReactEventRe.Mouse.t => ReactEventRe.Synthetic.t = "%identity";
+
+external focusAsSyntheticEvent : ReactEventRe.Focus.t => ReactEventRe.Synthetic.t = "%identity";
+
 module TodoItem = {
   include ReactRe.Component.Stateful.InstanceVars;
   let name = "TodoItemRe";
   type props = {
     todo,
     editing: bool,
-    onDestroy: ReactRe.event => unit,
+    onDestroy: ReactEventRe.Synthetic.t => unit,
     onSave: string => unit,
     onEdit: unit => unit,
-    onToggle: ReactRe.event => unit,
-    onCancel: ReactRe.event => unit
+    onToggle: ReactEventRe.Synthetic.t => unit,
+    onCancel: ReactEventRe.Synthetic.t => unit
   };
   type state = {editText: string};
   type instanceVars = {mutable editFieldRef: option ReactRe.reactRef};
   let getInstanceVars () => {editFieldRef: None};
   let getInitialState props => {editText: props.todo.title};
-  let handleSubmit {props, state} event =>
+  let handleSubmit {props, state} (event: ReactEventRe.Synthetic.t) =>
     switch (String.trim state.editText) {
     | "" =>
-      props.onDestroy event;
+      props.onDestroy (keyboardAsSyntheticEvent (asKeyboardEvent event));
       None
     | nonEmptyValue =>
       props.onSave nonEmptyValue;
@@ -33,19 +46,22 @@ module TodoItem = {
     props.onEdit ();
     Some {editText: props.todo.title}
   };
-  let handleKeyDown ({props} as componentBag) event =>
-    if (event##which === escapeKey) {
+  let handleKeyDown ({props} as componentBag) (event: ReactEventRe.Synthetic.t) =>
+    if (ReactEventRe.Keyboard.which (asKeyboardEvent event) === escapeKey) {
       props.onCancel event;
       Some {editText: props.todo.title}
     } else if (
-      event##which === enterKey
+      ReactEventRe.Keyboard.which (asKeyboardEvent event) === enterKey
     ) {
       handleSubmit componentBag event
     } else {
       None
     };
-  let handleChange {props} (event: ReactRe.event) =>
-    switch (props.editing, ReasonJs.Dom.Element.asHtmlElement event##target) {
+  let handleChange {props} (event: ReactEventRe.Synthetic.t) =>
+    switch (
+      props.editing,
+      ReasonJs.Dom.Element.asHtmlElement (ReactEventRe.Synthetic.target event)
+    ) {
     | (true, Some el) => Some {editText: ReasonJs.HtmlElement.value el}
     | (true, None) => raise (Failure "Invalid event target passed to todoItem handleChange")
     | _ => None
@@ -77,18 +93,21 @@ module TodoItem = {
           className="toggle"
           _type="checkbox"
           checked=(Js.Boolean.to_js_boolean todo.completed)
-          onChange=onToggle
+          onChange=(fun event => onToggle (formAsSyntheticEvent event))
         />
         <label onDoubleClick=(updater handleEdit)> (ReactRe.stringToElement todo.title) </label>
-        <button className="destroy" onClick=onDestroy />
+        <button
+          className="destroy"
+          onClick=(fun event => onDestroy (mouseAsSyntheticEvent event))
+        />
       </div>
       <input
         ref=(refSetter setEditFieldRef)
         className="edit"
         value=state.editText
-        onBlur=(updater handleSubmit)
-        onChange=(updater handleChange)
-        onKeyDown=(updater handleKeyDown)
+        onBlur=(fun event => (updater handleSubmit) (focusAsSyntheticEvent event))
+        onChange=(fun event => (updater handleChange) (formAsSyntheticEvent event))
+        onKeyDown=(fun event => (updater handleKeyDown) (keyboardAsSyntheticEvent event))
       />
     </li>
   };
