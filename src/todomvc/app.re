@@ -36,10 +36,10 @@ module Top = {
       None
     };
     let handleChange {state} event =>
-      Some {...state, newTodo: ReasonJs.Document.value (ReactRe.FormEvent.target event)};
+      Some {...state, newTodo: ReasonJs.Document.value (ReactEventRe.Form.target event)};
     let handleNewTodoKeyDown {state} event =>
-      if (ReactRe.KeyboardEvent.keyCode event === enterKey) {
-        ReactRe.KeyboardEvent.preventDefault event;
+      if (ReactEventRe.Keyboard.keyCode event === enterKey) {
+        ReactEventRe.Keyboard.preventDefault event;
         switch (String.trim state.newTodo) {
         | "" => None
         | nonEmptyValue =>
@@ -54,7 +54,7 @@ module Top = {
         None
       };
     let toggleAll {state} event => {
-      let checked = ReasonJs.Document.checked (ReactRe.FormEvent.target event);
+      let checked = ReasonJs.Document.checked (ReactEventRe.Form.target event);
       let todos =
         List.map (fun todo => {...todo, TodoItem.completed: Js.to_bool checked}) state.todos;
       saveLocally todos;

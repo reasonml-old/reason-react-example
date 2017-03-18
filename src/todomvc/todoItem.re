@@ -34,18 +34,18 @@ module TodoItem = {
     Some {editText: props.todo.title}
   };
   let handleKeyDown ({props} as componentBag) event =>
-    if (ReactRe.KeyboardEvent.which event === escapeKey) {
+    if (ReactEventRe.Keyboard.which event === escapeKey) {
       props.onCancel ();
       Some {editText: props.todo.title}
     } else if (
-      ReactRe.KeyboardEvent.which event === enterKey
+      ReactEventRe.Keyboard.which event === enterKey
     ) {
       handleSubmit componentBag ()
     } else {
       None
     };
   let handleChange {props} event =>
-    props.editing ? Some {editText: ReasonJs.Document.value (ReactRe.FormEvent.target event)} : None;
+    props.editing ? Some {editText: ReasonJs.Document.value (ReactEventRe.Form.target event)} : None;
   let setEditFieldRef {instanceVars} r => instanceVars.editFieldRef = Some r;
 
   /**
