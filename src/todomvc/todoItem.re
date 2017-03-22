@@ -17,7 +17,7 @@ module TodoItem = {
     onCancel: unit => unit
   };
   type state = {editText: string};
-  type instanceVars = {mutable editFieldRef: option ReactRe.reactRef};
+  type instanceVars = {mutable editFieldRef: option ReasonJs.Document.element};
   let getInstanceVars () => {editFieldRef: None};
   let getInitialState props => {editText: props.todo.title};
   let handleSubmit {props, state} _ =>
@@ -45,7 +45,8 @@ module TodoItem = {
       None
     };
   let handleChange {props} event =>
-    props.editing ? Some {editText: ReasonJs.Document.value (ReactEventRe.Form.target event)} : None;
+    props.editing ?
+      Some {editText: ReasonJs.Document.value (ReactEventRe.Form.target event)} : None;
   let setEditFieldRef {instanceVars} r => instanceVars.editFieldRef = Some r;
 
   /**
@@ -57,13 +58,13 @@ module TodoItem = {
   let componentDidUpdate ::prevProps prevState::_ {props, instanceVars} =>
     switch (prevProps.editing, props.editing, instanceVars.editFieldRef) {
     | (false, true, Some field) =>
-      let node = ReactDOMRe.domElementToObj (ReactDOMRe.findDOMNode field);
+      let node = ReactDOMRe.domElementToObj field;
       ignore (node##focus ());
       ignore (node##setSelectionRange node##value##length node##value##length);
       None
     | _ => None
     };
-  let render {props, state, updater, refSetter} => {
+  let render {props, state, updater, handler} => {
     let {todo, editing, onDestroy, onToggle} = props;
     let className =
       [todo.completed ? "completed" : "", editing ? "editing" : ""] |> String.concat " ";
@@ -79,7 +80,7 @@ module TodoItem = {
         <button className="destroy" onClick=(fun _ => onDestroy ()) />
       </div>
       <input
-        ref=(refSetter setEditFieldRef)
+        ref=(handler setEditFieldRef)
         className="edit"
         value=state.editText
         onBlur=(updater handleSubmit)
