@@ -47,7 +47,7 @@ module Main_area = {
   let handleChange _ (event: ReactEventRe.Form.t) =>
     Some {
       editText:
-        ReasonJs.HtmlElement.value (Utils.domAsHtmlElement (ReactEventRe.Form.target event))
+        ReasonJs.Dom.HtmlElement.value (Utils.domAsHtmlElement (ReactEventRe.Form.target event))
     };
   let render {props, state, updater} => {
     let activityItem (activity: State.message) => {

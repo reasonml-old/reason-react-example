@@ -73,9 +73,9 @@ let randomRgbString () => {
 };
 
 let setPageTitle title =>
-  switch (ReasonJs.Dom.document |> ReasonJs.Document.asHtmlDocument) {
+  switch (ReasonJs.Dom.document |> ReasonJs.Dom.Document.asHtmlDocument) {
   | None => ()
-  | Some doc => ReasonJs.HtmlDocument.setTitle doc title
+  | Some doc => ReasonJs.Dom.HtmlDocument.setTitle doc title
   };
 
 let findNextMedia channel offset => {
