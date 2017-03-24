@@ -65,7 +65,7 @@ module Logo = {
    */
   let handleMouseDown {state} _ /* event */ => Some {...state, drag: mouseDownDrag};
   let render {props, state, updater} => {
-    let transform = "rotate(" ^ string_of_float state.degrees ^ "fdeg)";
+    let transform = "rotate(" ^ string_of_float state.degrees ^ "deg)";
     /* To create JS Objects in Reason, */
     let rotationStyle = ReactDOMRe.Style.make transformOrigin::"50% 50%" ::transform ();
     <div

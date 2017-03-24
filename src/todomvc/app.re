@@ -179,8 +179,4 @@ module Top = {
   let createElement = wrapProps ();
 };
 
-let root = (
-             ReasonJs.Dom.document |> ReasonJs.Dom.Document.getElementsByClassName "todoapp" |> ReasonJs.Dom.HtmlCollection.toArray
-           ).(0);
-
-ReactDOMRe.render <Top /> root;
+ReactDOMRe.renderToNodeWithClassName <Top /> "todoapp";

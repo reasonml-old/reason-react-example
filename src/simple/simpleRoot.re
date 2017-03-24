@@ -1,5 +1,1 @@
-switch (ReasonJs.Dom.Document.getElementById "index" ReasonJs.Dom.document) {
-| None =>
-  failwith "Cannot find the element with the ID `index` onto which to mount our React root."
-| Some root => ReactDOMRe.render <Page message="Hello!" /> root
-};
+ReactDOMRe.renderToNodeWithClassName <Page message="Hello!" /> "index";
