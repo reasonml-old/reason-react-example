@@ -2,11 +2,16 @@ type router = Js.t {. init : (string => unit) [@bs.meth]};
 
 external routerMake : Js.t {..} => router = "Router" [@@bs.module "director"] [@@bs.new];
 
-let enterKey = 13;
+external unsafeJsonParse : string => 'a = "JSON.parse" [@@bs.val];
 
 let namespace = "reason-react-todos";
 
-let saveLocally todos => ReasonJs.LocalStorage.setItem namespace (ReasonJs.JSON.stringify todos);
+let saveLocally todos =>
+  switch (Js.Json.stringifyAny todos) {
+  | None => ()
+  | Some stringifiedTodos =>
+    ReasonJs.Storage.setItem namespace stringifiedTodos ReasonJs.Storage.localStorage
+  };
 
 module Top = {
   module TodoApp = {
@@ -21,9 +26,9 @@ module Top = {
     };
     let getInitialState _ /* props */ => {
       let todos =
-        switch (Js.Null.to_opt (ReasonJs.LocalStorage.getItem namespace)) {
+        switch (ReasonJs.Storage.getItem namespace ReasonJs.Storage.localStorage) {
         | None => []
-        | Some todos => ReasonJs.JSON.parse todos
+        | Some todos => unsafeJsonParse todos
         };
       {nowShowing: AllTodos, editing: None, newTodo: "", todos}
     };
@@ -36,9 +41,12 @@ module Top = {
       None
     };
     let handleChange {state} event =>
-      Some {...state, newTodo: ReasonJs.Document.value (ReactEventRe.Form.target event)};
+      Some {
+        ...state,
+        newTodo: (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##value
+      };
     let handleNewTodoKeyDown {state} event =>
-      if (ReactEventRe.Keyboard.keyCode event === enterKey) {
+      if (ReactEventRe.Keyboard.keyCode event === 13 /* enter key */) {
         ReactEventRe.Keyboard.preventDefault event;
         switch (String.trim state.newTodo) {
         | "" => None
@@ -54,7 +62,7 @@ module Top = {
         None
       };
     let toggleAll {state} event => {
-      let checked = ReasonJs.Document.checked (ReactEventRe.Form.target event);
+      let checked = (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##checked;
       let todos =
         List.map (fun todo => {...todo, TodoItem.completed: Js.to_bool checked}) state.todos;
       saveLocally todos;
@@ -171,4 +179,8 @@ module Top = {
   let createElement = wrapProps ();
 };
 
-ReactDOMRe.render <Top /> (ReasonJs.Document.getElementsByClassName "todoapp").(0);
+let root = (
+             ReasonJs.Dom.document |> ReasonJs.Dom.Document.getElementsByClassName "todoapp" |> ReasonJs.Dom.HtmlCollection.toArray
+           ).(0);
+
+ReactDOMRe.render <Top /> root;

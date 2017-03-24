@@ -1,3 +1,5 @@
-Js.log "Do you see this message? If you do, then things should work!";
-
-ReactDOMRe.render <Page message="Hello!" /> (ReasonJs.Document.getElementById "index");
+switch (ReasonJs.Dom.Document.getElementById "index" ReasonJs.Dom.document) {
+| None =>
+  failwith "Cannot find the element with the ID `index` onto which to mount our React root."
+| Some root => ReactDOMRe.render <Page message="Hello!" /> root
+};

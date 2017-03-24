@@ -17,7 +17,7 @@ module TodoItem = {
     onCancel: unit => unit
   };
   type state = {editText: string};
-  type instanceVars = {mutable editFieldRef: option ReasonJs.Document.element};
+  type instanceVars = {mutable editFieldRef: option Dom.element};
   let getInstanceVars () => {editFieldRef: None};
   let getInitialState props => {editText: props.todo.title};
   let handleSubmit {props, state} _ =>
@@ -46,7 +46,7 @@ module TodoItem = {
     };
   let handleChange {props} event =>
     props.editing ?
-      Some {editText: ReasonJs.Document.value (ReactEventRe.Form.target event)} : None;
+      Some {editText: (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##value} : None;
   let setEditFieldRef {instanceVars} r => instanceVars.editFieldRef = Some r;
 
   /**
