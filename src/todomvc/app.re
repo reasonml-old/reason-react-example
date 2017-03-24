@@ -179,4 +179,4 @@ module Top = {
   let createElement = wrapProps ();
 };
 
-ReactDOMRe.renderToNodeWithClassName <Top /> "todoapp";
+ReactDOMRe.renderToElementWithClassName <Top /> "todoapp";
