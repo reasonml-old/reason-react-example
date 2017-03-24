@@ -1,1 +1,1 @@
-ReactDOMRe.renderToNodeWithClassName <Logo message="REASON REACT" /> "index";
+ReactDOMRe.renderToNodeWithId <Logo message="REASON REACT" /> "index";

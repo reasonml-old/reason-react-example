@@ -1,1 +1,1 @@
-ReactDOMRe.renderToNodeWithClassName <Page message="Hello!" /> "index";
+ReactDOMRe.renderToNodeWithId <Page message="Hello!" /> "index";
