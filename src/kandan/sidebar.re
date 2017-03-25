@@ -15,10 +15,6 @@ module Sidebar = {
     onVolumeAdjusted: float => unit,
     volume: float
   };
-  let _onUserMenuToggled onUserMenuToggled opened _ => onUserMenuToggled opened;
-  let _onMediaStateUpdated onMediaStateUpdated state _ => onMediaStateUpdated state;
-  let _onSongSelected onSongSelected media _ => onSongSelected media;
-  let _onVolumeAdjusted onVolumeAdjusted volume _ => onVolumeAdjusted volume;
   let render {props} => {
     let {users, channel} = props;
     let me = List.hd users;
@@ -59,9 +55,7 @@ module Sidebar = {
                   ()
               )
         key=(string_of_int media.order)>
-        <a
-          style=cursorPointer
-          onClick=(fun event => _onSongSelected props.onSongSelected media event)>
+        <a style=cursorPointer onClick=(fun _event => props.onSongSelected media)>
           (
             ReactRe.stringToElement (
               string_of_int (media.order + 1) ^
@@ -85,7 +79,7 @@ module Sidebar = {
         <a
           className="user-menu-toggle"
           href="#"
-          onClick=(_onUserMenuToggled props.onUserMenuToggled (not props.menuOpen))>
+          onClick=(fun _event => props.onUserMenuToggled (not props.menuOpen))>
           <img className="avatar" src=(Utils.gravatarUrl State.(me.email)) />
           <i
             className="icon-angle button right"
@@ -139,11 +133,7 @@ module Sidebar = {
             <div className="dropzone">
               <i
                 className="fa fa-step-backward"
-                onClick=(
-                          fun event =>
-                            _onSongSelected
-                              props.onSongSelected (Utils.findNextMedia channel (-1)) event
-                        )
+                onClick=(fun _event => props.onSongSelected (Utils.findNextMedia channel (-1)))
                 style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
@@ -158,35 +148,28 @@ module Sidebar = {
                             )
                           )
                 onClick=(
-                          fun event =>
-                            _onMediaStateUpdated
-                              props.onMediaStateUpdated
-                              (
-                                switch props.channel.mediaState {
-                                | Playing => Paused
-                                | Paused => Playing
-                                | NotLoaded => NotLoaded
-                                }
-                              )
-                              event
+                          fun _event =>
+                            props.onMediaStateUpdated (
+                              switch props.channel.mediaState {
+                              | Playing => Paused
+                              | Paused => Playing
+                              | NotLoaded => NotLoaded
+                              }
+                            )
                         )
                 style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-step-forward"
-                onClick=(
-                          fun event =>
-                            _onSongSelected
-                              props.onSongSelected (Utils.findNextMedia channel 1) event
-                        )
+                onClick=(fun _event => props.onSongSelected (Utils.findNextMedia channel 1))
                 style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-volume-off"
                 onClick=(
-                          _onVolumeAdjusted
+                          fun _event =>
                             props.onVolumeAdjusted (props.volume == 0.0 ? props.lastVolume : 0.0)
                         )
                 style=cursorPointer
@@ -194,13 +177,13 @@ module Sidebar = {
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-volume-down"
-                onClick=(_onVolumeAdjusted props.onVolumeAdjusted (max 0.0 (props.volume -. 0.1)))
+                onClick=(fun _event => props.onVolumeAdjusted (max 0.0 (props.volume -. 0.1)))
                 style=cursorPointer
               />
               (ReactRe.stringToElement "  ")
               <i
                 className="fa fa-volume-up"
-                onClick=(_onVolumeAdjusted props.onVolumeAdjusted (min 1.0 (props.volume +. 0.1)))
+                onClick=(fun _event => props.onVolumeAdjusted (min 1.0 (props.volume +. 0.1)))
                 style=cursorPointer
               />
             </div>

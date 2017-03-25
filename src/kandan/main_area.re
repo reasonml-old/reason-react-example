@@ -17,30 +17,23 @@ module Main_area = {
     rightSidebarOpen: bool,
     searchTerm: option string
   };
-  let _onFocus onFocus focused _ => onFocus focused;
-  let _onLeftSidebarToggled onLeftSidebarToggled opened _ => onLeftSidebarToggled opened;
-  let _onRightSidebarToggled onRightSidebarToggled opened _ => onRightSidebarToggled opened;
-  let _onMessageSubmitted onMessageSubmitted channel message _ =>
-    onMessageSubmitted channel message;
   type state = {editText: string};
   let getInitialState _props => {editText: ""};
-  let handleSubmit {props, state} event =>
+  let handleSubmit {props, state} =>
     switch (String.trim state.editText) {
     | "" => None
     | _ =>
-      _onMessageSubmitted
-        props.onMessageSubmitted
+      props.onMessageSubmitted
         props.channel
-        State.{createdAt: Js.Date.now (), content: state.editText, userId: props.me.id}
-        event;
+        State.{createdAt: Js.Date.now (), content: state.editText, userId: props.me.id};
       Some {editText: ""}
     };
-  let handleButtonSubmit componentBag event => handleSubmit componentBag event;
+  let handleButtonSubmit componentBag _event => handleSubmit componentBag;
   let handleKeyUp componentBag (event: ReactEventRe.Keyboard.t) =>
     if (
       ReactEventRe.Keyboard.which event === enterKey && not (ReactEventRe.Keyboard.shiftKey event)
     ) {
-      handleSubmit componentBag event
+      handleSubmit componentBag
     } else {
       None
     };
@@ -107,13 +100,13 @@ module Main_area = {
         <a
           className="nav-toggle button left"
           href="#"
-          onClick=(_onLeftSidebarToggled props.onLeftSidebarToggled (not props.leftSidebarOpen))>
+          onClick=(fun _event => props.onLeftSidebarToggled (not props.leftSidebarOpen))>
           <i className="icon-comments" />
         </a>
         <a
           className="sidebar-toggle button right"
           href="#"
-          onClick=(_onRightSidebarToggled props.onRightSidebarToggled (not props.rightSidebarOpen))>
+          onClick=(fun _event => props.onRightSidebarToggled (not props.rightSidebarOpen))>
           <i className="icon-reorder" />
         </a>
         <a className="logo" href="#/">
@@ -126,8 +119,8 @@ module Main_area = {
           <div className="chatbox">
             <textarea
               className="chat-input"
-              onBlur=(_onFocus props.onFocus false)
-              onFocus=(_onFocus props.onFocus true)
+              onBlur=(fun _event => props.onFocus false)
+              onFocus=(fun _event => props.onFocus true)
               value=state.editText
               onChange=(updater handleChange)
               onKeyUp=(updater handleKeyUp)
