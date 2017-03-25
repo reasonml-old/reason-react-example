@@ -16,7 +16,7 @@ let setAudioPlayerMedia (player: AudioElement.t) audioSrc => {
   AudioElement.paused player == Js.false_ ?
     {
       AudioElement.load player;
-      ignore (ReasonJs.setTimeout (fun _ => AudioElement.play player) 2500)
+      ignore (Js.Global.setTimeout (fun _ => AudioElement.play player) 2500)
     } :
     AudioElement.load player
 };

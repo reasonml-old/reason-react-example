@@ -2,12 +2,17 @@ type router = Js.t {. init : (string => unit) [@bs.meth]};
 
 external routerMake : Js.t {..} => router = "Router" [@@bs.module "director"] [@@bs.new];
 
+external todosOfJson : Js.Json.t => array TodoItem.todo = "%identity";
+
 let enterKey = 13;
 
 let namespace = "reason-react-todos";
 
 let saveLocally todos =>
-  ReasonJs.Storage.setItem namespace (ReasonJs.Json.stringify todos) ReasonJs.Storage.localStorage;
+  switch (Js.Json.stringifyAny todos) {
+  | None => Js.log "ttodos are none"
+  | Some jsonstring => ReasonJs.Storage.setItem namespace jsonstring ReasonJs.Storage.localStorage
+  };
 
 module Top = {
   module TodoApp = {
@@ -24,7 +29,7 @@ module Top = {
       let todos =
         switch (ReasonJs.Storage.getItem namespace ReasonJs.Storage.localStorage) {
         | None => []
-        | Some todos => ReasonJs.Json.parse todos
+        | Some todos => Array.to_list (todosOfJson (Js.Json.parse todos))
         };
       {nowShowing: AllTodos, editing: None, newTodo: "", todos}
     };
@@ -38,7 +43,7 @@ module Top = {
     };
     let handleChange {state} (event: ReactEventRe.Form.t) =>
       switch (ReasonJs.Dom.Element.asHtmlElement (ReactEventRe.Form.target event)) {
-      | Some el => Some {...state, newTodo: ReasonJs.HtmlElement.value el}
+      | Some el => Some {...state, newTodo: ReasonJs.Dom.HtmlElement.value el}
       | None => raise (Failure "Invalid event target passed to app handleChange")
       };
     let handleNewTodoKeyDown {state} (event: ReactEventRe.Keyboard.t) =>
@@ -60,7 +65,7 @@ module Top = {
     let toggleAll {state} (event: ReactEventRe.Form.t) =>
       switch (ReasonJs.Dom.Element.asHtmlElement (ReactEventRe.Form.target event)) {
       | Some el =>
-        let checked = ReasonJs.HtmlElement.checked el;
+        let checked = ReasonJs.Dom.HtmlElement.checked el;
         let todos = List.map (fun todo => {...todo, TodoItem.completed: checked}) state.todos;
         saveLocally todos;
         Some {...state, todos}
@@ -178,8 +183,8 @@ module Top = {
 };
 
 switch (
-  ReasonJs.HtmlCollection.item
-    0 (ReasonJs.Document.getElementsByClassName "todoapp" ReasonJs.Dom.document)
+  ReasonJs.Dom.HtmlCollection.item
+    0 (ReasonJs.Dom.Document.getElementsByClassName "todoapp" ReasonJs.Dom.document)
 ) {
 | None => raise (Invalid_argument "Root element 'todoapp' not found in document")
 | Some el => ReactDOMRe.render <Top /> el

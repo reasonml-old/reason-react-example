@@ -293,7 +293,9 @@ let embedMe
       (
         fun index item => {
           final.(index * 2) = item;
-          final.(index * 2 + 1) = reactSpaceEl
+          if (index * 2 + 1 < Array.length final) {
+            final.(index * 2 + 1) = reactSpaceEl
+          }
         }
       )
       pieces;
@@ -330,7 +332,9 @@ let embedQuote
       (
         fun index item => {
           final.(index * 2) = item;
-          final.(index * 2 + 1) = reactSpaceEl
+          if (index * 2 + 1 < Array.length final) {
+            final.(index * 2 + 1) = reactSpaceEl
+          }
         }
       )
       pieces;
@@ -415,7 +419,11 @@ let renderableOfMessage
     (
       fun index item => {
         final.(index * 2) = item;
-        final.(index * 2 + 1) = reactSpaceEl
+        if (index * 2 + 1 < Array.length final) {
+          if (index * 2 + 1 < Array.length final) {
+            final.(index * 2 + 1) = reactSpaceEl
+          }
+        }
       }
     )
     pieces;

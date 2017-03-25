@@ -230,13 +230,14 @@ module Key_queue = {
   };
   let componentDidMount {state, props, setState} => {
     let keyListener = keyLogger props setState;
-    ReasonJs.Window.addEventListener "keydown" keyListener ReasonJs.Dom.window;
+    ReasonJs.Dom.Window.addEventListener "keydown" keyListener ReasonJs.Dom.window;
     Some {...state, keyListener: Some keyListener}
   };
   let componentWillUnmount {state} =>
     switch state.keyListener {
     | None => ()
-    | Some listener => ReasonJs.Window.removeEventListener "keydown" listener ReasonJs.Dom.window
+    | Some listener =>
+      ReasonJs.Dom.Window.removeEventListener "keydown" listener ReasonJs.Dom.window
     };
   let componentWillReceiveProps {props} ::nextProps =>
     props.keyMap == nextProps.keyMap ? None : Some (propsToKeyMap nextProps);

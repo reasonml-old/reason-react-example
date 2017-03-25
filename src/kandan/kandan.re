@@ -132,31 +132,31 @@ module Kandan = {
     switch action {
     | SearchFormFocused focused =>
       ignore (
-        ReasonJs.setTimeout (fun () => toggleSearchForm props.rootEl "input.query" focused) 100
+        Js.Global.setTimeout (fun () => toggleSearchForm props.rootEl "input.query" focused) 100
       )
     | SidebarToggled _ _ => ()
     | SearchUpdated _ => ()
     | ChannelSelected channel =>
-      ignore (ReasonJs.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
+      ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
     | ChannelSelectedByIndex idx =>
       let sortedChannels =
         List.sort
           (fun (a: State.channel) (b: State.channel) => compare a.title b.title) newState.channels;
       let channel = List.nth sortedChannels idx;
-      ignore (ReasonJs.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
+      ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
     | SongSelected _ _ => ()
     | MediaStateUpdated _ _ => ()
     | ChatBoxFocused _ => ()
     | UserMenuToggled _ => ()
     | MsgSubmitted channel _ _ =>
-      ignore (ReasonJs.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
+      ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
     | AppTitleUpdated title _badge_count => Utils.setPageTitle title
     | VolumeSet _
     | VolumeDecremented _
     | VolumeIncremented _
     | VolumeMuteToggled => ()
     | Log str => Js.log str
-    | Alert str => ReasonJs.Window.alert str ReasonJs.Dom.window
+    | Alert str => ReasonJs.Dom.Window.alert str ReasonJs.Dom.window
     };
     ()
   };
@@ -370,7 +370,7 @@ module Kandan = {
       List.find
         (fun (channel: State.channel) => channel.id === state.selectedChannelId) state.channels;
     ignore (
-      ReasonJs.setTimeout
+      Js.Global.setTimeout
         (fun _ => processEffects componentBag (ChannelSelected currentChannel) state state) 250
     );
     processEffects componentBag (AppTitleUpdated state.title 0) state state;

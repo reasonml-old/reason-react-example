@@ -62,7 +62,7 @@ module TodoItem = {
       props.editing,
       ReasonJs.Dom.Element.asHtmlElement (ReactEventRe.Synthetic.target event)
     ) {
-    | (true, Some el) => Some {editText: ReasonJs.HtmlElement.value el}
+    | (true, Some el) => Some {editText: ReasonJs.Dom.HtmlElement.value el}
     | (true, None) => raise (Failure "Invalid event target passed to todoItem handleChange")
     | _ => None
     };

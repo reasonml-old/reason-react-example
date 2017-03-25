@@ -52,7 +52,7 @@ module Navbar = {
                      fun event => {
                        let x =
                          switch (
-                           ReasonJs.HtmlElement.value (
+                           ReasonJs.Dom.HtmlElement.value (
                              Utils.domAsHtmlElement (ReactEventRe.Form.target event)
                            )
                          ) {
