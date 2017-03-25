@@ -19,7 +19,7 @@ let scrollToLatestMessage target channelId =>
     }
   };
 
-let toggleSearchForm (rootEl: ReasonJs.Dom.element) (selector: string) (event: bool) :unit =>
+let toggleSearchForm (rootEl: Dom.element) (selector: string) (event: bool) :unit =>
   switch (ReasonJs.Dom.Element.querySelector selector rootEl) {
   | None => ()
   | Some inputEl =>
@@ -31,7 +31,7 @@ let toggleSearchForm (rootEl: ReasonJs.Dom.element) (selector: string) (event: b
 module Kandan = {
   include ReactRe.Component.Stateful;
   let name = "KandanAppRe";
-  type props = {message: string, rootEl: ReasonJs.Dom.element};
+  type props = {message: string, rootEl: Dom.element};
   type state = State.appState;
   let getInitialState _props => Demo.state;
   let sidebarToggled {state} which opened =>

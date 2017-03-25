@@ -1,9 +1,9 @@
-external refToDom : ReactRe.reactRef => ReasonJs.Dom.element = "%identity";
+external refToDom : ReactRe.reactRef => Dom.element = "%identity";
 
 module AudioElement = {
   type t;
-  external ofDom : ReasonJs.Dom.element => t = "%identity";
-  external toDom : t => ReasonJs.Dom.element = "%identity";
+  external ofDom : Dom.element => t = "%identity";
+  external toDom : t => Dom.element = "%identity";
   external load : t => unit = "load" [@@bs.send];
   external play : t => unit = "play" [@@bs.send];
   external pause : t => unit = "pause" [@@bs.send];
@@ -23,7 +23,7 @@ let setAudioPlayerMedia (player: AudioElement.t) audioSrc => {
 
 module Audio_player = {
   include ReactRe.Component.Stateful.InstanceVars;
-  type instanceVars = {mutable domRef: option ReactRe.reactRef};
+  type instanceVars = {mutable domRef: option Dom.element};
   type state = unit;
   let getInitialState _ => ();
   let name = "AudioPlayer";
@@ -34,13 +34,12 @@ module Audio_player = {
     volume: float
   };
   let getInstanceVars () => {domRef: None};
-  let getRef componentBag domRef => componentBag.instanceVars.domRef = Some domRef;
   let componentDidUpdate ::prevProps ::prevState {props, instanceVars} => {
     ignore prevState;
     switch instanceVars.domRef {
     | None => ()
     | Some ref =>
-      let player = AudioElement.ofDom (refToDom ref);
+      let player = AudioElement.ofDom ref;
 
       /** Check for:
        * State change
@@ -63,7 +62,8 @@ module Audio_player = {
     };
     None
   };
-  let render {props, refSetter} =>
+  let setAudioRef {instanceVars} r => instanceVars.domRef = Some r;
+  let render {props, handler} =>
     <div style=(ReactDOMRe.Style.make display::"block" ())>
       <audio
         className=("audio-player audio-" ^ string_of_int props.channel.id)
@@ -73,7 +73,7 @@ module Audio_player = {
               | Some src => src
               }
             )
-        ref=(refSetter getRef)
+        ref=(handler setAudioRef)
       />
     </div>;
 };

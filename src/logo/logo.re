@@ -1,3 +1,5 @@
+external requestAnimationFrame : (unit => unit) => unit = "" [@@bs.val];
+
 open Constants;
 
 module Logo = {
@@ -25,9 +27,9 @@ module Logo = {
         {...state, degrees: nextDegrees, velocity: nextVelocity, lastMs: now}
       };
       setState stateSetter;
-      ReasonJs.requestAnimationFrame onAnimationFrame
+      requestAnimationFrame onAnimationFrame
     };
-    ReasonJs.requestAnimationFrame onAnimationFrame;
+    requestAnimationFrame onAnimationFrame;
     None
   };
   let name = "Logo";
@@ -63,7 +65,7 @@ module Logo = {
    */
   let handleMouseDown {state} _ /* event */ => Some {...state, drag: mouseDownDrag};
   let render {props, state, updater} => {
-    let transform = Printf.sprintf "rotate(%fdeg)" state.degrees;
+    let transform = "rotate(" ^ string_of_float state.degrees ^ "deg)";
     /* To create JS Objects in Reason, */
     let rotationStyle = ReactDOMRe.Style.make transformOrigin::"50% 50%" ::transform ();
     <div

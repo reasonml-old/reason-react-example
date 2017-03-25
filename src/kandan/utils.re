@@ -1,20 +1,21 @@
-external querySelector : string => Js.null ReasonJs.Dom.element =
-  "" [@@bs.send.pipe : ReasonJs.Dom.element];
+external querySelector : string => Js.null ReasonJs.Dom.Element.t =
+  "" [@@bs.send.pipe : ReasonJs.Dom.Element.t];
 
-external querySelectorAll : string => array ReasonJs.Dom.element =
-  "" [@@bs.send.pipe : ReasonJs.Dom.element];
+external querySelectorAll : string => array ReasonJs.Dom.Element.t =
+  "" [@@bs.send.pipe : ReasonJs.Dom.Element.t];
 
-external eventTargetAsHtmlElement : ReasonJs.Dom.eventTarget => ReasonJs.Dom.htmlElement =
+external eventTargetAsHtmlElement : Dom.eventTarget => ReasonJs.Dom.HtmlElement.t_htmlElement =
   "%identity";
 
-external domAsHtmlElement : ReasonJs.Dom.element => ReasonJs.Dom.htmlElement = "%identity";
+external domAsHtmlElement : ReasonJs.Dom.Element.t => ReasonJs.Dom.HtmlElement.t_htmlElement =
+  "%identity";
 
-external nodeAsHtmlElement : ReasonJs.Dom.node => ReasonJs.Dom.htmlElement = "%identity";
+external nodeAsHtmlElement : Dom.node => ReasonJs.Dom.HtmlElement.t_htmlElement = "%identity";
 
-let querySelector: string => ReasonJs.Dom.element => option ReasonJs.Dom.element =
+let querySelector: string => ReasonJs.Dom.Element.t => option ReasonJs.Dom.Element.t =
   fun selector self => Js.Null.to_opt (querySelector selector self);
 
-external setAttribute : ReasonJs.Dom.element => string => string => unit =
+external setAttribute : ReasonJs.Dom.Element.t => string => string => unit =
   "setAttribute" [@@bs.send];
 
 let findMeOpt (state: State.appState) =>
@@ -46,7 +47,7 @@ let month = day *. 30.0;
 let year = month *. 12.0;
 
 let timeAgo (time: float) :string => {
-  let now = ReasonJs.Date.now ();
+  let now = Js.Date.now ();
   let agoMs = now -. time;
   let ago = agoMs /. 1000.0;
   let (divisor, unit) =
