@@ -1,6 +1,5 @@
 let cursorPointer = ReactDOMRe.Style.make cursor::"pointer" ();
 
-/* hjkhjkhjkhjkhklj */
 module Sidebar = {
   include ReactRe.Component;
   let name = "Sidebar";
