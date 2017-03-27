@@ -1,0 +1,215 @@
+* {
+  &,
+  &:before,
+  &:after {
+    box-sizing: border-box;
+  }
+}
+
+::selection {
+  color: @blue_deep;
+  background: fade(@blue_deep, 08);
+  text-shadow: none;
+}
+
+html {
+  color: @font_color;
+  font: @font;
+  text-size-adjust: 100%;
+  font-smoothing: antialiased;
+  -webkit-tap-highlight-color: fade(@black, 0);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  background: @background;
+  overflow-x: hidden;
+}
+
+p {
+  // margin: 0 0 @tile_xs 0;
+  margin: 0 0 @margin 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  padding: 0;
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+select {
+  -webkit-appearance: none;
+}
+
+i {
+  font-style: normal;
+}
+
+strong {
+  font-weight: normal;
+}
+
+small {
+  font: inherit;
+}
+
+code {
+  font: @code;
+  white-space: pre;
+}
+
+pre {
+  font: @code;
+  display: inline;
+  margin: 0;
+}
+
+hr {
+  border: 0;
+  border-top: @border;
+  margin: @margin 0;
+  width: 100%;
+}
+
+img {
+  max-width: 100%;
+}
+
+ol {
+  li {
+    margin-bottom: @margin;
+  }
+}
+
+ul,
+ol {
+  padding-left: @padding;
+}
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
+path {
+  transform-origin: center;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+textarea {
+  resize: vertical;
+}
+
+h1, h2 {
+  margin: 0 0 (@margin / 2) 0;
+}
+
+h3, h4, h5, h6 {
+  margin: 0 0 @margin 0;
+}
+
+h1 {
+  font: 300 4em/1.25 @font_family;
+}
+
+h2 {
+  font: 300 3em/1.25 @font_family;
+}
+
+h3 {
+  font: @font_weight 2em/1.25 @font_family;
+}
+
+h4 {
+  font: @font_weight 1.5em/@font_height @font_family;
+}
+
+h5 {
+  font: @font_weight 1em/@font_height @font_family;
+}
+
+h6 {
+  font: @font_weight .75em/@font_height @font_family;
+}
+
+@keyframes fade_in {
+  0% {opacity: 0}
+  to {opacity: 1}
+}
+
+@keyframes slip_in_l2r {
+  0% {opacity: 0; transform: translate(-@tile, 0)}
+  to {opacity: 1; transform: translate(0)}
+}
+
+@keyframes slip_in_r2l {
+  0% {opacity: 0; transform: translate(@tile, 0)}
+  to {opacity: 1; transform: translate(0)}
+}
+
+@keyframes slip_in_t2b {
+  0% {opacity: 0; transform: translate(0, -100%)}
+  to {opacity: 1; transform: translate(0)}
+}
+
+@keyframes slip_in_b2t {
+  0% {opacity: 0; transform: translate(0, 100%)}
+  to {opacity: 1; transform: translate(0)}
+}
+
+@keyframes grow_in {
+  0% {transform: scale(0)}
+  to {transform: scale(1)}
+}
+
+@keyframes grow_in_l2r {
+  0% {transform: scale(0, 1)}
+  to {transform: scale(1)}
+}
+
+@keyframes grow_in_t2b {
+  0% {transform: scale(1, 0)}
+  to {transform: scale(1)}
+}
+
+@keyframes make {
+  0% {opacity: 0}
+  to {opacity: 1}
+}
+
+@keyframes rotate {
+  100% { transform: rotate(360deg) }
+}
+
+@keyframes fold_in_down {
+  0% {transform: translate(0, -50%) scale(1,0)}
+  to {transform: translate(0) scale(1)}
+}
+
+@keyframes fold_out_down {
+  0% {transform: translate(0) scale(1)}
+  to {transform: translate(0, 50%) scale(1,0)}
+}

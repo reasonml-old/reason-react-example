@@ -1,0 +1,177 @@
+@import "./common.less";
+@import "./base.less";
+
+@aside: @tile_xl;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.atop {
+  display: flex;
+}
+.atop-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    width: @tile;
+  height: @tile;
+}
+.atop-title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: @tile * 2;
+}
+.main {
+  flex: 1;
+  display: flex;
+  // min-height: 100vh;
+}
+.menu {
+  // width: @tile_xl * 1.5;
+  // width: @tile_xl;
+  width: @aside;
+  &.right {
+    color: @gray_light;
+    background: @gray_darker;
+  }
+}
+.menu-items {
+  //
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: @tile;
+  padding-left: @padding;
+}
+.menu-thumbnail {
+  // margin-right: @margin;
+  margin-right: @tile_xs;
+  img {
+    width: @tile - @padding;
+    height: @tile - @padding;
+    border-radius: @tile_xxs / 2;
+  }
+}
+.songs {
+  padding-top: @padding / 2;
+}
+.chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  // margin: @tile 0;
+  // padding: @tile 0;
+  // min-height: 100vh;
+}
+.chat-feed {
+  flex: 1;
+  padding: @padding;
+  border-right: @border;
+  border-left: @border;
+  border-top: @border;
+  background: @white;
+}
+.chat-input {
+  display: flex;
+  align-items: center;
+  padding: 0 @padding;
+  // border: @border;
+  height: @tile;
+  border-left: @border;
+  border-right: @border;
+  border-top: @border;
+  // background: @gray_lightest;
+  background: @white;
+}
+.player {
+  color: @gray_light;
+  display: flex;
+  // height: @tile * 2;
+  // height: @tile * 1.5;
+  // border-top: @border;
+  background: @gray_darker;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: @aside;
+  &.right {
+    box-shadow: 0 -1px @gray_dark;
+  }
+}
+.current {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.album {
+  margin-right: @margin;
+  // padding: @padding;
+  padding: @padding 0;
+}
+.album-art {
+  //
+}
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-right: @margin;
+}
+.title {
+  text-align: center;
+  line-height: 1;
+}
+.artist {
+  text-align: center;
+  line-height: 1;
+}
+.meta {
+  //
+}
+.progress {
+  display: flex;
+}
+.elapsed {
+  //
+}
+.timeline {
+  flex: 1;
+}
+.slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.track {
+  width: 100%;
+  height: @tile_xs / 2;
+  margin: 0 @margin;
+  border: @border;
+  border-radius: @tile_xs;
+}
+.spent {
+  width: 22%;
+  height: 100%;
+  background: @gray_lighter;
+  border-radius: @tile;
+}
+.thumb {
+  //
+}
+.playtime {
+  //
+}
+.mute {
+  margin-left: @margin;
+}
+.volume {
+  width: @aside;
+}

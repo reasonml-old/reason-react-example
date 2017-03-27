@@ -320,49 +320,48 @@ module Kandan = {
             />
         )
         state.channels;
-    <div id="app" style=fullHeight>
-      <div className style=fullHeight>
-        (ReactRe.arrayToElement (Array.of_list audioChannels))
-        <Key_queue keyMap onMatch=dispatchEL />
-        <Sidebar
-          channel=currentChannel
-          users=State.(state.users)
-          me
-          menuOpen=state.userMenuOpen
-          onUserMenuToggled=(fun opened => dispatchEL State.(UserMenuToggled opened) ())
-          onSongSelected=(fun media => dispatchEL State.(SongSelected currentChannel media) ())
-          onMediaStateUpdated=(
-                                fun (newState: State.mediaPlayerState) =>
-                                  dispatchEL State.(MediaStateUpdated currentChannel newState) ()
-                              )
-          onVolumeAdjusted=(fun volume => dispatchEL State.(VolumeSet volume) ())
-          lastVolume=state.lastVolume
-          volume=state.volume
-        />
-        <Main_area
-          me
-          users=state.users
-          channel=currentChannel
-          leftSidebarOpen=state.leftSidebarOpen
-          rightSidebarOpen=state.rightSidebarOpen
-          searchTerm=state.search
-          onFocus=(fun focused => dispatchEL State.(ChatBoxFocused focused) ())
-          onMessageSubmitted=(fun channel msg => dispatchEL State.(MsgSubmitted channel me msg) ())
-          onLeftSidebarToggled=(fun opened => dispatchEL State.(SidebarToggled Left opened) ())
-          onRightSidebarToggled=(fun opened => dispatchEL State.(SidebarToggled Right opened) ())
-        />
-        <Navbar
-          selectedChannelId=state.selectedChannelId
-          channels=sortedChannels
-          focused=state.searchFormFocused
-          searchTerm=state.search
-          onSearchUpdated=(fun term => dispatchEL (SearchUpdated term) ())
-          onFocus=(fun focused => dispatchEL State.(SearchFormFocused focused) ())
-          onChannelSelected=(fun channel => dispatchEL State.(ChannelSelected channel) ())
-        />
-        <div className="at-view" id="at-view"> <ul id="at-view-ul" /> </div>
-      </div>
-    </div>
+    <div id="app" style=fullHeight> <Wip message="Hi there" /> </div>
+    /* <div className style=fullHeight>
+         (ReactRe.arrayToElement (Array.of_list audioChannels))
+         <Key_queue keyMap onMatch=dispatchEL />
+         <Sidebar
+           channel=currentChannel
+           users=State.(state.users)
+           me
+           menuOpen=state.userMenuOpen
+           onUserMenuToggled=(fun opened => dispatchEL State.(UserMenuToggled opened) ())
+           onSongSelected=(fun media => dispatchEL State.(SongSelected currentChannel media) ())
+           onMediaStateUpdated=(
+                                 fun (newState: State.mediaPlayerState) =>
+                                   dispatchEL State.(MediaStateUpdated currentChannel newState) ()
+                               )
+           onVolumeAdjusted=(fun volume => dispatchEL State.(VolumeSet volume) ())
+           lastVolume=state.lastVolume
+           volume=state.volume
+         />
+         <Main_area
+           me
+           users=state.users
+           channel=currentChannel
+           leftSidebarOpen=state.leftSidebarOpen
+           rightSidebarOpen=state.rightSidebarOpen
+           searchTerm=state.search
+           onFocus=(fun focused => dispatchEL State.(ChatBoxFocused focused) ())
+           onMessageSubmitted=(fun channel msg => dispatchEL State.(MsgSubmitted channel me msg) ())
+           onLeftSidebarToggled=(fun opened => dispatchEL State.(SidebarToggled Left opened) ())
+           onRightSidebarToggled=(fun opened => dispatchEL State.(SidebarToggled Right opened) ())
+         />
+         <Navbar
+           selectedChannelId=state.selectedChannelId
+           channels=sortedChannels
+           focused=state.searchFormFocused
+           searchTerm=state.search
+           onSearchUpdated=(fun term => dispatchEL (SearchUpdated term) ())
+           onFocus=(fun focused => dispatchEL State.(SearchFormFocused focused) ())
+           onChannelSelected=(fun channel => dispatchEL State.(ChannelSelected channel) ())
+         />
+         <div className="at-view" id="at-view"> <ul id="at-view-ul" /> </div>
+       </div> */
   };
   let componentDidMount ({state} as componentBag) => {
     open State;

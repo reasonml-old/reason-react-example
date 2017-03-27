@@ -1,0 +1,225 @@
+// color
+
+@black:         #000;
+@gray_darkest:  #111;
+@gray_darker:   #333;
+@gray_dark:     #555;
+@gray:          #888;
+@gray_light:    #ccc;
+@gray_lighter:  #ddd;
+@gray_lightest: #eee;
+@white:         #fff;
+
+@red:       @red_root;
+@orange: @orange_root;
+@yellow: @yellow_root;
+@green:   @green_root;
+@cyan:     @cyan_root;
+@blue:     @blue_root;
+@purple: @purple_root;
+@pink:     @pink_root;
+
+// type
+
+@font_sans: 'Roboto', sans-serif;
+// @font_mono: 'Monaco', monospace;
+@font_mono: 'Roboto Mono', monospace;
+
+@font_weight: normal;
+@font_size: 16px;
+// @font_tiny: (@font_size * .75);
+@font_tiny: 13px;
+@font_height: 1.5;
+@font_color: @gray_dark;
+// @font_color: @gray;
+@font_family: @font_sans;
+
+@font: @font_weight @font_size/@font_height @font_family;
+// @code: @font_weight @font_tiny/@font_height @font_mono;
+@code: @font_weight @font_tiny/20px @font_mono;
+
+// time
+
+@now: 0.0ms;
+@run: 250ms;
+@run_faster: @run / 10.0;
+@run_fast:   @run / 2.50;
+@run_slow:   @run * 1.50;
+@run_slower: @run * 2.00;
+@sooner: @run_faster;
+@soon:   @run_fast;
+@late:   @run_slow;
+@later:  @run_slower;
+
+// timing
+
+@fadein: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+@bounce: cubic-bezier(.55, 0, .55, 1.44);
+@deform: cubic-bezier(0.39, 0.575, 0.565, 1);
+
+// size
+
+@tile:     1rem  * 4;
+@tile_xl:  @tile * @tile;
+@tile_xxl: @tile * @tile * @tile;
+@tile_xxs: @tile / @tile / @tile;
+@tile_xs:  @tile / @tile;
+
+@padding: @tile_xs * @font_height;
+@margin: @tile_xs * @font_height;
+
+@pi: `Math.PI`;
+
+@background: @white;
+// @background: @gray_darkest;
+// @background: #fafafa;
+
+@border_width: 1px;
+@border_style: solid;
+@border_color: @gray_lightest;
+// @border_color: @gray_dark;
+// @border_color: @gray_lighter;
+@border_radius: @tile_xxs;
+@border: @border_width @border_style @border_color;
+
+@luster: 99%; // <- % of luminance
+@purity: 66%; // <- % of saturation
+@filter: 33%; // <- % of congruency
+@soften: 13%; // <- % of dullness in soft colors
+@deepen: 21%; // <- % of richness in deep colors
+@softer: 21%; // <- % of light balance in deep colors
+@darker: 21%; // <- % of dark balance in soft colors
+@rotate: 21 ; // <- degree of a color wheel segment
+
+@red_spin:    00; // <- hue amount for red
+@orange_spin: 01; // <- hue amount for orange
+@yellow_spin: 03; // <- hue amount for yelllow
+@green_spin:  06; // <- hue amount for green
+@cyan_spin:   09; // <- hue amount for cyan
+@blue_spin:   12; // <- hue amount for blue
+@purple_spin: 15; // <- hue amount for purple
+@pink_spin:   18; // <- hue amount for pink
+
+@red_tint:    hsv((00 + (@red_spin    * (360 / @rotate))), @purity, @luster);
+@orange_tint: hsv((00 + (@orange_spin * (360 / @rotate))), @purity, @luster);
+@yellow_tint: hsv((00 + (@yellow_spin * (360 / @rotate))), @purity, @luster);
+@green_tint:  hsv((00 + (@green_spin  * (360 / @rotate))), @purity, @luster);
+@cyan_tint:   hsv((00 + (@cyan_spin   * (360 / @rotate))), @purity, @luster);
+@blue_tint:   hsv((00 + (@blue_spin   * (360 / @rotate))), @purity, @luster);
+@purple_tint: hsv((00 + (@purple_spin * (360 / @rotate))), @purity, @luster);
+@pink_tint:   hsv((00 + (@pink_spin   * (360 / @rotate))), @purity, @luster);
+
+@red_root:    softlight(@red_tint,     fade(@orange_tint,  (@filter +  01)));
+@orange_root: softlight(@orange_tint,  fade(@orange_tint,  (@filter +  00)));
+@yellow_root: softlight(@yellow_tint,  fade(@orange_tint,  (@filter +  01)));
+@green_root:  softlight(@green_tint,   fade(@orange_tint,  (@filter +  02)));
+@cyan_root:   softlight(@cyan_tint,    fade(@orange_tint,  (@filter +  03)));
+@blue_root:   softlight(@blue_tint,    fade(@orange_tint,  (@filter +  05)));
+@purple_root: softlight(@purple_tint,  fade(@orange_tint,  (@filter +  08)));
+@pink_root:   softlight(@pink_tint,    fade(@orange_tint,  (@filter +  13)));
+
+@red_soft:    overlay(lighten(@red_root,    @soften), fade(@black, @darker));
+@orange_soft: overlay(lighten(@orange_root, @soften), fade(@black, @darker));
+@yellow_soft: overlay(lighten(@yellow_root, @soften), fade(@black, @darker));
+@green_soft:  overlay(lighten(@green_root,  @soften), fade(@black, @darker));
+@cyan_soft:   overlay(lighten(@cyan_root,   @soften), fade(@black, @darker));
+@blue_soft:   overlay(lighten(@blue_root,   @soften), fade(@black, @darker));
+@purple_soft: overlay(lighten(@purple_root, @soften), fade(@black, @darker));
+@pink_soft:   overlay(lighten(@pink_root,   @soften), fade(@black, @darker));
+
+@red_deep:    overlay(darken(@red_root,     @deepen), fade(@white, @softer));
+@orange_deep: overlay(darken(@orange_root,  @deepen), fade(@white, @softer));
+@yellow_deep: overlay(darken(@yellow_root,  @deepen), fade(@white, @softer));
+@green_deep:  overlay(darken(@green_root,   @deepen), fade(@white, @softer));
+@cyan_deep:   overlay(darken(@cyan_root,    @deepen), fade(@white, @softer));
+@blue_deep:   overlay(darken(@blue_root,    @deepen), fade(@white, @softer));
+@purple_deep: overlay(darken(@purple_root,  @deepen), fade(@white, @softer));
+@pink_deep:   overlay(darken(@pink_root,    @deepen), fade(@white, @softer));
+
+.1280 (@rules) { @media screen and (max-width: (1280 - 1px)) { @rules(); } }
+.1024 (@rules) { @media screen and (max-width: (1024 - 1px)) { @rules(); } }
+.768  (@rules) { @media screen and (max-width:  (768 - 1px)) { @rules(); } }
+.512  (@rules) { @media screen and (max-width:  (512 - 1px)) { @rules(); } }
+
+// get @target using @overlay on @background
+.composite(@t; @o: @black; @b: @white) {
+  @a: (red(@t) - red(@b)) / (red(@o) - red(@b));
+  @composite: rgba(red(@o), red(@o), red(@o), @a);
+}
+
+.outline(@color: @border_color; @width: @border_width) {
+  box-shadow+:  0    @width @color;
+  box-shadow+:  0   -@width @color;
+  box-shadow+:  @width  0   @color;
+  box-shadow+: -@width  0   @color;
+}
+.inline(@color: @border_color; @width: @border_width) {
+  box-shadow+:  0    @width @color inset;
+  box-shadow+:  0   -@width @color inset;
+  box-shadow+:  @width  0   @color inset;
+  box-shadow+: -@width  0   @color inset;
+}
+// .edge(@color: @border_color; @width: @border_width) {
+//   .edge-top {
+//     box-shadow: 0 @width @color inset;
+//   }
+//   .edge-right {
+//     box-shadow: -@width 0 @color inset;
+//   }
+//   .edge-bottom {
+//     box-shadow: 0 -@width @color inset;
+//   }
+//   .edge-left {
+//     box-shadow: @width 0 @color inset;
+//   }
+// }
+.knockout(@color: @background) {
+  text-shadow+:  1px 0 @color;
+  text-shadow+:  2px 0 @color;
+  // text-shadow+:  3px 0 @color;
+  text-shadow+: -1px 0 @color;
+  text-shadow+: -2px 0 @color;
+  // text-shadow+: -3px 0 @color;
+}
+
+.shadow(@state) {
+  .composite(@gray_light);
+  .button(@state) when (@state = button) {
+    box-shadow+: 0 8px 21px 0 @composite;
+  }.button(@state);
+  .hover(@state) when (@state = hover) {
+    box-shadow+: 0 21px 34px 0 @composite;
+  }.hover(@state);
+  .active(@state) when (@state = active) {
+    box-shadow+: 0 5px 13px 0 @composite;
+  }.active(@state);
+}
+
+// .h1(@weight: 300; @size: 4em; @line: 1.25) {
+//   font: 300 4em/1.25 @font_family;
+//   .512({ font-size: 3em; });
+// }
+// .h2(@weight: 300; @size: 2em + (2 * (1 / 3)); @line: 1.5) {
+//   font: 300 2.25em/1.5 @font_family;
+//   .512({ font-size: 2em; });
+// }
+// .h3(@weight: 400; @size: 2em; @line: 1 + (1 / 3)) {
+//   font: 400 2em/1.25 @font_family;
+//   .512({ font-size: 1.5em; });
+// }
+// .h4(@weight: 400; @size: 1.5em; @line: 1 + (1 / 3)) {
+//   font: 400 1.5em/1.25 @font_family;
+// }
+// .h5(@weight: 400; @size: 1em; @line: 1.5) {
+//   font: 400 1em/1.5 @font_family;
+// }
+// .h6(@weight: 400; @size: .75em; @line: 1.5) {
+//   font: 400 .75em/1.5 @font_family;
+// }
+
+.cascade(@i; @s: @run_faster) when (@i > 0) {
+  .cascade((@i - 1); @s);
+  &:nth-child(@{i}) {
+    animation-delay: @s * (@i - 1);
+  }
+}
