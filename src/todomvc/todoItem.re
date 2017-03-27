@@ -4,19 +4,6 @@ let enterKey = 13;
 
 type todo = {id: string, title: string, completed: bool};
 
-external asKeyboardEvent : ReactEventRe.Synthetic.t => ReactEventRe.Keyboard.t = "%identity";
-
-external asFocusEvent : ReactEventRe.Synthetic.t => ReactEventRe.Focus.t = "%identity";
-
-external keyboardAsSyntheticEvent : ReactEventRe.Keyboard.t => ReactEventRe.Synthetic.t =
-  "%identity";
-
-external formAsSyntheticEvent : ReactEventRe.Form.t => ReactEventRe.Synthetic.t = "%identity";
-
-external mouseAsSyntheticEvent : ReactEventRe.Mouse.t => ReactEventRe.Synthetic.t = "%identity";
-
-external focusAsSyntheticEvent : ReactEventRe.Focus.t => ReactEventRe.Synthetic.t = "%identity";
-
 module TodoItem = {
   include ReactRe.Component.Stateful.InstanceVars;
   let name = "TodoItemRe";
@@ -96,9 +83,9 @@ module TodoItem = {
         ref=(handler setEditFieldRef)
         className="edit"
         value=state.editText
-        onBlur=(fun event => (updater handleSubmit) (focusAsSyntheticEvent event))
-        onChange=(fun event => (updater handleChange) (formAsSyntheticEvent event))
-        onKeyDown=(fun event => (updater handleKeyDown) (keyboardAsSyntheticEvent event))
+        onBlur=(updater handleSubmit)
+        onChange=(updater handleChange)
+        onKeyDown=(updater handleKeyDown)
       />
     </li>
   };
