@@ -10,8 +10,6 @@ module Navbar = {
     onSearchUpdated: option string => unit,
     searchTerm: option string
   };
-  let _onFocus onFocus focused _event => onFocus focused;
-  let _onChannelSelected onChannelSelected channel _event => onChannelSelected channel;
   let render {props} => {
     let tabs =
       props.channels |>
@@ -19,7 +17,7 @@ module Navbar = {
         fun (channel: State.channel) =>
           <li
             key=(string_of_int channel.id)
-            onClick=(_onChannelSelected props.onChannelSelected channel)
+            onClick=(fun _event => props.onChannelSelected channel)
             className=(
                         "protected example" ^ (
                           if (props.selectedChannelId === State.(channel.id)) {
@@ -37,8 +35,8 @@ module Navbar = {
     <nav className=("nav" ^ (props.focused ? " search-focus" : ""))>
       <form action="/search" className="search" method="get">
         <input
-          onBlur=(_onFocus props.onFocus false)
-          onFocus=(_onFocus props.onFocus true)
+          onBlur=(fun _event => props.onFocus false)
+          onFocus=(fun _event => props.onFocus true)
           className="query"
           name="query"
           _type="text"
@@ -52,7 +50,7 @@ module Navbar = {
                      fun event => {
                        let x =
                          switch (
-                           ReasonJs.HtmlElement.value (
+                           ReasonJs.Dom.HtmlElement.value (
                              Utils.domAsHtmlElement (ReactEventRe.Form.target event)
                            )
                          ) {

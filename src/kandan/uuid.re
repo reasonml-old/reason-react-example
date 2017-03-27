@@ -29,17 +29,17 @@ let to_hex_string n l => {
   }
 };
 
-external getUint16 : ReasonJs.Uint16Array.t => int => int = "" [@@bs.get_index];
+external getUint16 : Js.Typed_array.Uint16Array.t => int => int = "" [@@bs.get_index];
 
-external setUint16 : ReasonJs.Uint16Array.t => int => int => unit = "" [@@bs.set_index];
+external setUint16 : Js.Typed_array.Uint16Array.t => int => int => unit = "" [@@bs.set_index];
 
 module Crypto = {
-  external getRandomValues : Uint16ArrayRe.t => Uint16ArrayRe.t =
+  external getRandomValues : Js.Typed_array.Uint16Array.t => Js.Typed_array.Uint16Array.t =
     "window.crypto.getRandomValues" [@@bs.val];
 };
 
 let squuid () => {
-  let a = Crypto.getRandomValues (ReasonJs.Uint16Array.make [|6|]);
+  let a = Crypto.getRandomValues (Js.Typed_array.Uint16Array.make [|6|]);
   let b1 = getUint16 a 0;
   let b2 = getUint16 a 1;
   let b3 = getUint16 a 2;

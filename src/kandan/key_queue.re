@@ -45,7 +45,7 @@ type keyCode =
   | Special namedKey
   | Literal string;
 
-let codeOfKey (event: ReasonJs.Dom.keyboardEvent) =>
+let codeOfKey (event: ReasonJs.Dom.KeyboardEvent.t) =>
   switch (ReasonJs.Dom.KeyboardEvent.key event) {
   | "Enter" => Special Enter
   | "Escape" => Special Esc
@@ -146,7 +146,7 @@ let matchKeySequence keyMap (strokes: list keyStroke) => {
   List.map (fun (_, action) => action) matches
 };
 
-let nativeModifiers (event: ReasonJs.Dom.keyboardEvent) =>
+let nativeModifiers (event: ReasonJs.Dom.KeyboardEvent.t) =>
   ReasonJs.Dom.KeyboardEvent.{
     code: codeOfKey event,
     shift: shiftKey event,
@@ -155,9 +155,9 @@ let nativeModifiers (event: ReasonJs.Dom.keyboardEvent) =>
     meta: metaKey event
   };
 
-external asKeyboardEvent : ReasonJs.Dom.event => ReasonJs.Dom.keyboardEvent = "%identity";
+external asKeyboardEvent : Dom.event => ReasonJs.Dom.KeyboardEvent.t = "%identity";
 
-external asHtmlElement : ReasonJs.Dom.eventTarget => ReasonJs.Dom.htmlElement = "%identity";
+external asHtmlElement : Dom.eventTarget => ReasonJs.Dom.HtmlElement.t_htmlElement = "%identity";
 
 /* TODO: Should each key-seq get its own copy of the window
    key-strokes, so they can be individually cleared rather than all at
@@ -169,13 +169,13 @@ module Key_queue = {
     keyMap: list (list string, State.action),
     onMatch: State.action => unit => unit,
     timeout: option int,
-    filter: option (ReasonJs.Dom.keyboardEvent => keyStroke => bool)
+    filter: option (ReasonJs.Dom.KeyboardEvent.t => keyStroke => bool)
   };
   type state = {
     counter: int,
     processedKeyMap: list (list keyStroke, State.action),
     keyPresses: list (keyStroke, int),
-    keyListener: option (ReasonJs.Dom.event => unit)
+    keyListener: option (Dom.event => unit)
   };
   let propsToKeyMap someProps => {
     let keyMap = someProps.keyMap;
@@ -188,7 +188,7 @@ module Key_queue = {
   };
   let getInitialState props => propsToKeyMap props;
   let stateSetter newStroke {props, state} => {
-    let now = int_of_float (ReasonJs.Date.now ());
+    let now = int_of_float (Js.Date.now ());
     let strokes =
       switch props.timeout {
       | None => [(newStroke, now), ...state.keyPresses]
@@ -204,7 +204,7 @@ module Key_queue = {
     let matchOccurred = 0 < List.length matches;
     {...state, keyPresses: matchOccurred ? [] : strokes, counter: state.counter + 1}
   };
-  let keyLogger props setState (rawEvent: ReasonJs.Dom.event) => {
+  let keyLogger props setState (rawEvent: Dom.event) => {
     let event = asKeyboardEvent rawEvent;
     switch props.filter {
     | None =>
@@ -230,13 +230,14 @@ module Key_queue = {
   };
   let componentDidMount {state, props, setState} => {
     let keyListener = keyLogger props setState;
-    ReasonJs.Window.addEventListener "keydown" keyListener ReasonJs.Dom.window;
+    ReasonJs.Dom.Window.addEventListener "keydown" keyListener ReasonJs.Dom.window;
     Some {...state, keyListener: Some keyListener}
   };
   let componentWillUnmount {state} =>
     switch state.keyListener {
     | None => ()
-    | Some listener => ReasonJs.Window.removeEventListener "keydown" listener ReasonJs.Dom.window
+    | Some listener =>
+      ReasonJs.Dom.Window.removeEventListener "keydown" listener ReasonJs.Dom.window
     };
   let componentWillReceiveProps {props} ::nextProps =>
     props.keyMap == nextProps.keyMap ? None : Some (propsToKeyMap nextProps);
