@@ -53,6 +53,7 @@ let state =
         media: {src: None, order: 0, duration: None},
         mediaState: Paused,
         mediaProgress: 0,
+        mediaScrubbedTo: None,
         playlist: [
           {
             src:
@@ -89,6 +90,7 @@ let state =
         userIds: State.UserIdSet.empty |> State.UserIdSet.add 1 |> State.UserIdSet.add 2,
         media: {src: None, order: 0, duration: None},
         mediaProgress: 0,
+        mediaScrubbedTo: None,
         mediaState: Paused,
         playlist: [
           {
@@ -139,6 +141,7 @@ let state =
         ],
         media: {src: None, order: 0, duration: None},
         mediaProgress: 0,
+        mediaScrubbedTo: None,
         mediaState: Paused,
         playlist: [
           {

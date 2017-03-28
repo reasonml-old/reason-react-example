@@ -235,6 +235,15 @@ module Wip = {
     let newChannels = List.append otherChannels [newChannel];
     Some {...state, channels: newChannels}
   };
+  let mediaScrubbedTo {state} (channel: State.channel) (percent: float) (time: float) => {
+    let currentChannel =
+      List.find (fun haystack => State.(haystack.id) === channel.id) State.(state.channels);
+    let otherChannels =
+      List.filter (fun haystack => State.(haystack.id) !== channel.id) State.(state.channels);
+    let newChannel = {...currentChannel, mediaScrubbedTo: Some (percent, time)};
+    let newChannels = List.append otherChannels [newChannel];
+    Some {...state, channels: newChannels}
+  };
   let chatBoxFocused {state} focused => Some State.{...state, userMessageFocused: focused};
   let searchFormFocused {state} focused => Some State.{...state, searchFormFocused: focused};
   let userMenuToggled {state} opened => Some State.{...state, userMenuOpen: opened};
@@ -288,6 +297,7 @@ module Wip = {
       ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
     | SongSelected _ _ => ()
     | MediaStateUpdated _ _
+    | MediaPlayerScrubbed _ _ _
     | MediaProgressUpdated _ _ _ => ()
     | ChatBoxFocused _ => ()
     | UserMenuToggled _ => ()
@@ -331,6 +341,8 @@ module Wip = {
       | Alert _ => None
       | SongSelected channel media => songSelected componentBag channel media
       | MediaStateUpdated channel state => mediaStateUpdated componentBag channel state
+      | MediaPlayerScrubbed channel percent time =>
+        mediaScrubbedTo componentBag channel percent time
       | MediaProgressUpdated channel progress duration =>
         mediaProgressUpdated componentBag channel progress duration
       | ChatBoxFocused focused => chatBoxFocused componentBag focused
@@ -459,6 +471,7 @@ module Wip = {
               key=(string_of_int channel.id)
               volume=(channel.id == currentChannel.id ? state.volume : 0.0)
               audioState=channel.mediaState
+              percent=currentChannel.mediaScrubbedTo
               onTimeUpdated=(
                               fun el => {
                                 let duration = Audio_player.AudioElement.duration el;
@@ -631,20 +644,19 @@ module Wip = {
                 )
               </div>
               <div className="timeline slider">
-                <div className="track">
-                  <div
-                    className="spent"
-                    style=(
-                            ReactDOMRe.Style.make
-                              width::(
-                                string_of_float (
-                                  Utils.channelMediaProgress currentChannel currentChannel.media
-                                ) ^ "%"
-                              )
-                              ()
-                          )
-                  />
-                </div>
+                <Progress_bar
+                  progress=(Utils.channelMediaProgress currentChannel currentChannel.media)
+                  onChanged=(
+                              fun offset => {
+                                Js.log offset;
+                                dispatchEL
+                                  State.(
+                                    MediaPlayerScrubbed currentChannel offset (Js.Date.now ())
+                                  )
+                                  ()
+                              }
+                            )
+                />
                 <div className="thumb" />
               </div>
               <div className="playtime">
@@ -667,15 +679,10 @@ module Wip = {
         <div className="right controls">
           <div className="mute"> (text "<))") </div>
           <div className="volume slider">
-            <div className="track">
-              <div
-                className="spent"
-                style=(
-                        ReactDOMRe.Style.make
-                          width::(string_of_float (state.volume *. 100.0) ^ "%") ()
-                      )
-              />
-            </div>
+            <Progress_bar
+              progress=(state.volume *. 100.0)
+              onChanged=(fun offset => dispatchEL State.(VolumeSet offset) ())
+            />
             <div className="thumb" />
           </div>
         </div>

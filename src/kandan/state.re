@@ -35,6 +35,7 @@ type channel = {
   mediaState: mediaPlayerState,
   /* 0.0 => 1.0 */
   mediaProgress: int,
+  mediaScrubbedTo: option (float, float),
   playlist: list media
 };
 
@@ -70,6 +71,7 @@ type action =
   | ChannelSelectedByIndex int
   | SongSelected channel media
   | MediaStateUpdated channel mediaPlayerState
+  | MediaPlayerScrubbed channel float float
   | MediaProgressUpdated channel int int
   | ChatBoxFocused bool
   | UserMenuToggled bool
@@ -91,6 +93,7 @@ let stringOfAction (action: action) =>
   | ChannelSelectedByIndex _ => "ChannelSelectedByIndex"
   | SongSelected _ _ [@implicit_arity] => "SongSelected"
   | MediaStateUpdated _ _ [@implicit_arity] => "MediaStateUpdated"
+  | MediaPlayerScrubbed _ _ _ => "MediaPlayerScrubbed"
   | MediaProgressUpdated _ _ _ => "MediaProgressUpdated"
   | ChatBoxFocused _ => "ChatBoxFocused"
   | UserMenuToggled _ => "UserMenuToggled"

@@ -1027,8 +1027,8 @@
 	}
 
 	function findNextMedia(channel, offset) {
-	  var idx = Pervasives.max(0, Pervasives.min(channel[/* media */5][/* order */0] + offset | 0, List.length(channel[/* playlist */8])));
-	  return List.nth(channel[/* playlist */8], idx);
+	  var idx = Pervasives.max(0, Pervasives.min(channel[/* media */5][/* order */0] + offset | 0, List.length(channel[/* playlist */9])));
+	  return List.nth(channel[/* playlist */9], idx);
 	}
 
 	function mediaSrcToTitle(media) {
@@ -9283,8 +9283,8 @@
 	    newChannel = newrecord;
 	  } else {
 	    var match = currentChannel[/* media */5][/* src */1];
-	    var match$1 = List.length(currentChannel[/* playlist */8]);
-	    var media = match || match$1 === 0 ? currentChannel[/* media */5] : List.nth(currentChannel[/* playlist */8], 0);
+	    var match$1 = List.length(currentChannel[/* playlist */9]);
+	    var media = match || match$1 === 0 ? currentChannel[/* media */5] : List.nth(currentChannel[/* playlist */9], 0);
 	    var newrecord$1 = currentChannel.slice();
 	    newrecord$1[/* media */5] = media;
 	    newrecord$1[/* mediaState */6] = newState;
@@ -9332,7 +9332,7 @@
 	    var match$1 = parts.length;
 	    if (match$1 !== 0) {
 	      mediaToQueue = match$1 !== 1 ? /* Some */[/* record */[
-	            /* order */List.length(channel[/* playlist */8]),
+	            /* order */List.length(channel[/* playlist */9]),
 	            /* src : Some */[Caml_array.caml_array_get(parts, 1)],
 	            /* duration : None */0
 	          ]] : /* None */0;
@@ -9358,10 +9358,10 @@
 	        newMsg,
 	        /* [] */0
 	      ]);
-	  newrecord[/* playlist */8] = mediaToQueue ? List.append(currentChannel[/* playlist */8], /* :: */[
+	  newrecord[/* playlist */9] = mediaToQueue ? List.append(currentChannel[/* playlist */9], /* :: */[
 	          mediaToQueue[0],
 	          /* [] */0
-	        ]) : currentChannel[/* playlist */8];
+	        ]) : currentChannel[/* playlist */9];
 	  var newChannels = List.append(otherChannels, /* :: */[
 	        newrecord,
 	        /* [] */0
@@ -9399,6 +9399,7 @@
 	              }, 100);
 	          break;
 	      case 7 : 
+	      case 8 : 
 	          throw [
 	                Caml_builtin_exceptions.match_failure,
 	                [
@@ -9407,23 +9408,23 @@
 	                  4
 	                ]
 	              ];
-	      case 10 : 
+	      case 11 : 
 	          var channel$2 = action[0];
 	          setTimeout(function () {
 	                return scrollToLatestMessage(props[/* rootEl */1], channel$2[/* id */0]);
 	              }, 100);
 	          break;
-	      case 11 : 
+	      case 12 : 
 	          Utils.setPageTitle(action[0]);
 	          break;
-	      case 12 : 
 	      case 13 : 
 	      case 14 : 
-	          break;
 	      case 15 : 
-	          console.log(action[0]);
 	          break;
 	      case 16 : 
+	          console.log(action[0]);
+	          break;
+	      case 17 : 
 	          window.alert(action[0]);
 	          break;
 	      default:
@@ -9472,6 +9473,7 @@
 	          newState = mediaStateUpdated(componentBag, action[0], action[1]);
 	          break;
 	      case 7 : 
+	      case 8 : 
 	          throw [
 	                Caml_builtin_exceptions.match_failure,
 	                [
@@ -9480,28 +9482,28 @@
 	                  6
 	                ]
 	              ];
-	      case 8 : 
+	      case 9 : 
 	          newState = chatBoxFocused(componentBag, action[0]);
 	          break;
-	      case 9 : 
+	      case 10 : 
 	          newState = userMenuToggled(componentBag, action[0]);
 	          break;
-	      case 10 : 
+	      case 11 : 
 	          newState = msgSubmitted(componentBag, action[0], action[1], action[2]);
 	          break;
-	      case 11 : 
-	          throw notAEventlessAction(action);
 	      case 12 : 
+	          throw notAEventlessAction(action);
+	      case 13 : 
 	          newState = volumeSet(componentBag, action[0]);
 	          break;
-	      case 13 : 
+	      case 14 : 
 	          newState = volumeIncremented(componentBag, action[0]);
 	          break;
-	      case 14 : 
+	      case 15 : 
 	          newState = volumeDecremented(componentBag, action[0]);
 	          break;
-	      case 15 : 
 	      case 16 : 
+	      case 17 : 
 	          newState = /* None */0;
 	          break;
 	      
@@ -9532,8 +9534,8 @@
 	    }
 	  } else {
 	    switch (action.tag | 0) {
-	      case 13 : 
 	      case 14 : 
+	      case 15 : 
 	          exit = 1;
 	          break;
 	      default:
@@ -9572,7 +9574,7 @@
 	      ]);
 	  }
 	  catch (exn){
-	    $js = /* Log */Block.__(15, ["No previous media in channel"]);
+	    $js = /* Log */Block.__(16, ["No previous media in channel"]);
 	  }
 	  var $js$1;
 	  try {
@@ -9582,7 +9584,7 @@
 	      ]);
 	  }
 	  catch (exn$1){
-	    $js$1 = /* Log */Block.__(15, ["No previous media in channel"]);
+	    $js$1 = /* Log */Block.__(16, ["No previous media in channel"]);
 	  }
 	  var match = currentChannel[/* mediaState */6];
 	  var $js$2;
@@ -9614,12 +9616,15 @@
 	        var match = +(channel[/* id */0] === currentChannel[/* id */0]);
 	        var partial_arg$1 = match !== 0 ? state[/* volume */11] : 0.0;
 	        var partial_arg$2 = channel[/* id */0];
-	        var func = function (param) {
-	          return Audio_player.createElement(channel, partial_arg$2, partial_arg$1, partial_arg, param);
+	        var func = function (param, param$1, param$2) {
+	          return Audio_player.createElement(channel, partial_arg$2, partial_arg$1, partial_arg, param, param$1, param$2);
 	        };
 	        var arg = /* Some */[Pervasives.string_of_int(channel[/* id */0])];
 	        return function (param) {
-	          return Curry._5(func, param, /* [] */0, /* None */0, arg, /* () */0);
+	          var func$1 = Curry._1(func, param);
+	          return function (param) {
+	            return Curry._6(func$1, param, /* None */0, /* [] */0, /* None */0, arg, /* () */0);
+	          };
 	        };
 	      }, state[/* channels */5]);
 	  return React.createElement("div", {
@@ -9636,7 +9641,7 @@
 	  setTimeout(function () {
 	        return processEffects(componentBag, /* ChannelSelected */Block.__(3, [currentChannel]), state, state);
 	      }, 250);
-	  processEffects(componentBag, /* AppTitleUpdated */Block.__(11, [
+	  processEffects(componentBag, /* AppTitleUpdated */Block.__(12, [
 	          state[/* title */10],
 	          0
 	        ]), state, state);
@@ -9646,7 +9651,7 @@
 	function componentDidUpdate(_, prevState, componentBag) {
 	  var state = componentBag[/* state */0];
 	  if (state[/* title */10] !== prevState[/* title */10]) {
-	    processEffects(componentBag, /* AppTitleUpdated */Block.__(11, [
+	    processEffects(componentBag, /* AppTitleUpdated */Block.__(12, [
 	            state[/* title */10],
 	            0
 	          ]), state, state);
@@ -9750,6 +9755,7 @@
 	var Pervasives              = __webpack_require__(8);
 	var Caml_string             = __webpack_require__(15);
 	var Audio_player            = __webpack_require__(76);
+	var Progress_bar            = __webpack_require__(229);
 	var Caml_builtin_exceptions = __webpack_require__(3);
 
 	var cursorPointer = {
@@ -9941,8 +9947,8 @@
 	    newChannel = newrecord;
 	  } else {
 	    var match = currentChannel[/* media */5][/* src */1];
-	    var match$1 = List.length(currentChannel[/* playlist */8]);
-	    var media = match || match$1 === 0 ? currentChannel[/* media */5] : List.nth(currentChannel[/* playlist */8], 0);
+	    var match$1 = List.length(currentChannel[/* playlist */9]);
+	    var media = match || match$1 === 0 ? currentChannel[/* media */5] : List.nth(currentChannel[/* playlist */9], 0);
 	    var newrecord$1 = currentChannel.slice();
 	    newrecord$1[/* media */5] = media;
 	    newrecord$1[/* mediaState */6] = newState;
@@ -9976,6 +9982,27 @@
 	  var newrecord = currentChannel.slice();
 	  newrecord[/* media */5] = media;
 	  newrecord[/* mediaProgress */7] = progress;
+	  var newChannels = List.append(otherChannels, /* :: */[
+	        newrecord,
+	        /* [] */0
+	      ]);
+	  var newrecord$1 = state.slice();
+	  return /* Some */[(newrecord$1[/* channels */5] = newChannels, newrecord$1)];
+	}
+
+	function mediaScrubbedTo(param, channel, percent, time) {
+	  var state = param[/* state */0];
+	  var currentChannel = List.find(function (haystack) {
+	        return +(haystack[/* id */0] === channel[/* id */0]);
+	      }, state[/* channels */5]);
+	  var otherChannels = List.filter(function (haystack) {
+	          return +(haystack[/* id */0] !== channel[/* id */0]);
+	        })(state[/* channels */5]);
+	  var newrecord = currentChannel.slice();
+	  newrecord[/* mediaScrubbedTo */8] = /* Some */[/* tuple */[
+	      percent,
+	      time
+	    ]];
 	  var newChannels = List.append(otherChannels, /* :: */[
 	        newrecord,
 	        /* [] */0
@@ -10018,7 +10045,7 @@
 	    var match$1 = parts.length;
 	    if (match$1 !== 0) {
 	      mediaToQueue = match$1 !== 1 ? /* Some */[/* record */[
-	            /* order */List.length(channel[/* playlist */8]),
+	            /* order */List.length(channel[/* playlist */9]),
 	            /* src : Some */[Caml_array.caml_array_get(parts, 1)],
 	            /* duration : None */0
 	          ]] : /* None */0;
@@ -10027,7 +10054,7 @@
 	            Caml_builtin_exceptions.assert_failure,
 	            [
 	              "wip.re",
-	              248,
+	              257,
 	              15
 	            ]
 	          ];
@@ -10044,10 +10071,10 @@
 	        newMsg,
 	        /* [] */0
 	      ]);
-	  newrecord[/* playlist */8] = mediaToQueue ? List.append(currentChannel[/* playlist */8], /* :: */[
+	  newrecord[/* playlist */9] = mediaToQueue ? List.append(currentChannel[/* playlist */9], /* :: */[
 	          mediaToQueue[0],
 	          /* [] */0
-	        ]) : currentChannel[/* playlist */8];
+	        ]) : currentChannel[/* playlist */9];
 	  var newChannels = List.append(otherChannels, /* :: */[
 	        newrecord,
 	        /* [] */0
@@ -10084,25 +10111,26 @@
 	                return scrollToLatestMessage(props[/* rootEl */1], channel$1[/* id */0]);
 	              }, 100);
 	          break;
-	      case 10 : 
+	      case 11 : 
 	          var channel$2 = action[0];
 	          setTimeout(function () {
 	                return scrollToLatestMessage(props[/* rootEl */1], channel$2[/* id */0]);
 	              }, 100);
 	          break;
-	      case 11 : 
+	      case 12 : 
 	          Utils.setPageTitle(action[0]);
 	          break;
 	      case 6 : 
 	      case 7 : 
-	      case 12 : 
+	      case 8 : 
 	      case 13 : 
 	      case 14 : 
-	          break;
 	      case 15 : 
-	          console.log(action[0]);
 	          break;
 	      case 16 : 
+	          console.log(action[0]);
+	          break;
+	      case 17 : 
 	          window.alert(action[0]);
 	          break;
 	      default:
@@ -10151,30 +10179,33 @@
 	          newState = mediaStateUpdated(componentBag, action[0], action[1]);
 	          break;
 	      case 7 : 
-	          newState = mediaProgressUpdated(componentBag, action[0], action[1], action[2]);
+	          newState = mediaScrubbedTo(componentBag, action[0], action[1], action[2]);
 	          break;
 	      case 8 : 
-	          newState = chatBoxFocused(componentBag, action[0]);
+	          newState = mediaProgressUpdated(componentBag, action[0], action[1], action[2]);
 	          break;
 	      case 9 : 
-	          newState = userMenuToggled(componentBag, action[0]);
+	          newState = chatBoxFocused(componentBag, action[0]);
 	          break;
 	      case 10 : 
-	          newState = msgSubmitted(componentBag, action[0], action[1], action[2]);
+	          newState = userMenuToggled(componentBag, action[0]);
 	          break;
 	      case 11 : 
-	          throw notAEventlessAction(action);
+	          newState = msgSubmitted(componentBag, action[0], action[1], action[2]);
+	          break;
 	      case 12 : 
+	          throw notAEventlessAction(action);
+	      case 13 : 
 	          newState = volumeSet(componentBag, action[0]);
 	          break;
-	      case 13 : 
+	      case 14 : 
 	          newState = volumeIncremented(componentBag, action[0]);
 	          break;
-	      case 14 : 
+	      case 15 : 
 	          newState = volumeDecremented(componentBag, action[0]);
 	          break;
-	      case 15 : 
 	      case 16 : 
+	      case 17 : 
 	          newState = /* None */0;
 	          break;
 	      
@@ -10205,8 +10236,8 @@
 	    }
 	  } else {
 	    switch (action.tag | 0) {
-	      case 13 : 
 	      case 14 : 
+	      case 15 : 
 	          exit = 1;
 	          break;
 	      default:
@@ -10241,7 +10272,7 @@
 	          Caml_builtin_exceptions.assert_failure,
 	          [
 	            "wip.re",
-	            388,
+	            400,
 	            16
 	          ]
 	        ];
@@ -10263,7 +10294,7 @@
 	      ]);
 	  }
 	  catch (exn){
-	    $js = /* Log */Block.__(15, ["No previous media in channel"]);
+	    $js = /* Log */Block.__(16, ["No previous media in channel"]);
 	  }
 	  var $js$1;
 	  try {
@@ -10273,7 +10304,7 @@
 	      ]);
 	  }
 	  catch (exn$1){
-	    $js$1 = /* Log */Block.__(15, ["No previous media in channel"]);
+	    $js$1 = /* Log */Block.__(16, ["No previous media in channel"]);
 	  }
 	  var match$1 = currentChannel[/* mediaState */6];
 	  var $js$2;
@@ -10294,7 +10325,7 @@
 	      "ctrl+esc",
 	      /* [] */0
 	    ],
-	    /* Log */Block.__(15, ["ctrl esc yo!"])
+	    /* Log */Block.__(16, ["ctrl esc yo!"])
 	  ];
 	  var keyMap_001 = /* :: */[
 	    /* tuple */[
@@ -10302,7 +10333,7 @@
 	        "ctrl+?",
 	        /* [] */0
 	      ],
-	      /* UserMenuToggled */Block.__(9, [state[/* userMenuOpen */8]])
+	      /* UserMenuToggled */Block.__(10, [state[/* userMenuOpen */8]])
 	    ],
 	    /* :: */[
 	      /* tuple */[
@@ -10318,7 +10349,7 @@
 	            "ctrl+-",
 	            /* [] */0
 	          ],
-	          /* VolumeDecremented */Block.__(14, [0.1])
+	          /* VolumeDecremented */Block.__(15, [0.1])
 	        ],
 	        /* :: */[
 	          /* tuple */[
@@ -10353,7 +10384,7 @@
 	                    "ctrl+shift+=",
 	                    /* [] */0
 	                  ],
-	                  /* VolumeIncremented */Block.__(13, [0.1])
+	                  /* VolumeIncremented */Block.__(14, [0.1])
 	                ],
 	                /* :: */[
 	                  /* tuple */[
@@ -10449,7 +10480,7 @@
 	                                            "ctrl+shift+esc",
 	                                            /* [] */0
 	                                          ],
-	                                          /* Alert */Block.__(16, ["ctrl shift esc yo!"])
+	                                          /* Alert */Block.__(17, ["ctrl shift esc yo!"])
 	                                        ],
 	                                        /* :: */[
 	                                          /* tuple */[
@@ -10484,7 +10515,7 @@
 	                                                ]
 	                                              ]
 	                                            ],
-	                                            /* Alert */Block.__(16, ["Konami code!"])
+	                                            /* Alert */Block.__(17, ["Konami code!"])
 	                                          ],
 	                                          /* [] */0
 	                                        ]
@@ -10521,7 +10552,7 @@
 	            return Curry._4(Audio_player.createElement(channel, channel[/* id */0], match !== 0 ? state[/* volume */11] : 0.0, channel[/* mediaState */6], function (el) {
 	                            var duration = el.duration;
 	                            var currentTime = el.currentTime;
-	                            var partial_arg = /* MediaProgressUpdated */Block.__(7, [
+	                            var partial_arg = /* MediaProgressUpdated */Block.__(8, [
 	                                currentChannel,
 	                                currentTime,
 	                                duration
@@ -10529,7 +10560,7 @@
 	                            return Curry._2(updater, function (param, param$1) {
 	                                        return dispatchEventless(partial_arg, param, param$1);
 	                                      }, /* () */0);
-	                          }), /* [] */0, /* None */0, /* Some */[Pervasives.string_of_int(channel[/* id */0])], /* () */0);
+	                          }, currentChannel[/* mediaScrubbedTo */8], /* None */0), /* [] */0, /* None */0, /* Some */[Pervasives.string_of_int(channel[/* id */0])], /* () */0);
 	          }, state[/* channels */5]));
 	  var userEntry = function (user) {
 	    return React.createElement("li", {
@@ -10629,7 +10660,7 @@
 	                                              className: "media-container"
 	                                            }, match[1]));
 	                            }, activities)), Curry._4(Chatbox.createElement(currentChannel, state[/* users */4], function (channel, msg) {
-	                              var partial_arg = /* MsgSubmitted */Block.__(10, [
+	                              var partial_arg = /* MsgSubmitted */Block.__(11, [
 	                                  channel,
 	                                  me,
 	                                  msg
@@ -10638,7 +10669,7 @@
 	                                          return dispatchEventless(partial_arg, param, param$1);
 	                                        }, /* () */0);
 	                            }, me, function (focused) {
-	                              var partial_arg = /* ChatBoxFocused */Block.__(8, [focused]);
+	                              var partial_arg = /* ChatBoxFocused */Block.__(9, [focused]);
 	                              return Curry._2(updater, function (param, param$1) {
 	                                          return dispatchEventless(partial_arg, param, param$1);
 	                                        }, /* () */0);
@@ -10646,7 +10677,7 @@
 	                      className: "menu right"
 	                    }, React.createElement("div", {
 	                          className: "menu-items songs"
-	                        }, React.createElement("ul", undefined, ReactRe.listToElement(List.map(songEntry, currentChannel[/* playlist */8])))))), React.createElement("div", {
+	                        }, React.createElement("ul", undefined, ReactRe.listToElement(List.map(songEntry, currentChannel[/* playlist */9])))))), React.createElement("div", {
 	                  className: "player"
 	                }, React.createElement("div", {
 	                      className: "left controls"
@@ -10715,14 +10746,18 @@
 	                                      match$3 !== 0 ? "0" : ""
 	                                    ) + Pervasives.string_of_int(seconds)))), React.createElement("div", {
 	                                  className: "timeline slider"
-	                                }, React.createElement("div", {
-	                                      className: "track"
-	                                    }, React.createElement("div", {
-	                                          className: "spent",
-	                                          style: {
-	                                            width: Pervasives.string_of_float(Utils.channelMediaProgress(currentChannel, currentChannel[/* media */5])) + "%"
-	                                          }
-	                                        })), React.createElement("div", {
+	                                }, Curry._4(Progress_bar.createElement(Utils.channelMediaProgress(currentChannel, currentChannel[/* media */5]), /* Some */[function (offset) {
+	                                            console.log(offset);
+	                                            var action_002 = Date.now();
+	                                            var action = /* MediaPlayerScrubbed */Block.__(7, [
+	                                                currentChannel,
+	                                                offset,
+	                                                action_002
+	                                              ]);
+	                                            return Curry._1(Curry._1(updater, function (param, param$1) {
+	                                                            return dispatchEventless(action, param, param$1);
+	                                                          }), /* () */0);
+	                                          }]), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
 	                                      className: "thumb"
 	                                    })), React.createElement("div", {
 	                                  className: "playtime"
@@ -10734,14 +10769,12 @@
 	                          className: "mute"
 	                        }, "<))"), React.createElement("div", {
 	                          className: "volume slider"
-	                        }, React.createElement("div", {
-	                              className: "track"
-	                            }, React.createElement("div", {
-	                                  className: "spent",
-	                                  style: {
-	                                    width: Pervasives.string_of_float(state[/* volume */11] * 100.0) + "%"
-	                                  }
-	                                })), React.createElement("div", {
+	                        }, Curry._4(Progress_bar.createElement(state[/* volume */11] * 100.0, /* Some */[function (offset) {
+	                                    var partial_arg = /* VolumeSet */Block.__(13, [offset]);
+	                                    return Curry._2(updater, function (param, param$1) {
+	                                                return dispatchEventless(partial_arg, param, param$1);
+	                                              }, /* () */0);
+	                                  }]), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
 	                              className: "thumb"
 	                            })))));
 	}
@@ -10772,6 +10805,7 @@
 	  /* songSelected */songSelected,
 	  /* mediaStateUpdated */mediaStateUpdated,
 	  /* mediaProgressUpdated */mediaProgressUpdated,
+	  /* mediaScrubbedTo */mediaScrubbedTo,
 	  /* chatBoxFocused */chatBoxFocused,
 	  /* searchFormFocused */searchFormFocused,
 	  /* userMenuToggled */userMenuToggled,
@@ -15390,6 +15424,7 @@
 	    ],
 	    /* mediaState : Paused */1,
 	    /* mediaProgress */0,
+	    /* mediaScrubbedTo : None */0,
 	    /* playlist : :: */[
 	      /* record */[
 	        /* order */0,
@@ -15441,6 +15476,7 @@
 	      ],
 	      /* mediaState : Paused */1,
 	      /* mediaProgress */0,
+	      /* mediaScrubbedTo : None */0,
 	      /* playlist : :: */[
 	        /* record */[
 	          /* order */0,
@@ -15527,6 +15563,7 @@
 	        ],
 	        /* mediaState : Paused */1,
 	        /* mediaProgress */0,
+	        /* mediaScrubbedTo : None */0,
 	        /* playlist : :: */[
 	          /* record */[
 	            /* order */0,
@@ -15643,24 +15680,26 @@
 	      case 6 : 
 	          return "MediaStateUpdated";
 	      case 7 : 
-	          return "MediaProgressUpdated";
+	          return "MediaPlayerScrubbed";
 	      case 8 : 
-	          return "ChatBoxFocused";
+	          return "MediaProgressUpdated";
 	      case 9 : 
-	          return "UserMenuToggled";
+	          return "ChatBoxFocused";
 	      case 10 : 
-	          return "MsgSubmitted";
+	          return "UserMenuToggled";
 	      case 11 : 
-	          return "AppTitleUpdated";
+	          return "MsgSubmitted";
 	      case 12 : 
-	          return "VolumeSet";
+	          return "AppTitleUpdated";
 	      case 13 : 
-	          return "VolumentIncremented";
+	          return "VolumeSet";
 	      case 14 : 
-	          return "VolumentDecremented";
+	          return "VolumentIncremented";
 	      case 15 : 
-	          return "Log";
+	          return "VolumentDecremented";
 	      case 16 : 
+	          return "Log";
+	      case 17 : 
 	          return "Alert";
 	      
 	    }
@@ -17212,6 +17251,21 @@
 	    if (prevProps[/* volume */3] !== props[/* volume */3]) {
 	      ref.volume = props[/* volume */3];
 	    }
+	    var match$2 = props[/* percent */5];
+	    if (match$2) {
+	      var match$3 = match$2[0];
+	      var offset = Math.floor(ref.duration * match$3[0]) | 0;
+	      var match$4 = prevProps[/* percent */5];
+	      if (match$4) {
+	        var match$5 = +(match$4[0][1] === match$3[1]);
+	        if (!match$5) {
+	          ref.currentTime = offset;
+	        }
+	        
+	      } else {
+	        ref.currentTime = offset;
+	      }
+	    }
 	    
 	  }
 	  return /* None */0;
@@ -17272,13 +17326,15 @@
 
 	var wrapProps = include$1[1];
 
-	function createElement(channel, id, volume, audioState, onTimeUpdated) {
+	function createElement(channel, id, volume, audioState, onTimeUpdated, percent, time) {
 	  return Curry._1(wrapProps, /* record */[
 	              /* id */id,
 	              /* channel */channel,
 	              /* audioState */audioState,
 	              /* volume */volume,
-	              /* onTimeUpdated */onTimeUpdated
+	              /* onTimeUpdated */onTimeUpdated,
+	              /* percent */percent,
+	              /* time */time
 	            ]);
 	}
 
@@ -41632,6 +41688,370 @@
 	exports.wrapProps     = wrapProps;
 	exports.createElement = createElement;
 	/* include Not a pure module */
+
+
+/***/ },
+/* 229 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// Generated by BUCKLESCRIPT VERSION 1.6.0+dev, PLEASE EDIT WITH CARE
+	'use strict';
+
+	var Curry      = __webpack_require__(1);
+	var React      = __webpack_require__(41);
+	var ReactRe    = __webpack_require__(71);
+	var ElementRe  = __webpack_require__(230);
+	var Pervasives = __webpack_require__(8);
+
+	function kill($$event) {
+	  $$event.preventDefault();
+	  $$event.stopPropagation();
+	  return /* () */0;
+	}
+
+	var include = ReactRe.Component[/* Stateful */8][/* InstanceVars */8];
+
+	var componentWillUpdate = include[1];
+
+	var componentDidUpdate = include[2];
+
+	var componentWillReceiveProps = include[3];
+
+	var componentWillUnmount = include[4];
+
+	var jsPropsToReasonProps = include[5];
+
+	var name = "ProgressBar";
+
+	function getInstanceVars() {
+	  return /* record */[/* domRef : None */0];
+	}
+
+	function getInitialState() {
+	  return /* record */[
+	          /* listeners : None */0,
+	          /* mouseDown : false */0
+	        ];
+	}
+
+	function mouseXAsPercentage(el, $$event) {
+	  var match = ElementRe.asHtmlElement(el);
+	  if (match) {
+	    var clickTarget = match[0];
+	    var offsetX = clickTarget.offsetLeft;
+	    var width = clickTarget.offsetWidth;
+	    var pageX = $$event.pageX;
+	    return /* Some */[Pervasives.max(0.0, Pervasives.min(1.0, (pageX - offsetX | 0) / width))];
+	  } else {
+	    return /* None */0;
+	  }
+	}
+
+	function handleMouseMoved(param, $$event) {
+	  var match = param[/* instanceVars */4][/* domRef */0];
+	  if (match) {
+	    var match$1 = param[/* state */0][/* mouseDown */1];
+	    if (match$1 !== 0) {
+	      var match$2 = param[/* props */1][/* onChanged */1];
+	      var match$3 = mouseXAsPercentage(match[0], $$event);
+	      if (match$2 && match$3) {
+	        kill($$event);
+	        Curry._1(match$2[0], match$3[0]);
+	        return /* None */0;
+	      } else {
+	        return /* None */0;
+	      }
+	    } else {
+	      return /* None */0;
+	    }
+	  } else {
+	    return /* None */0;
+	  }
+	}
+
+	function setTrackRef(param, el) {
+	  param[/* instanceVars */4][/* domRef */0] = /* Some */[el];
+	  return /* () */0;
+	}
+
+	function maybeDragged(isDown, param, $$event) {
+	  var state = param[/* state */0];
+	  var match = param[/* instanceVars */4][/* domRef */0];
+	  if (match) {
+	    var match$1 = state[/* mouseDown */1];
+	    var match$2 = param[/* props */1][/* onChanged */1];
+	    var match$3 = mouseXAsPercentage(match[0], $$event);
+	    if (match$1 !== 0) {
+	      if (isDown !== 0 || !(match$2 && match$3)) {
+	        return /* None */0;
+	      } else {
+	        Curry._1(match$2[0], match$3[0]);
+	        return /* Some */[/* record */[
+	                  /* listeners */state[/* listeners */0],
+	                  /* mouseDown */isDown
+	                ]];
+	      }
+	    } else if (isDown !== 0 && match$2 && match$3) {
+	      Curry._1(match$2[0], match$3[0]);
+	      return /* Some */[/* record */[
+	                /* listeners */state[/* listeners */0],
+	                /* mouseDown */isDown
+	              ]];
+	    } else {
+	      return /* None */0;
+	    }
+	  } else {
+	    return /* None */0;
+	  }
+	}
+
+	function componentDidMount(param) {
+	  var updater = param[/* updater */2];
+	  document.addEventListener("mouseup", function ($$event) {
+	        return Curry._2(updater, function (param, param$1) {
+	                    return maybeDragged(/* false */0, param, param$1);
+	                  }, $$event);
+	      });
+	  document.addEventListener("mousemove", function ($$event) {
+	        return Curry._2(updater, handleMouseMoved, $$event);
+	      });
+	  return /* None */0;
+	}
+
+	function render(param) {
+	  var updater = param[/* updater */2];
+	  var state = param[/* state */0];
+	  return React.createElement("div", {
+	              ref: Curry._1(param[/* handler */3], setTrackRef),
+	              className: "track",
+	              onMouseDown: function ($$event) {
+	                kill($$event);
+	                return Curry._2(updater, function (param, param$1) {
+	                            return maybeDragged(/* true */1, param, param$1);
+	                          }, $$event);
+	              },
+	              onMouseUp: function ($$event) {
+	                var match = state[/* mouseDown */1];
+	                if (match !== 0) {
+	                  return Curry._2(updater, function (param, param$1) {
+	                              return maybeDragged(/* false */0, param, param$1);
+	                            }, $$event);
+	                } else {
+	                  return /* () */0;
+	                }
+	              }
+	            }, React.createElement("div", {
+	                  className: "spent",
+	                  style: {
+	                    width: Pervasives.string_of_float(param[/* props */1][/* progress */0]) + "%"
+	                  }
+	                }));
+	}
+
+	var Progress_bar_005 = /* JsProps */include[6];
+
+	var Progress_bar = /* module */[
+	  /* componentWillUpdate */componentWillUpdate,
+	  /* componentDidUpdate */componentDidUpdate,
+	  /* componentWillReceiveProps */componentWillReceiveProps,
+	  /* componentWillUnmount */componentWillUnmount,
+	  /* jsPropsToReasonProps */jsPropsToReasonProps,
+	  Progress_bar_005,
+	  /* name */name,
+	  /* getInstanceVars */getInstanceVars,
+	  /* getInitialState */getInitialState,
+	  /* mouseXAsPercentage */mouseXAsPercentage,
+	  /* handleMouseMoved */handleMouseMoved,
+	  /* setTrackRef */setTrackRef,
+	  /* maybeDragged */maybeDragged,
+	  /* componentDidMount */componentDidMount,
+	  /* render */render
+	];
+
+	var include$1 = ReactRe.CreateComponent([
+	      name,
+	      getInstanceVars,
+	      getInitialState,
+	      componentDidMount,
+	      componentWillReceiveProps,
+	      componentWillUpdate,
+	      componentDidUpdate,
+	      componentWillUnmount,
+	      jsPropsToReasonProps,
+	      render
+	    ]);
+
+	var wrapProps = include$1[1];
+
+	function createElement(progress, onChanged) {
+	  return Curry._1(wrapProps, /* record */[
+	              /* progress */progress,
+	              /* onChanged */onChanged
+	            ]);
+	}
+
+	var comp = include$1[0];
+
+	exports.kill          = kill;
+	exports.Progress_bar  = Progress_bar;
+	exports.comp          = comp;
+	exports.wrapProps     = wrapProps;
+	exports.createElement = createElement;
+	/* include Not a pure module */
+
+
+/***/ },
+/* 230 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Curry                      = __webpack_require__(1);
+	var NodeRe                     = __webpack_require__(31);
+	var DomTypesRe                 = __webpack_require__(33);
+	var SlotableRe                 = __webpack_require__(231);
+	var ChildNodeRe                = __webpack_require__(232);
+	var Js_primitive               = __webpack_require__(35);
+	var ParentNodeRe               = __webpack_require__(36);
+	var EventTargetRe              = __webpack_require__(34);
+	var NonDocumentTypeChildNodeRe = __webpack_require__(233);
+
+	function ofNode(node) {
+	  var match = +(NodeRe.nodeType(node) === /* Element */0);
+	  if (match !== 0) {
+	    return /* Some */[node];
+	  } else {
+	    return /* None */0;
+	  }
+	}
+
+	function Impl() {
+	  var asHtmlElement = (
+	    function (element) {
+	      // BEWARE: Assumes "contentEditable" uniquely identifies an HTMLELement
+	      return element.contentEditable !== undefined ?  element : null;
+	    }
+	  );
+	  var asHtmlElement$1 = function (self) {
+	    return Js_primitive.null_to_opt(Curry._1(asHtmlElement, self));
+	  };
+	  var insertAdjacentElement = function (position, element, self) {
+	    self.insertAdjacentElement(DomTypesRe.encodeInsertPosition(position), element);
+	    return /* () */0;
+	  };
+	  var insertAdjacentHTML = function (position, text, self) {
+	    self.insertAdjacentHTML(DomTypesRe.encodeInsertPosition(position), text);
+	    return /* () */0;
+	  };
+	  var insertAdjacentText = function (position, text, self) {
+	    self.insertAdjacentText(DomTypesRe.encodeInsertPosition(position), text);
+	    return /* () */0;
+	  };
+	  return /* module */[
+	          /* asHtmlElement */asHtmlElement$1,
+	          /* ofNode */ofNode,
+	          /* insertAdjacentElement */insertAdjacentElement,
+	          /* insertAdjacentHTML */insertAdjacentHTML,
+	          /* insertAdjacentText */insertAdjacentText
+	        ];
+	}
+
+	EventTargetRe.Impl(/* module */[]);
+
+	var include = NodeRe.Impl(/* module */[]);
+
+	ParentNodeRe.Impl(/* module */[]);
+
+	NonDocumentTypeChildNodeRe.Impl(/* module */[]);
+
+	ChildNodeRe.Impl(/* module */[]);
+
+	SlotableRe.Impl(/* module */[]);
+
+	var asHtmlElement = (
+	    function (element) {
+	      // BEWARE: Assumes "contentEditable" uniquely identifies an HTMLELement
+	      return element.contentEditable !== undefined ?  element : null;
+	    }
+	  );
+
+	function asHtmlElement$1(self) {
+	  return Js_primitive.null_to_opt(Curry._1(asHtmlElement, self));
+	}
+
+	function insertAdjacentElement(position, element, self) {
+	  self.insertAdjacentElement(DomTypesRe.encodeInsertPosition(position), element);
+	  return /* () */0;
+	}
+
+	function insertAdjacentHTML(position, text, self) {
+	  self.insertAdjacentHTML(DomTypesRe.encodeInsertPosition(position), text);
+	  return /* () */0;
+	}
+
+	function insertAdjacentText(position, text, self) {
+	  self.insertAdjacentText(DomTypesRe.encodeInsertPosition(position), text);
+	  return /* () */0;
+	}
+
+	var nodeType = include[0];
+
+	var insertBefore = include[1];
+
+	exports.Impl                  = Impl;
+	exports.nodeType              = nodeType;
+	exports.insertBefore          = insertBefore;
+	exports.asHtmlElement         = asHtmlElement$1;
+	exports.ofNode                = ofNode;
+	exports.insertAdjacentElement = insertAdjacentElement;
+	exports.insertAdjacentHTML    = insertAdjacentHTML;
+	exports.insertAdjacentText    = insertAdjacentText;
+	/*  Not a pure module */
+
+
+/***/ },
+/* 231 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+
+	function Impl() {
+	  return /* module */[];
+	}
+
+	exports.Impl = Impl;
+	/* No side effect */
+
+
+/***/ },
+/* 232 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+
+	function Impl() {
+	  return /* module */[];
+	}
+
+	exports.Impl = Impl;
+	/* No side effect */
+
+
+/***/ },
+/* 233 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+
+	function Impl() {
+	  return /* module */[];
+	}
+
+	exports.Impl = Impl;
+	/* No side effect */
 
 
 /***/ }

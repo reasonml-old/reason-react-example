@@ -1,5 +1,3 @@
-external refToDom : ReactRe.reactRef => Dom.element = "%identity";
-
 module AudioElement = {
   type t;
   external ofDom : Dom.element => t = "%identity";
@@ -11,6 +9,7 @@ module AudioElement = {
   external setVolume : t => float => unit = "volume" [@@bs.set];
   external currentTime : t => int = "" [@@bs.get];
   external duration : t => int = "" [@@bs.get];
+  external setCurrentTime : t => int => unit = "currentTime" [@@bs.set];
 };
 
 let setAudioPlayerMedia (player: AudioElement.t) audioSrc => {
@@ -32,7 +31,9 @@ module Audio_player = {
     channel: State.channel,
     audioState: State.mediaPlayerState,
     volume: float,
-    onTimeUpdated: AudioElement.t => unit
+    onTimeUpdated: AudioElement.t => unit,
+    percent: option (float, float),
+    time: option float
   };
   type instanceVars = {mutable domRef: option Dom.element};
   type state = {onTimeUpdated: AudioElement.t => unit};
@@ -50,6 +51,8 @@ module Audio_player = {
        * State change
        * Src change
        * Volume change
+       * Progress percent change (set time as a percent)
+       * Time change (set time in seconds, beats progress)
         */
       if (
         prevProps.audioState != props.audioState ||
@@ -63,6 +66,15 @@ module Audio_player = {
       };
       if (prevProps.volume != props.volume) {
         AudioElement.setVolume player props.volume
+      };
+      switch props.percent {
+      | None => ()
+      | Some (percent, time) =>
+        let offset = int_of_float (floor (float_of_int (AudioElement.duration player) *. percent));
+        switch prevProps.percent {
+        | None => AudioElement.setCurrentTime player offset
+        | Some (_, oldTime) => oldTime == time ? () : AudioElement.setCurrentTime player offset
+        }
       }
     };
     None
@@ -90,5 +102,5 @@ module Audio_player = {
 
 include ReactRe.CreateComponent Audio_player;
 
-let createElement ::channel ::id ::volume ::audioState ::onTimeUpdated =>
-  wrapProps {channel, id, audioState, volume, onTimeUpdated};
+let createElement ::channel ::id ::volume ::audioState ::onTimeUpdated ::percent ::time=? =>
+  wrapProps {channel, id, audioState, volume, onTimeUpdated, percent, time};
