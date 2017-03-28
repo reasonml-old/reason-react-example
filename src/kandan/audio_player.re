@@ -9,6 +9,8 @@ module AudioElement = {
   external pause : t => unit = "pause" [@@bs.send];
   external paused : t => Js.boolean = "paused" [@@bs.get];
   external setVolume : t => float => unit = "volume" [@@bs.set];
+  external currentTime : t => int = "" [@@bs.get];
+  external duration : t => int = "" [@@bs.get];
 };
 
 let setAudioPlayerMedia (player: AudioElement.t) audioSrc => {
@@ -21,18 +23,21 @@ let setAudioPlayerMedia (player: AudioElement.t) audioSrc => {
     AudioElement.load player
 };
 
+/* TODO: Figure out how to move handlers from props to state */
+/* TODO: Add optional handlers for all the other audio tag events */
 module Audio_player = {
   include ReactRe.Component.Stateful.InstanceVars;
-  type instanceVars = {mutable domRef: option Dom.element};
-  type state = unit;
-  let getInitialState _ => ();
-  let name = "AudioPlayer";
   type props = {
     id: int,
     channel: State.channel,
     audioState: State.mediaPlayerState,
-    volume: float
+    volume: float,
+    onTimeUpdated: AudioElement.t => unit
   };
+  type instanceVars = {mutable domRef: option Dom.element};
+  type state = {onTimeUpdated: AudioElement.t => unit};
+  let getInitialState (props: props) => {onTimeUpdated: props.onTimeUpdated};
+  let name = "AudioPlayer";
   let getInstanceVars () => {domRef: None};
   let componentDidUpdate ::prevProps ::prevState {props, instanceVars} => {
     ignore prevState;
@@ -62,7 +67,12 @@ module Audio_player = {
     };
     None
   };
-  let setAudioRef {instanceVars} r => instanceVars.domRef = Some r;
+  let setAudioRef {state, instanceVars} el => {
+    instanceVars.domRef = Some el;
+    /* TODO: This is probably too frequent, find a way to debounce to ~500ms */
+    ReasonJs.Dom.Element.addEventListener
+      "timeupdate" (fun _event => state.onTimeUpdated (AudioElement.ofDom el)) el
+  };
   let render {props, handler} =>
     <div style=(ReactDOMRe.Style.make display::"block" ())>
       <audio
@@ -80,5 +90,5 @@ module Audio_player = {
 
 include ReactRe.CreateComponent Audio_player;
 
-let createElement ::channel ::id ::volume ::audioState =>
-  wrapProps {channel, id, audioState, volume};
+let createElement ::channel ::id ::volume ::audioState ::onTimeUpdated =>
+  wrapProps {channel, id, audioState, volume, onTimeUpdated};

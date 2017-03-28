@@ -23,7 +23,7 @@ type mediaPlayerState =
   | Paused
   | NotLoaded;
 
-type media = {order: int, src: option string};
+type media = {order: int, src: option string, duration: option int};
 
 type channel = {
   id: channelId,
@@ -33,6 +33,8 @@ type channel = {
   userIds: UserIdSet.t,
   media,
   mediaState: mediaPlayerState,
+  /* 0.0 => 1.0 */
+  mediaProgress: int,
   playlist: list media
 };
 
@@ -68,6 +70,7 @@ type action =
   | ChannelSelectedByIndex int
   | SongSelected channel media
   | MediaStateUpdated channel mediaPlayerState
+  | MediaProgressUpdated channel int int
   | ChatBoxFocused bool
   | UserMenuToggled bool
   | MsgSubmitted channel user message
@@ -88,6 +91,7 @@ let stringOfAction (action: action) =>
   | ChannelSelectedByIndex _ => "ChannelSelectedByIndex"
   | SongSelected _ _ [@implicit_arity] => "SongSelected"
   | MediaStateUpdated _ _ [@implicit_arity] => "MediaStateUpdated"
+  | MediaProgressUpdated _ _ _ => "MediaProgressUpdated"
   | ChatBoxFocused _ => "ChatBoxFocused"
   | UserMenuToggled _ => "UserMenuToggled"
   | MsgSubmitted _ _ _ [@implicit_arity] => "MsgSubmitted"
