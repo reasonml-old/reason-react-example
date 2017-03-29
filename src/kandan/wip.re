@@ -160,6 +160,38 @@ let text = ReactRe.stringToElement;
          </div>
        </div>;
    }; */
+let searchField searchTerm onSearchUpdated =>
+  <input
+    _type="text"
+    placeholder="Search..."
+    value=(
+            switch searchTerm {
+            | None => ""
+            | Some term => term
+            }
+          )
+    onChange=(
+               fun event => {
+                 let x =
+                   switch (
+                     ReasonJs.Dom.HtmlElement.value (
+                       Utils.domAsHtmlElement (ReactEventRe.Form.target event)
+                     )
+                   ) {
+                   | "" => None
+                   | term => Some term
+                   };
+                 onSearchUpdated x
+               }
+             )
+    onKeyDown=(
+                fun event =>
+                  if (ReactEventRe.Keyboard.which event == 13) {
+                    ReactEventRe.Keyboard.preventDefault event
+                  }
+              )
+  />;
+
 module Wip = {
   include ReactRe.Component.Stateful;
   let name = "Wip";
@@ -411,7 +443,64 @@ module Wip = {
         State.(state.channels);
     let activities =
       State.(currentChannel.activities) |>
-      List.sort (fun a b => compare State.(a.createdAt) State.(b.createdAt)) |> Array.of_list;
+      List.sort (fun a b => compare State.(a.createdAt) State.(b.createdAt));
+    let filteredActivities =
+      switch state.search {
+      | None => activities
+      | Some term =>
+        State.(
+          activities |>
+          List.filter (
+            fun (activity: message) =>
+              switch (
+                Local_string.indexOf
+                  (Local_string.lowerCase activity.content) (Local_string.lowerCase term)
+              ) {
+              | (-1) => false
+              | _ => true
+              }
+          )
+        )
+      };
+    let filteredChannels =
+      switch state.search {
+      | None => sortedChannels
+      | Some term =>
+        State.(
+          sortedChannels |>
+          List.filter (
+            fun (channel: channel) =>
+              switch (
+                Local_string.indexOf
+                  (Local_string.lowerCase channel.title) (Local_string.lowerCase term)
+              ) {
+              | (-1) => false
+              | _ => true
+              }
+          )
+        )
+      };
+    let filteredPlaylist =
+      switch state.search {
+      | None => currentChannel.playlist
+      | Some term =>
+        State.(
+          currentChannel.playlist |>
+          List.filter (
+            fun (media: media) =>
+              switch media.src {
+              | None => false
+              | Some src =>
+                switch (
+                  Local_string.indexOf (Local_string.lowerCase src) (Local_string.lowerCase term)
+                ) {
+                | (-1) => false
+                | _ => true
+                }
+              }
+          )
+        )
+      };
     let keyMap =
       State.[
         (["ctrl+esc"], Log "ctrl esc yo!"),
@@ -534,30 +623,27 @@ module Wip = {
       <div className="main">
         <div className="menu left">
           <div className="menu-items channels">
-            (ReactRe.listToElement (List.map channelEntry sortedChannels))
+            (searchField state.search (fun term => dispatchEL (SearchUpdated term) ()))
+            (ReactRe.listToElement (List.map channelEntry filteredChannels))
           </div>
         </div>
         <div className="chat">
           <div className="chat-feed">
             State.(
-              ReactRe.arrayToElement (
-                Array.map
-                  (
-                    fun (activity: State.message) => {
-                      let user =
-                        List.find
-                          (fun (user: State.user) => user.id === activity.userId) state.users;
-                      let (renderableMessage, media, _media_count) =
-                        Plugins.renderableOfMessage me state.users currentChannel activity;
-                      <div>
-                        <img className="avatar" src=(Utils.gravatarUrl user.email) />
-                        (ReactRe.arrayToElement renderableMessage)
-                        <div className="media-container"> media </div>
-                      </div>
-                    }
-                  )
-                  activities
-              )
+              filteredActivities |>
+              List.map (
+                fun (activity: message) => {
+                  let user =
+                    List.find (fun (user: State.user) => user.id === activity.userId) state.users;
+                  let (renderableMessage, media, _media_count) =
+                    Plugins.renderableOfMessage me state.users currentChannel activity;
+                  <div>
+                    <img className="avatar" src=(Utils.gravatarUrl user.email) />
+                    (ReactRe.arrayToElement renderableMessage)
+                    <div className="media-container"> media </div>
+                  </div>
+                }
+              ) |> ReactRe.listToElement
             )
           </div>
           <Chatbox
@@ -573,7 +659,7 @@ module Wip = {
         </div>
         <div className="menu right">
           <div className="menu-items songs">
-            <ul> (ReactRe.listToElement (List.map songEntry currentChannel.playlist)) </ul>
+            <ul> (ReactRe.listToElement (List.map songEntry filteredPlaylist)) </ul>
           </div>
         </div>
       </div>
