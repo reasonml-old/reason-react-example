@@ -10766,7 +10766,12 @@
 	                            }, "artist name (Probably can't get this)"))), React.createElement("div", {
 	                      className: "right controls"
 	                    }, React.createElement("div", {
-	                          className: "mute"
+	                          className: "mute",
+	                          onClick: function () {
+	                            return Curry._2(updater, function (param, param$1) {
+	                                        return dispatchEventless(/* VolumeMuteToggled */0, param, param$1);
+	                                      }, /* () */0);
+	                          }
 	                        }, "<))"), React.createElement("div", {
 	                          className: "volume slider"
 	                        }, Curry._4(Progress_bar.createElement(state[/* volume */11] * 100.0, /* Some */[function (offset) {

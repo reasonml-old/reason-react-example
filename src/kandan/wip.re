@@ -676,7 +676,9 @@ module Wip = {
           </div>
         </div>
         <div className="right controls">
-          <div className="mute"> (text "<))") </div>
+          <div className="mute" onClick=(fun _ => dispatchEL VolumeMuteToggled ())>
+            (text "<))")
+          </div>
           <div className="volume slider">
             <Progress_bar
               cursor="ew-resize"
