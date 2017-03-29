@@ -101,10 +101,9 @@ module Audio_player = {
   };
   let setAudioRef {state, instanceVars} el => {
     instanceVars.domRef = Some el;
-    /* TODO: This is probably too frequent, find a way to debounce to ~500ms */
     ReasonJs.Dom.Element.addEventListener
       "timeupdate"
-      (throttleOneArg 950.0 (fun _event => state.onTimeUpdated (AudioElement.ofDom el)))
+      (throttleOneArg 100.0 (fun _event => state.onTimeUpdated (AudioElement.ofDom el)))
       el
   };
   let render {props, handler} =>

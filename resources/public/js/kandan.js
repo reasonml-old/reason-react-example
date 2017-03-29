@@ -17296,7 +17296,7 @@
 	function setAudioRef(param, el) {
 	  var state = param[/* state */0];
 	  param[/* instanceVars */4][/* domRef */0] = /* Some */[el];
-	  el.addEventListener("timeupdate", throttleOneArg(950.0, function () {
+	  el.addEventListener("timeupdate", throttleOneArg(100.0, function () {
 	            return Curry._1(state[/* onTimeUpdated */0], el);
 	          }));
 	  return /* () */0;
