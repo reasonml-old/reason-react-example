@@ -462,28 +462,26 @@ module Wip = {
       ];
     let dispatchEL action => updater (dispatchEventless action);
     let audioChannels =
-      List.map
-        (
-          fun (channel: State.channel) =>
-            <Audio_player
-              channel
-              id=channel.id
-              key=(string_of_int channel.id)
-              volume=(channel.id == currentChannel.id ? state.volume : 0.0)
-              audioState=channel.mediaState
-              percent=currentChannel.mediaScrubbedTo
-              onTimeUpdated=(
-                              fun el => {
-                                let duration = Audio_player.AudioElement.duration el;
-                                let currentTime = Audio_player.AudioElement.currentTime el;
-                                dispatchEL
-                                  State.(MediaProgressUpdated currentChannel currentTime duration)
-                                  ()
-                              }
-                            )
-            />
-        )
-        state.channels |> Array.of_list;
+      sortedChannels |>
+      List.map (
+        fun (channel: State.channel) =>
+          <Audio_player
+            channel
+            id=channel.id
+            key=(string_of_int channel.id)
+            volume=(channel.id == currentChannel.id ? state.volume : 0.0)
+            audioState=channel.mediaState
+            percent=channel.mediaScrubbedTo
+            onTimeUpdated=(
+                            fun el => {
+                              let duration = Audio_player.AudioElement.duration el;
+                              let currentTime = Audio_player.AudioElement.currentTime el;
+                              dispatchEL
+                                State.(MediaProgressUpdated channel currentTime duration) ()
+                            }
+                          )
+          />
+      ) |> Array.of_list;
     let userEntry (user: State.user) =>
       State.(
         <li className="user" title=(Utils.nameOfUser user) key=(string_of_int user.id)>

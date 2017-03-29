@@ -10553,15 +10553,15 @@
 	                            var duration = el.duration;
 	                            var currentTime = el.currentTime;
 	                            var partial_arg = /* MediaProgressUpdated */Block.__(8, [
-	                                currentChannel,
+	                                channel,
 	                                currentTime,
 	                                duration
 	                              ]);
 	                            return Curry._2(updater, function (param, param$1) {
 	                                        return dispatchEventless(partial_arg, param, param$1);
 	                                      }, /* () */0);
-	                          }, currentChannel[/* mediaScrubbedTo */8], /* None */0), /* [] */0, /* None */0, /* Some */[Pervasives.string_of_int(channel[/* id */0])], /* () */0);
-	          }, state[/* channels */5]));
+	                          }, channel[/* mediaScrubbedTo */8], /* None */0), /* [] */0, /* None */0, /* Some */[Pervasives.string_of_int(channel[/* id */0])], /* () */0);
+	          }, sortedChannels));
 	  var userEntry = function (user) {
 	    return React.createElement("li", {
 	                key: Pervasives.string_of_int(user[/* id */0]),
@@ -15682,7 +15682,7 @@
 	      case 7 : 
 	          return "MediaPlayerScrubbed";
 	      case 8 : 
-	          return "MediaProgressUpdated";
+	          return "MediaProgressUpdated on " + action[0][/* title */1];
 	      case 9 : 
 	          return "ChatBoxFocused";
 	      case 10 : 
@@ -17207,6 +17207,28 @@
 	  }
 	}
 
+	function throttleOneArg(quiet_interval_ms, fn) {
+	  var timeout = [/* None */0];
+	  return function (fnArg1) {
+	    var match = timeout[0];
+	    if (match) {
+	      var now = Date.now();
+	      var elapsed = now - match[0];
+	      var match$1 = +(quiet_interval_ms < elapsed);
+	      if (match$1 !== 0) {
+	        timeout[0] = /* Some */[now];
+	        return Curry._1(fn, fnArg1);
+	      } else {
+	        return /* () */0;
+	      }
+	    } else {
+	      var now$1 = Date.now();
+	      timeout[0] = /* Some */[now$1];
+	      return Curry._1(fn, fnArg1);
+	    }
+	  };
+	}
+
 	var include = ReactRe.Component[/* Stateful */8][/* InstanceVars */8];
 
 	var componentDidMount = include[0];
@@ -17274,23 +17296,37 @@
 	function setAudioRef(param, el) {
 	  var state = param[/* state */0];
 	  param[/* instanceVars */4][/* domRef */0] = /* Some */[el];
-	  el.addEventListener("timeupdate", function () {
-	        return Curry._1(state[/* onTimeUpdated */0], el);
-	      });
+	  el.addEventListener("timeupdate", throttleOneArg(950.0, function () {
+	            return Curry._1(state[/* onTimeUpdated */0], el);
+	          }));
 	  return /* () */0;
 	}
 
 	function render(param) {
 	  var props = param[/* props */1];
-	  var match = props[/* channel */1][/* media */5][/* src */1];
+	  var match = props[/* audioState */2];
+	  var $js;
+	  switch (match) {
+	    case 0 : 
+	        $js = "Playing";
+	        break;
+	    case 1 : 
+	        $js = "Paused";
+	        break;
+	    case 2 : 
+	        $js = "NotLoaded";
+	        break;
+	    
+	  }
+	  var match$1 = props[/* channel */1][/* media */5][/* src */1];
 	  return React.createElement("div", {
 	              style: {
 	                display: "block"
 	              }
 	            }, React.createElement("audio", {
 	                  ref: Curry._1(param[/* handler */3], setAudioRef),
-	                  className: "audio-player audio-" + Pervasives.string_of_int(props[/* channel */1][/* id */0]),
-	                  src: match ? match[0] : ""
+	                  className: "audio-player audio-" + (Pervasives.string_of_int(props[/* channel */1][/* id */0]) + (" " + $js)),
+	                  src: match$1 ? match$1[0] : ""
 	                }));
 	}
 
@@ -17342,6 +17378,7 @@
 
 	exports.AudioElement        = AudioElement;
 	exports.setAudioPlayerMedia = setAudioPlayerMedia;
+	exports.throttleOneArg      = throttleOneArg;
 	exports.Audio_player        = Audio_player;
 	exports.comp                = comp;
 	exports.wrapProps           = wrapProps;

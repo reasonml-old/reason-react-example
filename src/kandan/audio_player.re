@@ -22,7 +22,27 @@ let setAudioPlayerMedia (player: AudioElement.t) audioSrc => {
     AudioElement.load player
 };
 
-/* TODO: Figure out how to move handlers from props to state */
+let throttleOneArg (quiet_interval_ms: float) fn => {
+  let timeout: ref (option float) = ref None;
+  let throttledFn fnArg1 =>
+    switch !timeout {
+    | None =>
+      let now = Js.Date.now ();
+      timeout := Some now;
+      fn fnArg1
+    | Some lastFired =>
+      let now = Js.Date.now ();
+      let elapsed = now -. lastFired;
+      quiet_interval_ms < elapsed ?
+        {
+          timeout := Some now;
+          fn fnArg1
+        } :
+        ()
+    };
+  throttledFn
+};
+
 /* TODO: Add optional handlers for all the other audio tag events */
 module Audio_player = {
   include ReactRe.Component.Stateful.InstanceVars;
@@ -83,12 +103,24 @@ module Audio_player = {
     instanceVars.domRef = Some el;
     /* TODO: This is probably too frequent, find a way to debounce to ~500ms */
     ReasonJs.Dom.Element.addEventListener
-      "timeupdate" (fun _event => state.onTimeUpdated (AudioElement.ofDom el)) el
+      "timeupdate"
+      (throttleOneArg 950.0 (fun _event => state.onTimeUpdated (AudioElement.ofDom el)))
+      el
   };
   let render {props, handler} =>
     <div style=(ReactDOMRe.Style.make display::"block" ())>
       <audio
-        className=("audio-player audio-" ^ string_of_int props.channel.id)
+        className=(
+                    "audio-player audio-" ^
+                    string_of_int props.channel.id ^
+                    " " ^ (
+                      switch props.audioState {
+                      | NotLoaded => "NotLoaded"
+                      | Playing => "Playing"
+                      | Paused => "Paused"
+                      }
+                    )
+                  )
         src=(
               switch props.channel.media.src {
               | None => ""
