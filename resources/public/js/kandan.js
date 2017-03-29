@@ -10757,7 +10757,7 @@
 	                                            return Curry._1(Curry._1(updater, function (param, param$1) {
 	                                                            return dispatchEventless(action, param, param$1);
 	                                                          }), /* () */0);
-	                                          }]), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
+	                                          }], /* Some */["ew-resize"]), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
 	                                      className: "thumb"
 	                                    })), React.createElement("div", {
 	                                  className: "playtime"
@@ -10774,7 +10774,7 @@
 	                                    return Curry._2(updater, function (param, param$1) {
 	                                                return dispatchEventless(partial_arg, param, param$1);
 	                                              }, /* () */0);
-	                                  }]), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
+	                                  }], /* Some */["ew-resize"]), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
 	                              className: "thumb"
 	                            })))));
 	}
@@ -41857,10 +41857,15 @@
 
 	function render(param) {
 	  var updater = param[/* updater */2];
+	  var props = param[/* props */1];
 	  var state = param[/* state */0];
+	  var match = props[/* cursor */2];
 	  return React.createElement("div", {
 	              ref: Curry._1(param[/* handler */3], setTrackRef),
 	              className: "track",
+	              style: match ? {
+	                  cursor: match[0]
+	                } : { },
 	              onMouseDown: function ($$event) {
 	                kill($$event);
 	                return Curry._2(updater, function (param, param$1) {
@@ -41880,7 +41885,7 @@
 	            }, React.createElement("div", {
 	                  className: "spent",
 	                  style: {
-	                    width: Pervasives.string_of_float(param[/* props */1][/* progress */0]) + "%"
+	                    width: Pervasives.string_of_float(props[/* progress */0]) + "%"
 	                  }
 	                }));
 	}
@@ -41920,10 +41925,11 @@
 
 	var wrapProps = include$1[1];
 
-	function createElement(progress, onChanged) {
+	function createElement(progress, onChanged, cursor) {
 	  return Curry._1(wrapProps, /* record */[
 	              /* progress */progress,
-	              /* onChanged */onChanged
+	              /* onChanged */onChanged,
+	              /* cursor */cursor
 	            ]);
 	}
 

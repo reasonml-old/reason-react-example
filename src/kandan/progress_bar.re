@@ -10,7 +10,7 @@ let kill event => {
 module Progress_bar = {
   include ReactRe.Component.Stateful.InstanceVars;
   let name = "ProgressBar";
-  type props = {progress: float, onChanged: option (float => unit)};
+  type props = {progress: float, onChanged: option (float => unit), cursor: option string};
   type state = {listeners: option string, mouseDown: bool};
   type instanceVars = {mutable domRef: option Dom.element};
   let getInstanceVars () => {domRef: None};
@@ -74,7 +74,13 @@ module Progress_bar = {
                       kill event;
                       updater (maybeDragged true) event
                     }
-                  )>
+                  )
+      style=(
+              switch props.cursor {
+              | None => ReactDOMRe.Style.make ()
+              | Some cursor => ReactDOMRe.Style.make ::cursor ()
+              }
+            )>
       <div
         className="spent"
         style=(ReactDOMRe.Style.make width::(string_of_float props.progress ^ "%") ())
@@ -84,4 +90,4 @@ module Progress_bar = {
 
 include ReactRe.CreateComponent Progress_bar;
 
-let createElement ::progress ::onChanged=? => wrapProps {progress, onChanged};
+let createElement ::progress ::onChanged=? ::cursor=? => wrapProps {progress, onChanged, cursor};

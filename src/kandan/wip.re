@@ -644,6 +644,7 @@ module Wip = {
               <div className="timeline slider">
                 <Progress_bar
                   progress=(Utils.channelMediaProgress currentChannel currentChannel.media)
+                  cursor="ew-resize"
                   onChanged=(
                               fun offset => {
                                 Js.log offset;
@@ -678,6 +679,7 @@ module Wip = {
           <div className="mute"> (text "<))") </div>
           <div className="volume slider">
             <Progress_bar
+              cursor="ew-resize"
               progress=(state.volume *. 100.0)
               onChanged=(fun offset => dispatchEL State.(VolumeSet offset) ())
             />
