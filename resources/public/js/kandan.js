@@ -923,6 +923,7 @@
 	var Digest       = __webpack_require__(18);
 	var Random       = __webpack_require__(23);
 	var Caml_array   = __webpack_require__(2);
+	var Caml_int32   = __webpack_require__(12);
 	var DocumentRe   = __webpack_require__(30);
 	var Pervasives   = __webpack_require__(8);
 	var Js_primitive = __webpack_require__(35);
@@ -1027,8 +1028,29 @@
 	}
 
 	function findNextMedia(channel, offset) {
-	  var idx = Pervasives.max(0, Pervasives.min(channel[/* media */5][/* order */0] + offset | 0, List.length(channel[/* playlist */9])));
-	  return List.nth(channel[/* playlist */9], idx);
+	  var rawIdx = channel[/* media */5][/* order */0] + offset | 0;
+	  var rawIdx$1 = Pervasives.max(0, Pervasives.min(rawIdx, List.length(channel[/* playlist */11])));
+	  var match = channel[/* mediaRepeat */10];
+	  var idx;
+	  switch (match) {
+	    case 0 : 
+	        idx = rawIdx$1;
+	        break;
+	    case 1 : 
+	        idx = channel[/* media */5][/* order */0];
+	        break;
+	    case 2 : 
+	        var idx$1 = Caml_int32.mod_(rawIdx$1, List.length(channel[/* playlist */11]));
+	        console.log(/* int array */[
+	              rawIdx$1,
+	              List.length(channel[/* playlist */11]),
+	              idx$1
+	            ]);
+	        idx = idx$1;
+	        break;
+	    
+	  }
+	  return List.nth(channel[/* playlist */11], idx);
 	}
 
 	function mediaSrcToTitle(media) {
@@ -1038,6 +1060,15 @@
 	    return window.decodeURI(Caml_array.caml_array_get(split, split.length - 1 | 0));
 	  } else {
 	    return "Unknown";
+	  }
+	}
+
+	function tmpProgress(progress, media) {
+	  var match = media[/* duration */2];
+	  if (match) {
+	    return progress / match[0] * 100.0;
+	  } else {
+	    return 0;
 	  }
 	}
 
@@ -1068,6 +1099,7 @@
 	exports.setPageTitle         = setPageTitle;
 	exports.findNextMedia        = findNextMedia;
 	exports.mediaSrcToTitle      = mediaSrcToTitle;
+	exports.tmpProgress          = tmpProgress;
 	exports.channelMediaProgress = channelMediaProgress;
 	/* DocumentRe Not a pure module */
 
@@ -9239,6 +9271,37 @@
 	var Progress_bar            = __webpack_require__(229);
 	var Caml_builtin_exceptions = __webpack_require__(3);
 
+	function nativeOfTimeRanges(ranges) {
+	  var length = ranges.length;
+	  var match = +(length === 0);
+	  if (match !== 0) {
+	    return /* array */[];
+	  } else {
+	    var destination = Caml_array.caml_make_vect(length, /* tuple */[
+	          0.0,
+	          0.0
+	        ]);
+	    var _idx = 0;
+	    while(true) {
+	      var idx = _idx;
+	      var start = ranges.start(idx);
+	      var _end = ranges.end(idx);
+	      Caml_array.caml_array_set(destination, idx, /* tuple */[
+	            start,
+	            _end
+	          ]);
+	      var match$1 = +(((length - idx | 0) - 1 | 0) === 0);
+	      if (match$1 !== 0) {
+	        return destination;
+	      } else {
+	        _idx = idx + 1 | 0;
+	        continue ;
+	        
+	      }
+	    };
+	  }
+	}
+
 	var cursorPointer = {
 	  cursor: "pointer"
 	};
@@ -9425,6 +9488,35 @@
 	        })(state[/* channels */5]);
 	  var newrecord = currentChannel.slice();
 	  newrecord[/* media */5] = media;
+	  newrecord[/* mediaScrubbedTo */9] = /* Some */[/* tuple */[
+	      0.0,
+	      Date.now()
+	    ]];
+	  var newChannels = List.append(otherChannels, /* :: */[
+	        newrecord,
+	        /* [] */0
+	      ]);
+	  var newrecord$1 = state.slice();
+	  return /* Some */[(newrecord$1[/* channels */5] = newChannels, newrecord$1)];
+	}
+
+	function mediaPlaybackFinished(param, channel) {
+	  var state = param[/* state */0];
+	  var currentChannel = List.find(function (haystack) {
+	        return +(haystack[/* id */0] === channel[/* id */0]);
+	      }, state[/* channels */5]);
+	  var otherChannels = List.filter(function (haystack) {
+	          return +(haystack[/* id */0] !== channel[/* id */0]);
+	        })(state[/* channels */5]);
+	  console.log("Finding next media from " + Pervasives.string_of_int(channel[/* media */5][/* order */0]));
+	  var media = Utils.findNextMedia(channel, 1);
+	  console.log("\tFound " + Pervasives.string_of_int(media[/* order */0]));
+	  var newrecord = currentChannel.slice();
+	  newrecord[/* media */5] = media;
+	  newrecord[/* mediaScrubbedTo */9] = /* Some */[/* tuple */[
+	      0.0,
+	      Date.now()
+	    ]];
 	  var newChannels = List.append(otherChannels, /* :: */[
 	        newrecord,
 	        /* [] */0
@@ -9449,8 +9541,8 @@
 	    newChannel = newrecord;
 	  } else {
 	    var match = currentChannel[/* media */5][/* src */1];
-	    var match$1 = List.length(currentChannel[/* playlist */9]);
-	    var media = match || match$1 === 0 ? currentChannel[/* media */5] : List.nth(currentChannel[/* playlist */9], 0);
+	    var match$1 = List.length(currentChannel[/* playlist */11]);
+	    var media = match || match$1 === 0 ? currentChannel[/* media */5] : List.nth(currentChannel[/* playlist */11], 0);
 	    var newrecord$1 = currentChannel.slice();
 	    newrecord$1[/* media */5] = media;
 	    newrecord$1[/* mediaState */6] = newState;
@@ -9476,14 +9568,50 @@
 	  var media_000 = /* order */init[/* order */0];
 	  var media_001 = /* src */init[/* src */1];
 	  var media_002 = /* duration : Some */[duration];
+	  var media_003 = /* buffered */init[/* buffered */3];
+	  var media_004 = /* seekable */init[/* seekable */4];
 	  var media = /* record */[
 	    media_000,
 	    media_001,
-	    media_002
+	    media_002,
+	    media_003,
+	    media_004
 	  ];
 	  var newrecord = currentChannel.slice();
 	  newrecord[/* media */5] = media;
 	  newrecord[/* mediaProgress */7] = progress;
+	  var newChannels = List.append(otherChannels, /* :: */[
+	        newrecord,
+	        /* [] */0
+	      ]);
+	  var newrecord$1 = state.slice();
+	  return /* Some */[(newrecord$1[/* channels */5] = newChannels, newrecord$1)];
+	}
+
+	function mediaLoadProgressUpdated(param, channel, buffered, seekable) {
+	  var state = param[/* state */0];
+	  var currentChannel = List.find(function (haystack) {
+	        return +(haystack[/* id */0] === channel[/* id */0]);
+	      }, state[/* channels */5]);
+	  var otherChannels = List.filter(function (haystack) {
+	          return +(haystack[/* id */0] !== channel[/* id */0]);
+	        })(state[/* channels */5]);
+	  var init = currentChannel[/* media */5];
+	  var media_000 = /* order */init[/* order */0];
+	  var media_001 = /* src */init[/* src */1];
+	  var media_002 = /* duration */init[/* duration */2];
+	  var media_003 = /* buffered : Some */[buffered];
+	  var media_004 = /* seekable : Some */[seekable];
+	  var media = /* record */[
+	    media_000,
+	    media_001,
+	    media_002,
+	    media_003,
+	    media_004
+	  ];
+	  var newrecord = currentChannel.slice();
+	  newrecord[/* media */5] = media;
+	  newrecord[/* mediaLoadProgress */8] = /* Some */[buffered];
 	  var newChannels = List.append(otherChannels, /* :: */[
 	        newrecord,
 	        /* [] */0
@@ -9501,7 +9629,7 @@
 	          return +(haystack[/* id */0] !== channel[/* id */0]);
 	        })(state[/* channels */5]);
 	  var newrecord = currentChannel.slice();
-	  newrecord[/* mediaScrubbedTo */8] = /* Some */[/* tuple */[
+	  newrecord[/* mediaScrubbedTo */9] = /* Some */[/* tuple */[
 	      percent,
 	      time
 	    ]];
@@ -9547,16 +9675,18 @@
 	    var match$1 = parts.length;
 	    if (match$1 !== 0) {
 	      mediaToQueue = match$1 !== 1 ? /* Some */[/* record */[
-	            /* order */List.length(channel[/* playlist */9]),
+	            /* order */List.length(channel[/* playlist */11]),
 	            /* src : Some */[Caml_array.caml_array_get(parts, 1)],
-	            /* duration : None */0
+	            /* duration : None */0,
+	            /* buffered : None */0,
+	            /* seekable : None */0
 	          ]] : /* None */0;
 	    } else {
 	      throw [
 	            Caml_builtin_exceptions.assert_failure,
 	            [
 	              "wip.re",
-	              289,
+	              334,
 	              15
 	            ]
 	          ];
@@ -9573,10 +9703,10 @@
 	        newMsg,
 	        /* [] */0
 	      ]);
-	  newrecord[/* playlist */9] = mediaToQueue ? List.append(currentChannel[/* playlist */9], /* :: */[
+	  newrecord[/* playlist */11] = mediaToQueue ? List.append(currentChannel[/* playlist */11], /* :: */[
 	          mediaToQueue[0],
 	          /* [] */0
-	        ]) : currentChannel[/* playlist */9];
+	        ]) : currentChannel[/* playlist */11];
 	  var newChannels = List.append(otherChannels, /* :: */[
 	        newrecord,
 	        /* [] */0
@@ -9587,7 +9717,6 @@
 
 	function processEffects(param, action, _, newState) {
 	  var props = param[/* props */1];
-	  console.log("Processing effect for action: " + State.stringOfAction(action));
 	  if (typeof action === "number") {
 	    +(action === 0);
 	  } else {
@@ -9613,26 +9742,28 @@
 	                return scrollToLatestMessage(props[/* rootEl */1], channel$1[/* id */0]);
 	              }, 100);
 	          break;
-	      case 11 : 
+	      case 13 : 
 	          var channel$2 = action[0];
 	          setTimeout(function () {
 	                return scrollToLatestMessage(props[/* rootEl */1], channel$2[/* id */0]);
 	              }, 100);
 	          break;
-	      case 12 : 
+	      case 14 : 
 	          Utils.setPageTitle(action[0]);
 	          break;
 	      case 6 : 
 	      case 7 : 
 	      case 8 : 
-	      case 13 : 
-	      case 14 : 
+	      case 9 : 
+	      case 10 : 
 	      case 15 : 
-	          break;
 	      case 16 : 
+	      case 17 : 
+	          break;
+	      case 18 : 
 	          console.log(action[0]);
 	          break;
-	      case 17 : 
+	      case 19 : 
 	          window.alert(action[0]);
 	          break;
 	      default:
@@ -9684,30 +9815,36 @@
 	          newState = mediaScrubbedTo(componentBag, action[0], action[1], action[2]);
 	          break;
 	      case 8 : 
-	          newState = mediaProgressUpdated(componentBag, action[0], action[1], action[2]);
+	          newState = mediaPlaybackFinished(componentBag, action[0]);
 	          break;
 	      case 9 : 
-	          newState = chatBoxFocused(componentBag, action[0]);
+	          newState = mediaProgressUpdated(componentBag, action[0], action[1], action[2]);
 	          break;
 	      case 10 : 
-	          newState = userMenuToggled(componentBag, action[0]);
+	          newState = mediaLoadProgressUpdated(componentBag, action[0], action[1], action[2]);
 	          break;
 	      case 11 : 
-	          newState = msgSubmitted(componentBag, action[0], action[1], action[2]);
+	          newState = chatBoxFocused(componentBag, action[0]);
 	          break;
 	      case 12 : 
-	          throw notAEventlessAction(action);
+	          newState = userMenuToggled(componentBag, action[0]);
+	          break;
 	      case 13 : 
-	          newState = volumeSet(componentBag, action[0]);
+	          newState = msgSubmitted(componentBag, action[0], action[1], action[2]);
 	          break;
 	      case 14 : 
-	          newState = volumeIncremented(componentBag, action[0]);
-	          break;
+	          throw notAEventlessAction(action);
 	      case 15 : 
-	          newState = volumeDecremented(componentBag, action[0]);
+	          newState = volumeSet(componentBag, action[0]);
 	          break;
 	      case 16 : 
+	          newState = volumeIncremented(componentBag, action[0]);
+	          break;
 	      case 17 : 
+	          newState = volumeDecremented(componentBag, action[0]);
+	          break;
+	      case 18 : 
+	      case 19 : 
 	          newState = /* None */0;
 	          break;
 	      
@@ -9738,8 +9875,8 @@
 	    }
 	  } else {
 	    switch (action.tag | 0) {
-	      case 14 : 
-	      case 15 : 
+	      case 16 : 
+	      case 17 : 
 	          exit = 1;
 	          break;
 	      default:
@@ -9774,7 +9911,7 @@
 	          Caml_builtin_exceptions.assert_failure,
 	          [
 	            "wip.re",
-	            432,
+	            489,
 	            16
 	          ]
 	        ];
@@ -9834,9 +9971,9 @@
 	            } else {
 	              return /* false */0;
 	            }
-	          })(currentChannel[/* playlist */9]);
+	          })(currentChannel[/* playlist */11]);
 	  } else {
-	    filteredPlaylist = currentChannel[/* playlist */9];
+	    filteredPlaylist = currentChannel[/* playlist */11];
 	  }
 	  var $js;
 	  try {
@@ -9846,7 +9983,7 @@
 	      ]);
 	  }
 	  catch (exn){
-	    $js = /* Log */Block.__(16, ["No previous media in channel"]);
+	    $js = /* Log */Block.__(18, ["No previous media in channel"]);
 	  }
 	  var $js$1;
 	  try {
@@ -9856,7 +9993,7 @@
 	      ]);
 	  }
 	  catch (exn$1){
-	    $js$1 = /* Log */Block.__(16, ["No previous media in channel"]);
+	    $js$1 = /* Log */Block.__(18, ["No previous media in channel"]);
 	  }
 	  var match$4 = currentChannel[/* mediaState */6];
 	  var $js$2;
@@ -9877,23 +10014,50 @@
 	      "ctrl+esc",
 	      /* [] */0
 	    ],
-	    /* Log */Block.__(16, ["ctrl esc yo!"])
+	    /* Log */Block.__(18, ["ctrl esc yo!"])
 	  ];
 	  var keyMap_001 = /* :: */[
 	    /* tuple */[
 	      /* :: */[
-	        "ctrl+?",
+	        "ctrl+shift+esc",
 	        /* [] */0
 	      ],
-	      /* UserMenuToggled */Block.__(10, [state[/* userMenuOpen */8]])
+	      /* Alert */Block.__(19, ["ctrl shift esc yo!"])
 	    ],
 	    /* :: */[
 	      /* tuple */[
 	        /* :: */[
-	          "/",
-	          /* [] */0
+	          "up",
+	          /* :: */[
+	            "up",
+	            /* :: */[
+	              "down",
+	              /* :: */[
+	                "down",
+	                /* :: */[
+	                  "left",
+	                  /* :: */[
+	                    "right",
+	                    /* :: */[
+	                      "left",
+	                      /* :: */[
+	                        "right",
+	                        /* :: */[
+	                          "a",
+	                          /* :: */[
+	                            "b",
+	                            /* [] */0
+	                          ]
+	                        ]
+	                      ]
+	                    ]
+	                  ]
+	                ]
+	              ]
+	            ]
+	          ]
 	        ],
-	        /* SearchFormFocused */Block.__(0, [/* true */1])
+	        /* Alert */Block.__(19, ["Konami code!"])
 	      ],
 	      /* :: */[
 	        /* tuple */[
@@ -9901,162 +10065,281 @@
 	            "ctrl+-",
 	            /* [] */0
 	          ],
-	          /* VolumeDecremented */Block.__(15, [0.1])
+	          /* VolumeDecremented */Block.__(17, [0.1])
 	        ],
 	        /* :: */[
 	          /* tuple */[
 	            /* :: */[
-	              "ctrl+shift+<",
+	              "ctrl+shift+_",
 	              /* [] */0
 	            ],
-	            $js
+	            /* VolumeDecremented */Block.__(17, [0.1])
 	          ],
 	          /* :: */[
 	            /* tuple */[
 	              /* :: */[
-	                "ctrl+shift+>",
+	                "ctrl+shift+plus",
 	                /* [] */0
 	              ],
-	              $js$1
+	              /* VolumeIncremented */Block.__(16, [0.1])
 	            ],
 	            /* :: */[
 	              /* tuple */[
 	                /* :: */[
-	                  "ctrl+p",
+	                  "ctrl+equal",
 	                  /* [] */0
 	                ],
-	                /* MediaStateUpdated */Block.__(6, [
-	                    currentChannel,
-	                    $js$2
-	                  ])
+	                /* VolumeIncremented */Block.__(16, [0.1])
 	              ],
 	              /* :: */[
 	                /* tuple */[
 	                  /* :: */[
-	                    "ctrl+shift+=",
+	                    "ctrl+0",
 	                    /* [] */0
 	                  ],
-	                  /* VolumeIncremented */Block.__(14, [0.1])
+	                  /* VolumeMuteToggled */0
 	                ],
 	                /* :: */[
 	                  /* tuple */[
 	                    /* :: */[
-	                      "ctrl+1",
+	                      "ctrl+shift+)",
 	                      /* [] */0
 	                    ],
-	                    /* ChannelSelectedByIndex */Block.__(4, [0])
+	                    /* VolumeMuteToggled */0
 	                  ],
 	                  /* :: */[
 	                    /* tuple */[
 	                      /* :: */[
-	                        "ctrl+2",
+	                        "ctrl+m",
 	                        /* [] */0
 	                      ],
-	                      /* ChannelSelectedByIndex */Block.__(4, [1])
+	                      /* VolumeMuteToggled */0
 	                    ],
 	                    /* :: */[
 	                      /* tuple */[
 	                        /* :: */[
-	                          "ctrl+3",
+	                          "ctrl+shift+<",
 	                          /* [] */0
 	                        ],
-	                        /* ChannelSelectedByIndex */Block.__(4, [2])
+	                        $js
 	                      ],
 	                      /* :: */[
 	                        /* tuple */[
 	                          /* :: */[
-	                            "ctrl+4",
+	                            "ctrl+shift+>",
 	                            /* [] */0
 	                          ],
-	                          /* ChannelSelectedByIndex */Block.__(4, [3])
+	                          $js$1
 	                        ],
 	                        /* :: */[
 	                          /* tuple */[
 	                            /* :: */[
-	                              "ctrl+5",
+	                              "ctrl+p",
 	                              /* [] */0
 	                            ],
-	                            /* ChannelSelectedByIndex */Block.__(4, [4])
+	                            /* MediaStateUpdated */Block.__(6, [
+	                                currentChannel,
+	                                $js$2
+	                              ])
 	                          ],
 	                          /* :: */[
 	                            /* tuple */[
 	                              /* :: */[
-	                                "ctrl+6",
-	                                /* [] */0
+	                                "ctrl+x",
+	                                /* :: */[
+	                                  "1",
+	                                  /* [] */0
+	                                ]
 	                              ],
-	                              /* ChannelSelectedByIndex */Block.__(4, [5])
+	                              /* ChannelSelectedByIndex */Block.__(4, [0])
 	                            ],
 	                            /* :: */[
 	                              /* tuple */[
 	                                /* :: */[
-	                                  "ctrl+7",
-	                                  /* [] */0
+	                                  "ctrl+x",
+	                                  /* :: */[
+	                                    "2",
+	                                    /* [] */0
+	                                  ]
 	                                ],
-	                                /* ChannelSelectedByIndex */Block.__(4, [6])
+	                                /* ChannelSelectedByIndex */Block.__(4, [1])
 	                              ],
 	                              /* :: */[
 	                                /* tuple */[
 	                                  /* :: */[
-	                                    "ctrl+8",
-	                                    /* [] */0
+	                                    "ctrl+x",
+	                                    /* :: */[
+	                                      "3",
+	                                      /* [] */0
+	                                    ]
 	                                  ],
-	                                  /* ChannelSelectedByIndex */Block.__(4, [7])
+	                                  /* ChannelSelectedByIndex */Block.__(4, [2])
 	                                ],
 	                                /* :: */[
 	                                  /* tuple */[
 	                                    /* :: */[
-	                                      "ctrl+9",
-	                                      /* [] */0
+	                                      "ctrl+x",
+	                                      /* :: */[
+	                                        "4",
+	                                        /* [] */0
+	                                      ]
 	                                    ],
-	                                    /* ChannelSelectedByIndex */Block.__(4, [9])
+	                                    /* ChannelSelectedByIndex */Block.__(4, [3])
 	                                  ],
 	                                  /* :: */[
 	                                    /* tuple */[
 	                                      /* :: */[
-	                                        "ctrl+0",
-	                                        /* [] */0
+	                                        "ctrl+x",
+	                                        /* :: */[
+	                                          "5",
+	                                          /* [] */0
+	                                        ]
 	                                      ],
-	                                      /* VolumeMuteToggled */0
+	                                      /* ChannelSelectedByIndex */Block.__(4, [4])
 	                                    ],
 	                                    /* :: */[
 	                                      /* tuple */[
 	                                        /* :: */[
-	                                          "esc",
-	                                          /* [] */0
+	                                          "ctrl+x",
+	                                          /* :: */[
+	                                            "6",
+	                                            /* [] */0
+	                                          ]
 	                                        ],
-	                                        /* SearchFormFocused */Block.__(0, [/* false */0])
+	                                        /* ChannelSelectedByIndex */Block.__(4, [5])
 	                                      ],
 	                                      /* :: */[
 	                                        /* tuple */[
 	                                          /* :: */[
-	                                            "ctrl+shift+esc",
-	                                            /* [] */0
+	                                            "ctrl+x",
+	                                            /* :: */[
+	                                              "7",
+	                                              /* [] */0
+	                                            ]
 	                                          ],
-	                                          /* Alert */Block.__(17, ["ctrl shift esc yo!"])
+	                                          /* ChannelSelectedByIndex */Block.__(4, [6])
 	                                        ],
 	                                        /* :: */[
 	                                          /* tuple */[
 	                                            /* :: */[
-	                                              "up",
+	                                              "ctrl+x",
 	                                              /* :: */[
-	                                                "up",
+	                                                "8",
+	                                                /* [] */0
+	                                              ]
+	                                            ],
+	                                            /* ChannelSelectedByIndex */Block.__(4, [7])
+	                                          ],
+	                                          /* :: */[
+	                                            /* tuple */[
+	                                              /* :: */[
+	                                                "ctrl+x",
 	                                                /* :: */[
-	                                                  "down",
+	                                                  "9",
+	                                                  /* [] */0
+	                                                ]
+	                                              ],
+	                                              /* ChannelSelectedByIndex */Block.__(4, [8])
+	                                            ],
+	                                            /* :: */[
+	                                              /* tuple */[
+	                                                /* :: */[
+	                                                  "ctrl+1",
+	                                                  /* [] */0
+	                                                ],
+	                                                /* ChannelSelectedByIndex */Block.__(4, [0])
+	                                              ],
+	                                              /* :: */[
+	                                                /* tuple */[
 	                                                  /* :: */[
-	                                                    "down",
+	                                                    "ctrl+2",
+	                                                    /* [] */0
+	                                                  ],
+	                                                  /* ChannelSelectedByIndex */Block.__(4, [1])
+	                                                ],
+	                                                /* :: */[
+	                                                  /* tuple */[
 	                                                    /* :: */[
-	                                                      "left",
+	                                                      "ctrl+3",
+	                                                      /* [] */0
+	                                                    ],
+	                                                    /* ChannelSelectedByIndex */Block.__(4, [2])
+	                                                  ],
+	                                                  /* :: */[
+	                                                    /* tuple */[
 	                                                      /* :: */[
-	                                                        "right",
+	                                                        "ctrl+4",
+	                                                        /* [] */0
+	                                                      ],
+	                                                      /* ChannelSelectedByIndex */Block.__(4, [3])
+	                                                    ],
+	                                                    /* :: */[
+	                                                      /* tuple */[
 	                                                        /* :: */[
-	                                                          "left",
+	                                                          "ctrl+5",
+	                                                          /* [] */0
+	                                                        ],
+	                                                        /* ChannelSelectedByIndex */Block.__(4, [4])
+	                                                      ],
+	                                                      /* :: */[
+	                                                        /* tuple */[
 	                                                          /* :: */[
-	                                                            "right",
+	                                                            "ctrl+6",
+	                                                            /* [] */0
+	                                                          ],
+	                                                          /* ChannelSelectedByIndex */Block.__(4, [5])
+	                                                        ],
+	                                                        /* :: */[
+	                                                          /* tuple */[
 	                                                            /* :: */[
-	                                                              "a",
+	                                                              "ctrl+7",
+	                                                              /* [] */0
+	                                                            ],
+	                                                            /* ChannelSelectedByIndex */Block.__(4, [6])
+	                                                          ],
+	                                                          /* :: */[
+	                                                            /* tuple */[
 	                                                              /* :: */[
-	                                                                "b",
+	                                                                "ctrl+8",
 	                                                                /* [] */0
+	                                                              ],
+	                                                              /* ChannelSelectedByIndex */Block.__(4, [7])
+	                                                            ],
+	                                                            /* :: */[
+	                                                              /* tuple */[
+	                                                                /* :: */[
+	                                                                  "ctrl+9",
+	                                                                  /* [] */0
+	                                                                ],
+	                                                                /* ChannelSelectedByIndex */Block.__(4, [9])
+	                                                              ],
+	                                                              /* :: */[
+	                                                                /* tuple */[
+	                                                                  /* :: */[
+	                                                                    "esc",
+	                                                                    /* [] */0
+	                                                                  ],
+	                                                                  /* SearchFormFocused */Block.__(0, [/* false */0])
+	                                                                ],
+	                                                                /* :: */[
+	                                                                  /* tuple */[
+	                                                                    /* :: */[
+	                                                                      "/",
+	                                                                      /* [] */0
+	                                                                    ],
+	                                                                    /* SearchFormFocused */Block.__(0, [/* true */1])
+	                                                                  ],
+	                                                                  /* :: */[
+	                                                                    /* tuple */[
+	                                                                      /* :: */[
+	                                                                        "ctrl+?",
+	                                                                        /* [] */0
+	                                                                      ],
+	                                                                      /* UserMenuToggled */Block.__(12, [state[/* userMenuOpen */8]])
+	                                                                    ],
+	                                                                    /* [] */0
+	                                                                  ]
+	                                                                ]
 	                                                              ]
 	                                                            ]
 	                                                          ]
@@ -10066,10 +10349,8 @@
 	                                                  ]
 	                                                ]
 	                                              ]
-	                                            ],
-	                                            /* Alert */Block.__(17, ["Konami code!"])
-	                                          ],
-	                                          /* [] */0
+	                                            ]
+	                                          ]
 	                                        ]
 	                                      ]
 	                                    ]
@@ -10104,7 +10385,7 @@
 	            return Curry._4(Audio_player.createElement(channel, channel[/* id */0], match !== 0 ? state[/* volume */11] : 0.0, channel[/* mediaState */6], function (el) {
 	                            var duration = el.duration;
 	                            var currentTime = el.currentTime;
-	                            var partial_arg = /* MediaProgressUpdated */Block.__(8, [
+	                            var partial_arg = /* MediaProgressUpdated */Block.__(9, [
 	                                channel,
 	                                currentTime,
 	                                duration
@@ -10112,7 +10393,24 @@
 	                            return Curry._2(updater, function (param, param$1) {
 	                                        return dispatchEventless(partial_arg, param, param$1);
 	                                      }, /* () */0);
-	                          }, channel[/* mediaScrubbedTo */8], /* None */0), /* [] */0, /* None */0, /* Some */[Pervasives.string_of_int(channel[/* id */0])], /* () */0);
+	                          }, channel[/* mediaScrubbedTo */9], /* None */0, /* None */0, /* Some */[function (_, buffered, seekable) {
+	                              var nativeBuffered = nativeOfTimeRanges(buffered);
+	                              var nativeSeekable = nativeOfTimeRanges(seekable);
+	                              var partial_arg = /* MediaLoadProgressUpdated */Block.__(10, [
+	                                  channel,
+	                                  nativeBuffered,
+	                                  nativeSeekable
+	                                ]);
+	                              return Curry._2(updater, function (param, param$1) {
+	                                          return dispatchEventless(partial_arg, param, param$1);
+	                                        }, /* () */0);
+	                            }], /* Some */[function () {
+	                              console.log("Channel media order:  " + Pervasives.string_of_int(channel[/* media */5][/* order */0]));
+	                              var partial_arg = /* MediaPlaybackFinished */Block.__(8, [channel]);
+	                              return Curry._2(updater, function (param, param$1) {
+	                                          return dispatchEventless(partial_arg, param, param$1);
+	                                        }, /* () */0);
+	                            }]), /* [] */0, /* None */0, /* Some */[Pervasives.string_of_int(channel[/* id */0])], /* () */0);
 	          }, sortedChannels));
 	  var userEntry = function (user) {
 	    return React.createElement("li", {
@@ -10176,14 +10474,15 @@
 	  }
 	  var seconds = currentChannel[/* mediaProgress */7] % 60 | 0;
 	  var match$6 = +(seconds < 10);
-	  var match$7 = currentChannel[/* media */5][/* duration */2];
+	  var match$7 = currentChannel[/* media */5][/* buffered */3];
+	  var match$8 = currentChannel[/* media */5][/* duration */2];
 	  var $js$4;
-	  if (match$7) {
-	    var duration = match$7[0];
+	  if (match$8) {
+	    var duration = match$8[0];
 	    var seconds$1 = duration % 60 | 0;
-	    var match$8 = +(seconds$1 < 10);
+	    var match$9 = +(seconds$1 < 10);
 	    $js$4 = Pervasives.string_of_int(duration / 60 | 0) + (":" + ((
-	          match$8 !== 0 ? "0" : ""
+	          match$9 !== 0 ? "0" : ""
 	        ) + Pervasives.string_of_int(seconds$1)));
 	  } else {
 	    $js$4 = "Not Loaded";
@@ -10217,7 +10516,7 @@
 	                                                  className: "media-container"
 	                                                }, match[1]));
 	                                }, filteredActivities))), Curry._4(Chatbox.createElement(currentChannel, state[/* users */4], function (channel, msg) {
-	                              var partial_arg = /* MsgSubmitted */Block.__(11, [
+	                              var partial_arg = /* MsgSubmitted */Block.__(13, [
 	                                  channel,
 	                                  me,
 	                                  msg
@@ -10226,7 +10525,7 @@
 	                                          return dispatchEventless(partial_arg, param, param$1);
 	                                        }, /* () */0);
 	                            }, me, function (focused) {
-	                              var partial_arg = /* ChatBoxFocused */Block.__(9, [focused]);
+	                              var partial_arg = /* ChatBoxFocused */Block.__(11, [focused]);
 	                              return Curry._2(updater, function (param, param$1) {
 	                                          return dispatchEventless(partial_arg, param, param$1);
 	                                        }, /* () */0);
@@ -10303,8 +10602,10 @@
 	                                      match$6 !== 0 ? "0" : ""
 	                                    ) + Pervasives.string_of_int(seconds)))), React.createElement("div", {
 	                                  className: "timeline slider"
-	                                }, Curry._4(Progress_bar.createElement(Utils.channelMediaProgress(currentChannel, currentChannel[/* media */5]), /* Some */[function (offset) {
-	                                            console.log(offset);
+	                                }, Curry._4(Progress_bar.createElement(/* tuple */[
+	                                          0.0,
+	                                          Utils.channelMediaProgress(currentChannel, currentChannel[/* media */5])
+	                                        ], /* Some */[function (offset) {
 	                                            var action_002 = Date.now();
 	                                            var action = /* MediaPlayerScrubbed */Block.__(7, [
 	                                                currentChannel,
@@ -10314,7 +10615,15 @@
 	                                            return Curry._1(Curry._1(updater, function (param, param$1) {
 	                                                            return dispatchEventless(action, param, param$1);
 	                                                          }), /* () */0);
-	                                          }], /* Some */["ew-resize"]), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
+	                                          }], /* Some */["ew-resize"], match$7 ? /* Some */[$$Array.map(function (param) {
+	                                                  var startPercent = Utils.tmpProgress(param[0], currentChannel[/* media */5]);
+	                                                  var endPercent = Utils.tmpProgress(param[1], currentChannel[/* media */5]);
+	                                                  var widthPercent = endPercent - startPercent;
+	                                                  return /* tuple */[
+	                                                          startPercent,
+	                                                          widthPercent
+	                                                        ];
+	                                                }, match$7[0])] : /* None */0), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
 	                                      className: "thumb"
 	                                    })), React.createElement("div", {
 	                                  className: "playtime"
@@ -10331,12 +10640,15 @@
 	                          }
 	                        }, "<))"), React.createElement("div", {
 	                          className: "volume slider"
-	                        }, Curry._4(Progress_bar.createElement(state[/* volume */11] * 100.0, /* Some */[function (offset) {
-	                                    var partial_arg = /* VolumeSet */Block.__(13, [offset]);
+	                        }, Curry._4(Progress_bar.createElement(/* tuple */[
+	                                  0.0,
+	                                  state[/* volume */11] * 100.0
+	                                ], /* Some */[function (offset) {
+	                                    var partial_arg = /* VolumeSet */Block.__(15, [offset]);
 	                                    return Curry._2(updater, function (param, param$1) {
 	                                                return dispatchEventless(partial_arg, param, param$1);
 	                                              }, /* () */0);
-	                                  }], /* Some */["ew-resize"]), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
+	                                  }], /* Some */["ew-resize"], /* None */0), /* [] */0, /* None */0, /* None */0, /* () */0), React.createElement("div", {
 	                              className: "thumb"
 	                            })))));
 	}
@@ -10365,8 +10677,10 @@
 	  /* volumeMuteToggled */volumeMuteToggled,
 	  /* channelSelected */channelSelected,
 	  /* songSelected */songSelected,
+	  /* mediaPlaybackFinished */mediaPlaybackFinished,
 	  /* mediaStateUpdated */mediaStateUpdated,
 	  /* mediaProgressUpdated */mediaProgressUpdated,
+	  /* mediaLoadProgressUpdated */mediaLoadProgressUpdated,
 	  /* mediaScrubbedTo */mediaScrubbedTo,
 	  /* chatBoxFocused */chatBoxFocused,
 	  /* searchFormFocused */searchFormFocused,
@@ -10404,6 +10718,7 @@
 
 	var comp = include$1[0];
 
+	exports.nativeOfTimeRanges    = nativeOfTimeRanges;
 	exports.cursorPointer         = cursorPointer;
 	exports.scrollToLatestMessage = scrollToLatestMessage;
 	exports.toggleSearchForm      = toggleSearchForm;
@@ -14888,8 +15203,74 @@
 	// Generated by BUCKLESCRIPT VERSION 1.6.0+dev, PLEASE EDIT WITH CARE
 	'use strict';
 
+	var List  = __webpack_require__(5);
 	var Curry = __webpack_require__(1);
 	var State = __webpack_require__(73);
+
+	var lobbyPlaylist = /* :: */[
+	  /* record */[
+	    /* order */0,
+	    /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/%E4%BA%B2%E7%88%B1%E7%9A%84%E4%BD%A0%E6%80%8E%E4%B9%88%E4%B8%8D%E5%9C%A8%E6%88%91%E8%BA%AB%E8%BE%B9.m4a"],
+	    /* duration : None */0,
+	    /* buffered : None */0,
+	    /* seekable : None */0
+	  ],
+	  /* :: */[
+	    /* record */[
+	      /* order */1,
+	      /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/%E5%A5%BD%E5%BF%83%E5%88%86%E6%89%8B%20Candy%20Lo%20feat.%20%E7%8E%8B%E5%8A%9B%E5%AE%8F.mp3"],
+	      /* duration : None */0,
+	      /* buffered : None */0,
+	      /* seekable : None */0
+	    ],
+	    /* :: */[
+	      /* record */[
+	        /* order */2,
+	        /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/Why%20This%20Kolaveri%20Di.mp3"],
+	        /* duration : None */0,
+	        /* buffered : None */0,
+	        /* seekable : None */0
+	      ],
+	      /* :: */[
+	        /* record */[
+	          /* order */3,
+	          /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/%E4%BA%B2%E7%88%B1%E7%9A%84%20%EF%BC%8D%20%E5%BE%90%E8%8B%A5%E7%91%84.mp3"],
+	          /* duration : None */0,
+	          /* buffered : None */0,
+	          /* seekable : None */0
+	        ],
+	        /* :: */[
+	          /* record */[
+	            /* order */4,
+	            /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/Money%20Trees%20-%20Kendrick%20Lamar.mp3"],
+	            /* duration : None */0,
+	            /* buffered : None */0,
+	            /* seekable : None */0
+	          ],
+	          /* :: */[
+	            /* record */[
+	              /* order */5,
+	              /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/Armin%20van%20Buuren%20feat.%20Trevor%20Guthrie%20-%20This%20Is%20What%20It%20Feels%20Like.mp3"],
+	              /* duration : None */0,
+	              /* buffered : None */0,
+	              /* seekable : None */0
+	            ],
+	            /* :: */[
+	              /* record */[
+	                /* order */6,
+	                /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/05_Last_Train_To_New_Jersey.mp3"],
+	                /* duration : None */0,
+	                /* buffered : None */0,
+	                /* seekable : None */0
+	              ],
+	              /* [] */0
+	            ]
+	          ]
+	        ]
+	      ]
+	    ]
+	  ]
+	];
 
 	var state_003 = /* userId : Some */[1];
 
@@ -14992,34 +15373,46 @@
 	    /* media : record */[
 	      /* order */0,
 	      /* src : None */0,
-	      /* duration : None */0
+	      /* duration : None */0,
+	      /* buffered : None */0,
+	      /* seekable : None */0
 	    ],
 	    /* mediaState : Paused */1,
 	    /* mediaProgress */0,
+	    /* mediaLoadProgress : None */0,
 	    /* mediaScrubbedTo : None */0,
+	    /* mediaRepeat : All */2,
 	    /* playlist : :: */[
 	      /* record */[
 	        /* order */0,
 	        /* src : Some */["http://www.mfiles.co.uk/mp3-downloads/frederic-chopin-piano-sonata-2-op35-3-funeral-march.mp3"],
-	        /* duration : None */0
+	        /* duration : None */0,
+	        /* buffered : None */0,
+	        /* seekable : None */0
 	      ],
 	      /* :: */[
 	        /* record */[
 	          /* order */1,
 	          /* src : Some */["http://www.mfiles.co.uk/mp3-downloads/Dvorak-Symphony9-2-from-the-New-World.mp3"],
-	          /* duration : None */0
+	          /* duration : None */0,
+	          /* buffered : None */0,
+	          /* seekable : None */0
 	        ],
 	        /* :: */[
 	          /* record */[
 	            /* order */2,
 	            /* src : Some */["http://www.mfiles.co.uk/mp3-downloads/moonlight-movement1.mp3"],
-	            /* duration : None */0
+	            /* duration : None */0,
+	            /* buffered : None */0,
+	            /* seekable : None */0
 	          ],
 	          /* :: */[
 	            /* record */[
 	              /* order */3,
 	              /* src : Some */["http://www.mfiles.co.uk/mp3-downloads/beethoven-piano-sonata-pathetique-2.mp3"],
-	              /* duration : None */0
+	              /* duration : None */0,
+	              /* buffered : None */0,
+	              /* seekable : None */0
 	            ],
 	            /* [] */0
 	          ]
@@ -15044,16 +15437,22 @@
 	      /* media : record */[
 	        /* order */0,
 	        /* src : None */0,
-	        /* duration : None */0
+	        /* duration : None */0,
+	        /* buffered : None */0,
+	        /* seekable : None */0
 	      ],
 	      /* mediaState : Paused */1,
 	      /* mediaProgress */0,
+	      /* mediaLoadProgress : None */0,
 	      /* mediaScrubbedTo : None */0,
+	      /* mediaRepeat : All */2,
 	      /* playlist : :: */[
 	        /* record */[
 	          /* order */0,
 	          /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/Gareth%20Emery%20feat.%20Christina%20Novelli%20-%20Concrete%20Angel.mp3"],
-	          /* duration : None */0
+	          /* duration : None */0,
+	          /* buffered : None */0,
+	          /* seekable : None */0
 	        ],
 	        /* [] */0
 	      ]
@@ -15128,64 +15527,13 @@
 	          ]
 	        ],
 	        /* userIds */Curry._2(State.UserIdSet[/* add */3], 4, Curry._2(State.UserIdSet[/* add */3], 3, Curry._2(State.UserIdSet[/* add */3], 2, Curry._2(State.UserIdSet[/* add */3], 1, State.UserIdSet[/* empty */0])))),
-	        /* media : record */[
-	          /* order */0,
-	          /* src : None */0,
-	          /* duration : None */0
-	        ],
+	        /* media */List.nth(lobbyPlaylist, 4),
 	        /* mediaState : Paused */1,
 	        /* mediaProgress */0,
+	        /* mediaLoadProgress : None */0,
 	        /* mediaScrubbedTo : None */0,
-	        /* playlist : :: */[
-	          /* record */[
-	            /* order */0,
-	            /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/%E4%BA%B2%E7%88%B1%E7%9A%84%E4%BD%A0%E6%80%8E%E4%B9%88%E4%B8%8D%E5%9C%A8%E6%88%91%E8%BA%AB%E8%BE%B9.m4a"],
-	            /* duration : None */0
-	          ],
-	          /* :: */[
-	            /* record */[
-	              /* order */1,
-	              /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/%E5%A5%BD%E5%BF%83%E5%88%86%E6%89%8B%20Candy%20Lo%20feat.%20%E7%8E%8B%E5%8A%9B%E5%AE%8F.mp3"],
-	              /* duration : None */0
-	            ],
-	            /* :: */[
-	              /* record */[
-	                /* order */2,
-	                /* src : Some */["https://dl.dropboxusercontent.com/u/412963/Why%20This%20Kolaveri%20Di%20Full%20Song%20Promo%20Video%20in%20HD%20-%20.mp3"],
-	                /* duration : None */0
-	              ],
-	              /* :: */[
-	                /* record */[
-	                  /* order */3,
-	                  /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/%E4%BA%B2%E7%88%B1%E7%9A%84%20%EF%BC%8D%20%E5%BE%90%E8%8B%A5%E7%91%84.mp3"],
-	                  /* duration : None */0
-	                ],
-	                /* :: */[
-	                  /* record */[
-	                    /* order */4,
-	                    /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/Money%20Trees%20-%20Kendrick%20Lamar.mp3"],
-	                    /* duration : None */0
-	                  ],
-	                  /* :: */[
-	                    /* record */[
-	                      /* order */5,
-	                      /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/Armin%20van%20Buuren%20feat.%20Trevor%20Guthrie%20-%20This%20Is%20What%20It%20Feels%20Like.mp3"],
-	                      /* duration : None */0
-	                    ],
-	                    /* :: */[
-	                      /* record */[
-	                        /* order */6,
-	                        /* src : Some */["https://dl.dropboxusercontent.com/u/412963/music/05_Last_Train_To_New_Jersey.mp3"],
-	                        /* duration : None */0
-	                      ],
-	                      /* [] */0
-	                    ]
-	                  ]
-	                ]
-	              ]
-	            ]
-	          ]
-	        ]
+	        /* mediaRepeat : All */2,
+	        /* playlist */lobbyPlaylist
 	      ],
 	      /* [] */0
 	    ]
@@ -15208,7 +15556,8 @@
 	  /* lastVolume */0.75
 	];
 
-	exports.state = state;
+	exports.lobbyPlaylist = lobbyPlaylist;
+	exports.state         = state;
 	/* state Not a pure module */
 
 
@@ -15254,24 +15603,28 @@
 	      case 7 : 
 	          return "MediaPlayerScrubbed";
 	      case 8 : 
-	          return "MediaProgressUpdated on " + action[0][/* title */1];
+	          return "MediaPlaybackFinished";
 	      case 9 : 
-	          return "ChatBoxFocused";
+	          return "MediaProgressUpdated on " + action[0][/* title */1];
 	      case 10 : 
-	          return "UserMenuToggled";
+	          return "MediaLoadProgressUpdated on " + action[0][/* title */1];
 	      case 11 : 
-	          return "MsgSubmitted";
+	          return "ChatBoxFocused";
 	      case 12 : 
-	          return "AppTitleUpdated";
+	          return "UserMenuToggled";
 	      case 13 : 
-	          return "VolumeSet";
+	          return "MsgSubmitted";
 	      case 14 : 
-	          return "VolumentIncremented";
+	          return "AppTitleUpdated";
 	      case 15 : 
-	          return "VolumentDecremented";
+	          return "VolumeSet";
 	      case 16 : 
-	          return "Log";
+	          return "VolumentIncremented";
 	      case 17 : 
+	          return "VolumentDecremented";
+	      case 18 : 
+	          return "Log";
+	      case 19 : 
 	          return "Alert";
 	      
 	    }
@@ -16761,6 +17114,14 @@
 	var Caml_obj   = __webpack_require__(6);
 	var Pervasives = __webpack_require__(8);
 
+	var bufferedStyle = {
+	  background: "#ddd",
+	  height: "100%",
+	  borderRadius: "4rem"
+	};
+
+	var TimeRanges = /* module */[];
+
 	var AudioElement = /* module */[];
 
 	function setAudioPlayerMedia(player, audioSrc) {
@@ -16814,7 +17175,11 @@
 	var jsPropsToReasonProps = include[5];
 
 	function getInitialState(props) {
-	  return /* record */[/* onTimeUpdated */props[/* onTimeUpdated */4]];
+	  return /* record */[
+	          /* onEnded */props[/* onEnded */4],
+	          /* onTimeUpdated */props[/* onTimeUpdated */6],
+	          /* onLoadProgress */props[/* onLoadProgress */5]
+	        ];
 	}
 
 	var name = "AudioPlayer";
@@ -16845,11 +17210,11 @@
 	    if (prevProps[/* volume */3] !== props[/* volume */3]) {
 	      ref.volume = props[/* volume */3];
 	    }
-	    var match$2 = props[/* percent */5];
+	    var match$2 = props[/* percent */7];
 	    if (match$2) {
 	      var match$3 = match$2[0];
 	      var offset = Math.floor(ref.duration * match$3[0]) | 0;
-	      var match$4 = prevProps[/* percent */5];
+	      var match$4 = prevProps[/* percent */7];
 	      if (match$4) {
 	        var match$5 = +(match$4[0][1] === match$3[1]);
 	        if (!match$5) {
@@ -16869,9 +17234,25 @@
 	  var state = param[/* state */0];
 	  param[/* instanceVars */4][/* domRef */0] = /* Some */[el];
 	  el.addEventListener("timeupdate", throttleOneArg(100.0, function () {
-	            return Curry._1(state[/* onTimeUpdated */0], el);
+	            return Curry._1(state[/* onTimeUpdated */1], el);
 	          }));
-	  return /* () */0;
+	  var match = state[/* onLoadProgress */2];
+	  if (match) {
+	    var handler = match[0];
+	    el.addEventListener("progress", throttleOneArg(100.0, function () {
+	              return Curry._3(handler, el, el.buffered, el.seekable);
+	            }));
+	  }
+	  var match$1 = state[/* onEnded */0];
+	  if (match$1) {
+	    var handler$1 = match$1[0];
+	    el.addEventListener("ended", function () {
+	          return Curry._1(handler$1, el);
+	        });
+	    return /* () */0;
+	  } else {
+	    return /* () */0;
+	  }
 	}
 
 	function render(param) {
@@ -16934,20 +17315,25 @@
 
 	var wrapProps = include$1[1];
 
-	function createElement(channel, id, volume, audioState, onTimeUpdated, percent, time) {
+	function createElement(channel, id, volume, audioState, onTimeUpdated, percent, time, showBuffered, onLoadProgress, onEnded) {
 	  return Curry._1(wrapProps, /* record */[
 	              /* id */id,
 	              /* channel */channel,
 	              /* audioState */audioState,
 	              /* volume */volume,
+	              /* onEnded */onEnded,
+	              /* onLoadProgress */onLoadProgress,
 	              /* onTimeUpdated */onTimeUpdated,
 	              /* percent */percent,
-	              /* time */time
+	              /* time */time,
+	              /* showBuffered */showBuffered
 	            ]);
 	}
 
 	var comp = include$1[0];
 
+	exports.bufferedStyle       = bufferedStyle;
+	exports.TimeRanges          = TimeRanges;
 	exports.AudioElement        = AudioElement;
 	exports.setAudioPlayerMedia = setAudioPlayerMedia;
 	exports.throttleOneArg      = throttleOneArg;
@@ -34539,10 +34925,14 @@
 	function codeOfKey($$event) {
 	  var code = $$event.key;
 	  switch (code) {
+	    case "+" : 
+	        return /* Special */Block.__(0, [/* Plus */9]);
 	    case "/" : 
 	        return /* Special */Block.__(0, [/* Slash */8]);
 	    case ";" : 
 	        return /* Special */Block.__(0, [/* Semicolon */7]);
+	    case "=" : 
+	        return /* Special */Block.__(0, [/* Equal */10]);
 	    case "ArrowDown" : 
 	        return /* Special */Block.__(0, [/* Down */5]);
 	    case "ArrowLeft" : 
@@ -34552,9 +34942,9 @@
 	    case "ArrowUp" : 
 	        return /* Special */Block.__(0, [/* Up */3]);
 	    case "BracketLeft" : 
-	        return /* Special */Block.__(0, [/* BracketLeft */10]);
+	        return /* Special */Block.__(0, [/* BracketLeft */11]);
 	    case "BracketRigth" : 
-	        return /* Special */Block.__(0, [/* BracketRight */11]);
+	        return /* Special */Block.__(0, [/* BracketRight */12]);
 	    case "Delete" : 
 	        return /* Special */Block.__(0, [/* Del */6]);
 	    case "Enter" : 
@@ -34636,6 +35026,14 @@
 	            _$staropt$star$1 = /* Some */[alt];
 	            _$staropt$star = /* Some */[shift];
 	            continue ;
+	            case "equal" : 
+	            _tokens = xs;
+	            _$staropt$star$4 = /* Some */[/* Some */[/* Special */Block.__(0, [/* Equal */10])]];
+	            _$staropt$star$3 = /* Some */[meta];
+	            _$staropt$star$2 = /* Some */[ctrl];
+	            _$staropt$star$1 = /* Some */[alt];
+	            _$staropt$star = /* Some */[shift];
+	            continue ;
 	            case "esc" : 
 	            _tokens = xs;
 	            _$staropt$star$4 = /* Some */[/* Some */[/* Special */Block.__(0, [/* Esc */1])]];
@@ -34694,7 +35092,7 @@
 	            continue ;
 	            case "{" : 
 	            _tokens = xs;
-	            _$staropt$star$4 = /* Some */[/* Some */[/* Special */Block.__(0, [/* BracketLeft */10])]];
+	            _$staropt$star$4 = /* Some */[/* Some */[/* Special */Block.__(0, [/* BracketLeft */11])]];
 	            _$staropt$star$3 = /* Some */[meta];
 	            _$staropt$star$2 = /* Some */[ctrl];
 	            _$staropt$star$1 = /* Some */[alt];
@@ -34702,7 +35100,7 @@
 	            continue ;
 	            case "}" : 
 	            _tokens = xs;
-	            _$staropt$star$4 = /* Some */[/* Some */[/* Special */Block.__(0, [/* BracketRight */11])]];
+	            _$staropt$star$4 = /* Some */[/* Some */[/* Special */Block.__(0, [/* BracketRight */12])]];
 	            _$staropt$star$3 = /* Some */[meta];
 	            _$staropt$star$2 = /* Some */[ctrl];
 	            _$staropt$star$1 = /* Some */[alt];
@@ -34782,9 +35180,12 @@
 	          $js = "plus";
 	          break;
 	      case 10 : 
-	          $js = "{";
+	          $js = "equal";
 	          break;
 	      case 11 : 
+	          $js = "{";
+	          break;
+	      case 12 : 
 	          $js = "}";
 	          break;
 	      
@@ -41159,10 +41560,11 @@
 	// Generated by BUCKLESCRIPT VERSION 1.6.0+dev, PLEASE EDIT WITH CARE
 	'use strict';
 
-	var Curry    = __webpack_require__(1);
-	var React    = __webpack_require__(41);
-	var $$String = __webpack_require__(20);
-	var ReactRe  = __webpack_require__(71);
+	var Curry      = __webpack_require__(1);
+	var React      = __webpack_require__(41);
+	var $$String   = __webpack_require__(20);
+	var ReactRe    = __webpack_require__(71);
+	var Pervasives = __webpack_require__(8);
 
 	var include = ReactRe.Component[/* Stateful */8];
 
@@ -41223,7 +41625,7 @@
 	  var props = param[/* props */1];
 	  return React.createElement("textarea", {
 	              className: "chat-input",
-	              placeholder: "Chat in #" + props[/* channel */0][/* title */1].toLowerCase(),
+	              placeholder: "Chat in #" + (props[/* channel */0][/* title */1].toLowerCase() + (" while listening to #" + (Pervasives.string_of_int(props[/* channel */0][/* media */5][/* order */0]) + " in the playlist..."))),
 	              value: param[/* state */0][/* editText */0],
 	              onKeyUp: Curry._1(updater, handleKeyUp),
 	              onFocus: function () {
@@ -41306,6 +41708,7 @@
 	// Generated by BUCKLESCRIPT VERSION 1.6.0+dev, PLEASE EDIT WITH CARE
 	'use strict';
 
+	var $$Array    = __webpack_require__(24);
 	var Curry      = __webpack_require__(1);
 	var React      = __webpack_require__(41);
 	var ReactRe    = __webpack_require__(71);
@@ -41431,7 +41834,9 @@
 	  var updater = param[/* updater */2];
 	  var props = param[/* props */1];
 	  var state = param[/* state */0];
+	  var buffered = props[/* buffered */3];
 	  var match = props[/* cursor */2];
+	  var match$1 = props[/* progress */0];
 	  return React.createElement("div", {
 	              ref: Curry._1(param[/* handler */3], setTrackRef),
 	              className: "track",
@@ -41457,9 +41862,19 @@
 	            }, React.createElement("div", {
 	                  className: "spent",
 	                  style: {
-	                    width: Pervasives.string_of_float(props[/* progress */0]) + "%"
+	                    marginLeft: Pervasives.string_of_float(match$1[0]) + "%",
+	                    width: Pervasives.string_of_float(match$1[1]) + "%"
 	                  }
-	                }));
+	                }), buffered ? $$Array.map(function (_timeRange) {
+	                    return React.createElement("div", {
+	                                className: "spent",
+	                                style: {
+	                                  backgroundColor: "#717171",
+	                                  marginLeft: Pervasives.string_of_float(_timeRange[0]) + "%",
+	                                  width: Pervasives.string_of_float(_timeRange[1]) + "%"
+	                                }
+	                              });
+	                  }, buffered[0]) : null);
 	}
 
 	var Progress_bar_005 = /* JsProps */include[6];
@@ -41497,11 +41912,12 @@
 
 	var wrapProps = include$1[1];
 
-	function createElement(progress, onChanged, cursor) {
+	function createElement(progress, onChanged, cursor, buffered) {
 	  return Curry._1(wrapProps, /* record */[
 	              /* progress */progress,
 	              /* onChanged */onChanged,
-	              /* cursor */cursor
+	              /* cursor */cursor,
+	              /* buffered */buffered
 	            ]);
 	}
 

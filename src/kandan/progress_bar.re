@@ -10,7 +10,12 @@ let kill event => {
 module Progress_bar = {
   include ReactRe.Component.Stateful.InstanceVars;
   let name = "ProgressBar";
-  type props = {progress: float, onChanged: option (float => unit), cursor: option string};
+  type props = {
+    progress: (float, float),
+    onChanged: option (float => unit),
+    cursor: option string,
+    buffered: option (array (float, float))
+  };
   type state = {listeners: option string, mouseDown: bool};
   type instanceVars = {mutable domRef: option Dom.element};
   let getInstanceVars () => {domRef: None};
@@ -64,7 +69,8 @@ module Progress_bar = {
       ReasonJs.Dom.document;
     None
   };
-  let render {props, updater, handler, state} =>
+  let render {props, updater, handler, state} => {
+    let buffered = props.buffered;
     <div
       ref=(handler setTrackRef)
       className="track"
@@ -83,11 +89,41 @@ module Progress_bar = {
             )>
       <div
         className="spent"
-        style=(ReactDOMRe.Style.make width::(string_of_float props.progress ^ "%") ())
+        style={
+                let (progressStart, progressEnd) = props.progress;
+                ReactDOMRe.Style.make
+                  marginLeft::(string_of_float progressStart ^ "%")
+                  width::(string_of_float progressEnd ^ "%")
+                  ()
+              }
       />
-    </div>;
+      (
+        switch buffered {
+        | None => ReactRe.nullElement
+        | Some timeRanges =>
+          timeRanges |>
+          Array.map (
+            fun _timeRange => {
+              let (progressStart, progressEnd) = _timeRange;
+              <div
+                className="spent"
+                style=(
+                        ReactDOMRe.Style.make
+                          backgroundColor::"#717171"
+                          marginLeft::(string_of_float progressStart ^ "%")
+                          width::(string_of_float progressEnd ^ "%")
+                          ()
+                      )
+              />
+            }
+          ) |> ReactRe.arrayToElement
+        }
+      )
+    </div>
+  };
 };
 
 include ReactRe.CreateComponent Progress_bar;
 
-let createElement ::progress ::onChanged=? ::cursor=? => wrapProps {progress, onChanged, cursor};
+let createElement ::progress ::onChanged=? ::cursor=? ::buffered =>
+  wrapProps {progress, onChanged, cursor, buffered};

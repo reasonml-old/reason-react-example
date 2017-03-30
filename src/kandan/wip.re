@@ -1,5 +1,22 @@
 open ReactDOMRe.Style;
 
+let nativeOfTimeRanges (ranges: Audio_player.TimeRanges.t) => {
+  open Audio_player;
+  let length = TimeRanges.length ranges;
+  length == 0 ?
+    [||] :
+    {
+      let destination = Array.make length (0.0, 0.0);
+      let rec helper idx => {
+        let start = TimeRanges.start ranges idx;
+        let _end = TimeRanges._end ranges idx;
+        destination.(idx) = (start, _end);
+        length - idx - 1 == 0 ? destination : helper (idx + 1)
+      };
+      helper 0
+    }
+};
+
 let cursorPointer = ReactDOMRe.Style.make cursor::"pointer" ();
 
 let scrollToLatestMessage target channelId =>
@@ -229,7 +246,21 @@ module Wip = {
       State.(List.find (fun haystack => haystack.id === channel.id) state.channels);
     let otherChannels =
       List.filter (fun haystack => State.(haystack.id) !== channel.id) State.(state.channels);
-    let newChannel = {...currentChannel, media};
+    /* FIXME: Don't like the use of side-effecting Js.Date.now here, move out? */
+    let newChannel = {...currentChannel, media, mediaScrubbedTo: Some (0.0, Js.Date.now ())};
+    let newChannels = List.append otherChannels [newChannel];
+    Some {...state, channels: newChannels}
+  };
+  let mediaPlaybackFinished {state} (channel: State.channel) => {
+    let currentChannel =
+      State.(List.find (fun haystack => haystack.id === channel.id) state.channels);
+    let otherChannels =
+      List.filter (fun haystack => State.(haystack.id) !== channel.id) State.(state.channels);
+    Js.log ("Finding next media from " ^ string_of_int channel.media.order);
+    let media = Utils.findNextMedia channel 1;
+    Js.log ("\tFound " ^ string_of_int media.order);
+    /* FIXME: Don't like the use of side-effecting Js.Date.now here, move out? */
+    let newChannel = {...currentChannel, media, mediaScrubbedTo: Some (0.0, Js.Date.now ())};
     let newChannels = List.append otherChannels [newChannel];
     Some {...state, channels: newChannels}
   };
@@ -267,6 +298,20 @@ module Wip = {
     let newChannels = List.append otherChannels [newChannel];
     Some {...state, channels: newChannels}
   };
+  let mediaLoadProgressUpdated
+      {state}
+      (channel: State.channel)
+      (buffered: State.timeRange)
+      (seekable: State.timeRange) => {
+    let currentChannel =
+      List.find (fun haystack => State.(haystack.id) === channel.id) State.(state.channels);
+    let otherChannels =
+      List.filter (fun haystack => State.(haystack.id) !== channel.id) State.(state.channels);
+    let media = {...currentChannel.media, buffered: Some buffered, seekable: Some seekable};
+    let newChannel = {...currentChannel, mediaLoadProgress: Some buffered, media};
+    let newChannels = List.append otherChannels [newChannel];
+    Some {...state, channels: newChannels}
+  };
   let mediaScrubbedTo {state} (channel: State.channel) (percent: float) (time: float) => {
     let currentChannel =
       List.find (fun haystack => State.(haystack.id) === channel.id) State.(state.channels);
@@ -288,7 +333,14 @@ module Wip = {
         switch (Array.length parts) {
         | 0 => assert false
         | 1 => None
-        | _ => Some {order: List.length channel.playlist, src: Some parts.(1), duration: None}
+        | _ =>
+          Some {
+            order: List.length channel.playlist,
+            src: Some parts.(1),
+            duration: None,
+            buffered: None,
+            seekable: None
+          }
         }
       | _ => None
       };
@@ -311,14 +363,12 @@ module Wip = {
   let processEffects {props} (action: State.action) _oldState newState => {
     open State;
     /* Maybe this should take a list of Effect instead of an action, elm style?  */
-    Js.log ("Processing effect for action: " ^ State.stringOfAction action);
+    /* Js.log ("Processing effect for action: " ^ State.stringOfAction action); */
     switch action {
     | SearchFormFocused focused =>
       ignore (
         Js.Global.setTimeout (fun () => toggleSearchForm props.rootEl "input.query" focused) 100
       )
-    | SidebarToggled _ _ => ()
-    | SearchUpdated _ => ()
     | ChannelSelected channel =>
       ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
     | ChannelSelectedByIndex idx =>
@@ -327,21 +377,25 @@ module Wip = {
           (fun (a: State.channel) (b: State.channel) => compare a.title b.title) newState.channels;
       let channel = List.nth sortedChannels idx;
       ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
-    | SongSelected _ _ => ()
-    | MediaStateUpdated _ _
-    | MediaPlayerScrubbed _ _ _
-    | MediaProgressUpdated _ _ _ => ()
-    | ChatBoxFocused _ => ()
-    | UserMenuToggled _ => ()
     | MsgSubmitted channel _ _ =>
       ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
     | AppTitleUpdated title _badge_count => Utils.setPageTitle title
+    | Log str => Js.log str
+    | Alert str => ReasonJs.Dom.Window.alert str ReasonJs.Dom.window
+    | SidebarToggled _ _ => ()
+    | SearchUpdated _ => ()
+    | SongSelected _ _ => ()
+    | MediaStateUpdated _ _
+    | MediaPlayerScrubbed _ _ _
+    | MediaProgressUpdated _ _ _
+    | MediaPlaybackFinished _
+    | MediaLoadProgressUpdated _ _ _ => ()
+    | ChatBoxFocused _ => ()
+    | UserMenuToggled _ => ()
     | VolumeSet _
     | VolumeDecremented _
     | VolumeIncremented _
     | VolumeMuteToggled => ()
-    | Log str => Js.log str
-    | Alert str => ReasonJs.Dom.Window.alert str ReasonJs.Dom.window
     };
     ()
   };
@@ -377,6 +431,9 @@ module Wip = {
         mediaScrubbedTo componentBag channel percent time
       | MediaProgressUpdated channel progress duration =>
         mediaProgressUpdated componentBag channel progress duration
+      | MediaPlaybackFinished channel => mediaPlaybackFinished componentBag channel
+      | MediaLoadProgressUpdated channel buffered seekable =>
+        mediaLoadProgressUpdated componentBag channel buffered seekable
       | ChatBoxFocused focused => chatBoxFocused componentBag focused
       | UserMenuToggled opened => userMenuToggled componentBag opened
       | MsgSubmitted channel user msg => msgSubmitted componentBag channel user msg
@@ -502,53 +559,73 @@ module Wip = {
         )
       };
     let keyMap =
-      State.[
-        (["ctrl+esc"], Log "ctrl esc yo!"),
-        (["ctrl+?"], UserMenuToggled state.userMenuOpen),
-        (["/"], SearchFormFocused true),
-        (["ctrl+-"], VolumeDecremented 0.1),
-        (
-          ["ctrl+shift+<"],
-          try (SongSelected currentChannel (Utils.findNextMedia currentChannel (-1))) {
-          | _ => Log "No previous media in channel"
-          }
-        ),
-        (
-          ["ctrl+shift+>"],
-          try (SongSelected currentChannel (Utils.findNextMedia currentChannel 1)) {
-          | _ => Log "No previous media in channel"
-          }
-        ),
-        (
-          ["ctrl+p"],
-          MediaStateUpdated
-            currentChannel
-            (
-              switch currentChannel.mediaState {
-              | NotLoaded => NotLoaded
-              | Paused => Playing
-              | Playing => Paused
-              }
-            )
-        ),
-        (["ctrl+shift+="], VolumeIncremented 0.1),
-        (["ctrl+1"], ChannelSelectedByIndex 0),
-        (["ctrl+2"], ChannelSelectedByIndex 1),
-        (["ctrl+3"], ChannelSelectedByIndex 2),
-        (["ctrl+4"], ChannelSelectedByIndex 3),
-        (["ctrl+5"], ChannelSelectedByIndex 4),
-        (["ctrl+6"], ChannelSelectedByIndex 5),
-        (["ctrl+7"], ChannelSelectedByIndex 6),
-        (["ctrl+8"], ChannelSelectedByIndex 7),
-        (["ctrl+9"], ChannelSelectedByIndex 9),
-        (["ctrl+0"], VolumeMuteToggled),
-        (["esc"], SearchFormFocused false),
-        (["ctrl+shift+esc"], Alert "ctrl shift esc yo!"),
-        (
-          ["up", "up", "down", "down", "left", "right", "left", "right", "a", "b"],
-          Alert "Konami code!"
-        )
-      ];
+      State.
+        /* Debug shortcuts */
+        [
+          (["ctrl+esc"], Log "ctrl esc yo!"),
+          (["ctrl+shift+esc"], Alert "ctrl shift esc yo!"),
+          (
+            ["up", "up", "down", "down", "left", "right", "left", "right", "a", "b"],
+            Alert "Konami code!"
+          ),
+          /* Volume shortcuts: Support both shift and shiftless shortcuts */
+          (["ctrl+-"], VolumeDecremented 0.1),
+          (["ctrl+shift+_"], VolumeDecremented 0.1),
+          (["ctrl+shift+plus"], VolumeIncremented 0.1),
+          (["ctrl+equal"], VolumeIncremented 0.1),
+          (["ctrl+0"], VolumeMuteToggled),
+          (["ctrl+shift+)"], VolumeMuteToggled),
+          (["ctrl+m"], VolumeMuteToggled),
+          /* Media player shortcuts */
+          (
+            ["ctrl+shift+<"],
+            try (SongSelected currentChannel (Utils.findNextMedia currentChannel (-1))) {
+            | _ => Log "No previous media in channel"
+            }
+          ),
+          (
+            ["ctrl+shift+>"],
+            try (SongSelected currentChannel (Utils.findNextMedia currentChannel 1)) {
+            | _ => Log "No previous media in channel"
+            }
+          ),
+          (
+            ["ctrl+p"],
+            MediaStateUpdated
+              currentChannel
+              (
+                switch currentChannel.mediaState {
+                | NotLoaded => NotLoaded
+                | Paused => Playing
+                | Playing => Paused
+                }
+              )
+          ),
+          /* UI - Channel selection */
+          (["ctrl+x", "1"], ChannelSelectedByIndex 0),
+          (["ctrl+x", "2"], ChannelSelectedByIndex 1),
+          (["ctrl+x", "3"], ChannelSelectedByIndex 2),
+          (["ctrl+x", "4"], ChannelSelectedByIndex 3),
+          (["ctrl+x", "5"], ChannelSelectedByIndex 4),
+          (["ctrl+x", "6"], ChannelSelectedByIndex 5),
+          (["ctrl+x", "7"], ChannelSelectedByIndex 6),
+          (["ctrl+x", "8"], ChannelSelectedByIndex 7),
+          (["ctrl+x", "9"], ChannelSelectedByIndex 8),
+          (["ctrl+1"], ChannelSelectedByIndex 0),
+          (["ctrl+2"], ChannelSelectedByIndex 1),
+          (["ctrl+3"], ChannelSelectedByIndex 2),
+          (["ctrl+4"], ChannelSelectedByIndex 3),
+          (["ctrl+5"], ChannelSelectedByIndex 4),
+          (["ctrl+6"], ChannelSelectedByIndex 5),
+          (["ctrl+7"], ChannelSelectedByIndex 6),
+          (["ctrl+8"], ChannelSelectedByIndex 7),
+          (["ctrl+9"], ChannelSelectedByIndex 9),
+          /* UI - Search */
+          (["esc"], SearchFormFocused false),
+          (["/"], SearchFormFocused true),
+          /* UI - Misc */
+          (["ctrl+?"], UserMenuToggled state.userMenuOpen)
+        ];
     let dispatchEL action => updater (dispatchEventless action);
     let audioChannels =
       sortedChannels |>
@@ -561,6 +638,23 @@ module Wip = {
             volume=(channel.id == currentChannel.id ? state.volume : 0.0)
             audioState=channel.mediaState
             percent=channel.mediaScrubbedTo
+            onEnded=(
+                      fun _el => {
+                        Js.log ("Channel media order:  " ^ string_of_int channel.media.order);
+                        dispatchEL State.(MediaPlaybackFinished channel) ()
+                      }
+                    )
+            onLoadProgress=(
+                             fun _el buffered seekable => {
+                               let nativeBuffered = nativeOfTimeRanges buffered;
+                               let nativeSeekable = nativeOfTimeRanges seekable;
+                               dispatchEL
+                                 State.(
+                                   MediaLoadProgressUpdated channel nativeBuffered nativeSeekable
+                                 )
+                                 ()
+                             }
+                           )
             onTimeUpdated=(
                             fun el => {
                               let duration = Audio_player.AudioElement.duration el;
@@ -729,17 +823,35 @@ module Wip = {
               </div>
               <div className="timeline slider">
                 <Progress_bar
-                  progress=(Utils.channelMediaProgress currentChannel currentChannel.media)
+                  progress=(0.0, Utils.channelMediaProgress currentChannel currentChannel.media)
                   cursor="ew-resize"
+                  buffered=(
+                             switch currentChannel.media.buffered {
+                             | None => None
+                             | Some buffered =>
+                               Some (
+                                 Array.map
+                                   (
+                                     fun (start, finish) => {
+                                       let startPercent =
+                                         Utils.tmpProgress start currentChannel.media;
+                                       let endPercent =
+                                         Utils.tmpProgress finish currentChannel.media;
+                                       let widthPercent = endPercent -. startPercent;
+                                       (startPercent, widthPercent)
+                                     }
+                                   )
+                                   buffered
+                               )
+                             }
+                           )
                   onChanged=(
-                              fun offset => {
-                                Js.log offset;
+                              fun offset =>
                                 dispatchEL
                                   State.(
                                     MediaPlayerScrubbed currentChannel offset (Js.Date.now ())
                                   )
                                   ()
-                              }
                             )
                 />
                 <div className="thumb" />
@@ -768,7 +880,8 @@ module Wip = {
           <div className="volume slider">
             <Progress_bar
               cursor="ew-resize"
-              progress=(state.volume *. 100.0)
+              buffered=None
+              progress=(0.0, state.volume *. 100.0)
               onChanged=(fun offset => dispatchEL State.(VolumeSet offset) ())
             />
             <div className="thumb" />

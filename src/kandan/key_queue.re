@@ -1,22 +1,26 @@
 /**
- Example usage:
+  Example usage:
 
-    /* Mapping of keystroke(+modifiers) to handler (taking unit) */
-   let keyMap = [
-     (["ctrl+esc"], fun _ => Js.log "ctrl esc yo!"),
-     (
-       ["up", "up", "down", "down", "left", "right", "left", "right", "a", "b"],
-       fun _ => ReasonJs.Window.alert "Konami code!"
-     ),
-     (["ctrl+/"], fun _ => ReasonJs.Window.alert "Wow!"),
-     (["ctrl+shift+esc"], fun _ => ReasonJs.Window.alert "ctrl shift esc yo!")
-   ];
+     /* Mapping of keystroke(+modifiers) to handler (taking unit) */
+    let keyMap = [
+      (["ctrl+esc"], fun _ => Js.log "ctrl esc yo!"),
+      (
+        ["up", "up", "down", "down", "left", "right", "left", "right", "a", "b"],
+        fun _ => ReasonJs.Window.alert "Konami code!"
+      ),
+      (["ctrl+/"], fun _ => ReasonJs.Window.alert "Wow!"),
+      (["ctrl+shift+esc"], fun _ => ReasonJs.Window.alert "ctrl shift esc yo!")
+    ];
 
-   /* This component will add an event listener to window for
-   "keydown". In this case, any key chord will have to be
-   pressed within 2 seconds, but you can get no timeout via None. */
+    /* This component will add an event listener to window for
+    "keydown". In this case, any key chord will have to be
+    pressed within 2 seconds, but you can get no timeout via None. */
 
-   <Key_queue keyMap timeout=(Some 2000) />
+    <Key_queue keyMap timeout=(Some 2000) />
+
+    /* NB: You must fully qualify keys, e.g. it's impossible (on
+    US keyboards to hit `=` without shift, so a shortcut for `ctrl+=`
+    must be written out as `ctrl+shift+=`. This may change in the future. */
 
  */
 external charCodeAt : string => int => int = "charCodeAt" [@@bs.send];
@@ -38,6 +42,7 @@ type namedKey =
   | Semicolon
   | Slash
   | Plus
+  | Equal
   | BracketLeft
   | BracketRight;
 
@@ -58,6 +63,8 @@ let codeOfKey (event: ReasonJs.Dom.KeyboardEvent.t) =>
   | "BracketRigth" => Special BracketRight
   | ";" => Special Semicolon
   | "/" => Special Slash
+  | "=" => Special Equal
+  | "+" => Special Plus
   | code => Literal code
   };
 
@@ -91,6 +98,7 @@ let parseStroke keyStroke => {
       | "left" => helper ::shift ::alt ::ctrl ::meta code::(Some (Special Left)) xs
       | "right" => helper ::shift ::alt ::ctrl ::meta code::(Some (Special Right)) xs
       | "/" => helper ::shift ::alt ::ctrl ::meta code::(Some (Special Slash)) xs
+      | "equal" => helper ::shift ::alt ::ctrl ::meta code::(Some (Special Equal)) xs
       | "plus" => helper ::shift ::alt ::ctrl ::meta code::(Some (Special Plus)) xs
       | "{" => helper ::shift ::alt ::ctrl ::meta code::(Some (Special BracketLeft)) xs
       | "}" => helper ::shift ::alt ::ctrl ::meta code::(Some (Special BracketRight)) xs
@@ -125,6 +133,7 @@ let stringOfStroke stroke =>
     | Special Del => "del"
     | Special Semicolon => "semicolon"
     | Special Slash => "slash"
+    | Special Equal => "equal"
     | Special Plus => "plus"
     | Special BracketLeft => "{"
     | Special BracketRight => "}"

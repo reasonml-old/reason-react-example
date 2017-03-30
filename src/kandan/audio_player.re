@@ -1,3 +1,13 @@
+let bufferedStyle =
+  ReactDOMRe.Style.make height::"100%" background::"#ddd" borderRadius::"4rem" ();
+
+module TimeRanges = {
+  type t;
+  external length : t => int = "" [@@bs.get];
+  external start : t => int => float = "" [@@bs.send];
+  external _end : t => int => float = "end" [@@bs.send];
+};
+
 module AudioElement = {
   type t;
   external ofDom : Dom.element => t = "%identity";
@@ -10,6 +20,8 @@ module AudioElement = {
   external currentTime : t => int = "" [@@bs.get];
   external duration : t => int = "" [@@bs.get];
   external setCurrentTime : t => int => unit = "currentTime" [@@bs.set];
+  external buffered : t => TimeRanges.t = "" [@@bs.get];
+  external seekable : t => TimeRanges.t = "" [@@bs.get];
 };
 
 let setAudioPlayerMedia (player: AudioElement.t) audioSrc => {
@@ -51,13 +63,24 @@ module Audio_player = {
     channel: State.channel,
     audioState: State.mediaPlayerState,
     volume: float,
+    onEnded: option (AudioElement.t => unit),
+    onLoadProgress: option (AudioElement.t => TimeRanges.t => TimeRanges.t => unit),
     onTimeUpdated: AudioElement.t => unit,
     percent: option (float, float),
-    time: option float
+    time: option float,
+    showBuffered: option bool
   };
   type instanceVars = {mutable domRef: option Dom.element};
-  type state = {onTimeUpdated: AudioElement.t => unit};
-  let getInitialState (props: props) => {onTimeUpdated: props.onTimeUpdated};
+  type state = {
+    onEnded: option (AudioElement.t => unit),
+    onTimeUpdated: AudioElement.t => unit,
+    onLoadProgress: option (AudioElement.t => TimeRanges.t => TimeRanges.t => unit)
+  };
+  let getInitialState (props: props) => {
+    onEnded: props.onEnded,
+    onTimeUpdated: props.onTimeUpdated,
+    onLoadProgress: props.onLoadProgress
+  };
   let name = "AudioPlayer";
   let getInstanceVars () => {domRef: None};
   let componentDidUpdate ::prevProps ::prevState {props, instanceVars} => {
@@ -101,10 +124,32 @@ module Audio_player = {
   };
   let setAudioRef {state, instanceVars} el => {
     instanceVars.domRef = Some el;
+    let audioElement = AudioElement.ofDom el;
     ReasonJs.Dom.Element.addEventListener
-      "timeupdate"
-      (throttleOneArg 100.0 (fun _event => state.onTimeUpdated (AudioElement.ofDom el)))
-      el
+      "timeupdate" (throttleOneArg 100.0 (fun _event => state.onTimeUpdated audioElement)) el;
+    switch state.onLoadProgress {
+    | None => ()
+    | Some handler =>
+      ReasonJs.Dom.Element.addEventListener
+        "progress"
+        (
+          throttleOneArg
+            100.0
+            (
+              fun _event =>
+                handler
+                  audioElement
+                  (AudioElement.buffered audioElement)
+                  (AudioElement.seekable audioElement)
+            )
+        )
+        el
+    };
+    switch state.onEnded {
+    | None => ()
+    | Some handler =>
+      ReasonJs.Dom.Element.addEventListener "ended" (fun _event => handler audioElement) el
+    }
   };
   let render {props, handler} =>
     <div style=(ReactDOMRe.Style.make display::"block" ())>
@@ -133,5 +178,26 @@ module Audio_player = {
 
 include ReactRe.CreateComponent Audio_player;
 
-let createElement ::channel ::id ::volume ::audioState ::onTimeUpdated ::percent ::time=? =>
-  wrapProps {channel, id, audioState, volume, onTimeUpdated, percent, time};
+let createElement
+    ::channel
+    ::id
+    ::volume
+    ::audioState
+    ::onTimeUpdated
+    ::percent
+    ::time=?
+    ::showBuffered=?
+    ::onLoadProgress=?
+    ::onEnded=? =>
+  wrapProps {
+    channel,
+    id,
+    audioState,
+    volume,
+    onEnded,
+    onTimeUpdated,
+    onLoadProgress,
+    percent,
+    time,
+    showBuffered
+  };

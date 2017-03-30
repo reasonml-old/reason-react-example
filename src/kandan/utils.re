@@ -81,7 +81,17 @@ let setPageTitle title =>
 
 let findNextMedia channel offset => {
   open State;
-  let idx = max 0 (min (channel.media.order + offset) (List.length channel.playlist));
+  let rawIdx = channel.media.order + offset;
+  let rawIdx = max 0 (min rawIdx (List.length channel.playlist));
+  let idx =
+    switch channel.mediaRepeat {
+    | Off => rawIdx
+    | One => channel.media.order
+    | All =>
+      let idx = rawIdx mod List.length channel.playlist;
+      Js.log [|rawIdx, List.length channel.playlist, idx|];
+      idx
+    };
   List.nth channel.playlist idx
 };
 
@@ -92,6 +102,12 @@ let mediaSrcToTitle (media: State.media) =>
     let split = Local_string.split src [%bs.re "/\\//"];
     let last = split.(Array.length split - 1);
     Local_string.decodeURI last
+  };
+
+let tmpProgress (progress: float) (media: State.media) =>
+  switch media.duration {
+  | None => 0.
+  | Some duration => progress /. float_of_int duration *. 100.0
   };
 
 let channelMediaProgress (channel: State.channel) (media: State.media) =>

@@ -1,3 +1,61 @@
+let lobbyPlaylist =
+  State.[
+    {
+      src:
+        Some "https://dl.dropboxusercontent.com/u/412963/music/%E4%BA%B2%E7%88%B1%E7%9A%84%E4%BD%A0%E6%80%8E%E4%B9%88%E4%B8%8D%E5%9C%A8%E6%88%91%E8%BA%AB%E8%BE%B9.m4a",
+      order: 0,
+      duration: None,
+      buffered: None,
+      seekable: None
+    },
+    {
+      src:
+        Some "https://dl.dropboxusercontent.com/u/412963/music/%E5%A5%BD%E5%BF%83%E5%88%86%E6%89%8B%20Candy%20Lo%20feat.%20%E7%8E%8B%E5%8A%9B%E5%AE%8F.mp3",
+      order: 1,
+      duration: None,
+      buffered: None,
+      seekable: None
+    },
+    {
+      src: Some "https://dl.dropboxusercontent.com/u/412963/music/Why%20This%20Kolaveri%20Di.mp3",
+      order: 2,
+      duration: None,
+      buffered: None,
+      seekable: None
+    },
+    {
+      src:
+        Some "https://dl.dropboxusercontent.com/u/412963/music/%E4%BA%B2%E7%88%B1%E7%9A%84%20%EF%BC%8D%20%E5%BE%90%E8%8B%A5%E7%91%84.mp3",
+      order: 3,
+      duration: None,
+      buffered: None,
+      seekable: None
+    },
+    {
+      src:
+        Some "https://dl.dropboxusercontent.com/u/412963/music/Money%20Trees%20-%20Kendrick%20Lamar.mp3",
+      order: 4,
+      duration: None,
+      buffered: None,
+      seekable: None
+    },
+    {
+      src:
+        Some "https://dl.dropboxusercontent.com/u/412963/music/Armin%20van%20Buuren%20feat.%20Trevor%20Guthrie%20-%20This%20Is%20What%20It%20Feels%20Like.mp3",
+      order: 5,
+      duration: None,
+      buffered: None,
+      seekable: None
+    },
+    {
+      src: Some "https://dl.dropboxusercontent.com/u/412963/music/05_Last_Train_To_New_Jersey.mp3",
+      order: 6,
+      duration: None,
+      buffered: None,
+      seekable: None
+    }
+  ];
+
 let state =
   State.{
     title: "Kandan",
@@ -57,33 +115,43 @@ let state =
           },
           {userId: 3, content: "Sir, move along", createdAt: 3.}
         ],
-        media: {src: None, order: 0, duration: None},
+        media: {src: None, order: 0, duration: None, buffered: None, seekable: None},
         mediaState: Paused,
+        mediaRepeat: All,
         mediaProgress: 0,
+        mediaLoadProgress: None,
         mediaScrubbedTo: None,
         playlist: [
           {
             src:
               Some "http://www.mfiles.co.uk/mp3-downloads/frederic-chopin-piano-sonata-2-op35-3-funeral-march.mp3",
             order: 0,
-            duration: None
+            duration: None,
+            buffered: None,
+            seekable: None
           },
           {
             src:
               Some "http://www.mfiles.co.uk/mp3-downloads/Dvorak-Symphony9-2-from-the-New-World.mp3",
             order: 1,
-            duration: None
+            duration: None,
+            buffered: None,
+            seekable: None
           },
           {
             src: Some "http://www.mfiles.co.uk/mp3-downloads/moonlight-movement1.mp3",
             order: 2,
-            duration: None
+            duration: None,
+            buffered: None,
+            seekable: None
           },
           {
             src:
               Some "http://www.mfiles.co.uk/mp3-downloads/beethoven-piano-sonata-pathetique-2.mp3",
             order: 3,
-            duration: None
+            duration: None,
+            buffered: None,
+            seekable: None
           }
         ]
       },
@@ -95,8 +163,10 @@ let state =
           {userId: 2, content: "Not enough progressive trance in here, really...", createdAt: 0.}
         ],
         userIds: State.UserIdSet.empty |> State.UserIdSet.add 1 |> State.UserIdSet.add 2,
-        media: {src: None, order: 0, duration: None},
+        media: {src: None, order: 0, duration: None, buffered: None, seekable: None},
         mediaProgress: 0,
+        mediaLoadProgress: None,
+        mediaRepeat: All,
         mediaScrubbedTo: None,
         mediaState: Paused,
         playlist: [
@@ -104,7 +174,9 @@ let state =
             src:
               Some "https://dl.dropboxusercontent.com/u/412963/music/Gareth%20Emery%20feat.%20Christina%20Novelli%20-%20Concrete%20Angel.mp3",
             order: 0,
-            duration: None
+            duration: None,
+            buffered: None,
+            seekable: None
           }
         ]
       },
@@ -146,54 +218,13 @@ let state =
           {userId: 4, content: "Right, @sgrove?", createdAt: 10.},
           {userId: 3, content: "If you can see this, SEARCH WORKS~~~!", createdAt: 100.}
         ],
-        media: {src: None, order: 0, duration: None},
+        media: List.nth lobbyPlaylist 4,
         mediaProgress: 0,
+        mediaRepeat: All,
+        mediaLoadProgress: None,
         mediaScrubbedTo: None,
         mediaState: Paused,
-        playlist: [
-          {
-            src:
-              Some "https://dl.dropboxusercontent.com/u/412963/music/%E4%BA%B2%E7%88%B1%E7%9A%84%E4%BD%A0%E6%80%8E%E4%B9%88%E4%B8%8D%E5%9C%A8%E6%88%91%E8%BA%AB%E8%BE%B9.m4a",
-            order: 0,
-            duration: None
-          },
-          {
-            src:
-              Some "https://dl.dropboxusercontent.com/u/412963/music/%E5%A5%BD%E5%BF%83%E5%88%86%E6%89%8B%20Candy%20Lo%20feat.%20%E7%8E%8B%E5%8A%9B%E5%AE%8F.mp3",
-            order: 1,
-            duration: None
-          },
-          {
-            src:
-              Some "https://dl.dropboxusercontent.com/u/412963/Why%20This%20Kolaveri%20Di%20Full%20Song%20Promo%20Video%20in%20HD%20-%20.mp3",
-            order: 2,
-            duration: None
-          },
-          {
-            src:
-              Some "https://dl.dropboxusercontent.com/u/412963/music/%E4%BA%B2%E7%88%B1%E7%9A%84%20%EF%BC%8D%20%E5%BE%90%E8%8B%A5%E7%91%84.mp3",
-            order: 3,
-            duration: None
-          },
-          {
-            src:
-              Some "https://dl.dropboxusercontent.com/u/412963/music/Money%20Trees%20-%20Kendrick%20Lamar.mp3",
-            order: 4,
-            duration: None
-          },
-          {
-            src:
-              Some "https://dl.dropboxusercontent.com/u/412963/music/Armin%20van%20Buuren%20feat.%20Trevor%20Guthrie%20-%20This%20Is%20What%20It%20Feels%20Like.mp3",
-            order: 5,
-            duration: None
-          },
-          {
-            src:
-              Some "https://dl.dropboxusercontent.com/u/412963/music/05_Last_Train_To_New_Jersey.mp3",
-            order: 6,
-            duration: None
-          }
-        ]
+        playlist: lobbyPlaylist
       }
     ],
     search: None

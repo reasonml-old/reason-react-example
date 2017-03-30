@@ -23,7 +23,20 @@ type mediaPlayerState =
   | Paused
   | NotLoaded;
 
-type media = {order: int, src: option string, duration: option int};
+type timeRange = array (float, float);
+
+type media = {
+  order: int,
+  src: option string,
+  duration: option int,
+  buffered: option timeRange,
+  seekable: option timeRange
+};
+
+type mediaRepeatSetting =
+  | Off
+  | One
+  | All;
 
 type channel = {
   id: channelId,
@@ -35,7 +48,9 @@ type channel = {
   mediaState: mediaPlayerState,
   /* 0.0 => 1.0 */
   mediaProgress: int,
+  mediaLoadProgress: option timeRange,
   mediaScrubbedTo: option (float, float),
+  mediaRepeat: mediaRepeatSetting,
   playlist: list media
 };
 
@@ -72,7 +87,9 @@ type action =
   | SongSelected channel media
   | MediaStateUpdated channel mediaPlayerState
   | MediaPlayerScrubbed channel float float
+  | MediaPlaybackFinished channel
   | MediaProgressUpdated channel int int
+  | MediaLoadProgressUpdated channel timeRange timeRange
   | ChatBoxFocused bool
   | UserMenuToggled bool
   | MsgSubmitted channel user message
@@ -93,8 +110,10 @@ let stringOfAction (action: action) =>
   | ChannelSelectedByIndex _ => "ChannelSelectedByIndex"
   | SongSelected _ _ [@implicit_arity] => "SongSelected"
   | MediaStateUpdated _ _ [@implicit_arity] => "MediaStateUpdated"
+  | MediaPlaybackFinished _ => "MediaPlaybackFinished"
   | MediaPlayerScrubbed _ _ _ => "MediaPlayerScrubbed"
   | MediaProgressUpdated channel _ _ => "MediaProgressUpdated on " ^ channel.title
+  | MediaLoadProgressUpdated channel _ _ => "MediaLoadProgressUpdated on " ^ channel.title
   | ChatBoxFocused _ => "ChatBoxFocused"
   | UserMenuToggled _ => "UserMenuToggled"
   | MsgSubmitted _ _ _ [@implicit_arity] => "MsgSubmitted"
