@@ -1,6 +1,3 @@
-let bufferedStyle =
-  ReactDOMRe.Style.make height::"100%" background::"#ddd" borderRadius::"4rem" ();
-
 module TimeRanges = {
   type t;
   external length : t => int = "" [@@bs.get];
