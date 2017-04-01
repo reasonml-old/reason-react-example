@@ -93,11 +93,11 @@ type action =
   | ChatBoxFocused bool
   | UserMenuToggled bool
   | MsgSubmitted channel user message
-  | AppTitleUpdated string int
   | VolumeSet float
   | VolumeIncremented float
   | VolumeDecremented float
   | VolumeMuteToggled
+  | UriNavigated string
   | Log string
   | Alert string;
 
@@ -117,11 +117,11 @@ let stringOfAction (action: action) =>
   | ChatBoxFocused _ => "ChatBoxFocused"
   | UserMenuToggled _ => "UserMenuToggled"
   | MsgSubmitted _ _ _ [@implicit_arity] => "MsgSubmitted"
-  | AppTitleUpdated _ _ => "AppTitleUpdated"
   | VolumeSet _ => "VolumeSet"
   | VolumeIncremented _ => "VolumentIncremented"
   | VolumeDecremented _ => "VolumentDecremented"
   | VolumeMuteToggled => "VolumeMuteToggled"
+  | UriNavigated _ => "UriNavigated"
   | Log _ => "Log"
   | Alert _ => "Alert"
   };

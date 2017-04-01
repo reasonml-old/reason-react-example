@@ -79,6 +79,11 @@ let setPageTitle title =>
   | Some doc => ReasonJs.Dom.HtmlDocument.setTitle doc title
   };
 
+let setHash hash => {
+  let location = ReasonJs.Dom.Window.location ReasonJs.Dom.window;
+  ReasonJs.Dom.Location.setHash location hash
+};
+
 let findNextMedia channel offset => {
   open State;
   let rawIdx = channel.media.order + offset;
@@ -89,7 +94,6 @@ let findNextMedia channel offset => {
     | One => channel.media.order
     | All =>
       let idx = rawIdx mod List.length channel.playlist;
-      Js.log [|rawIdx, List.length channel.playlist, idx|];
       idx
     };
   List.nth channel.playlist idx

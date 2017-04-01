@@ -1,5 +1,8 @@
 open ReactDOMRe.Style;
 
+let findCurrentChannel state =>
+  State.(List.find (fun haystack => haystack.id === state.selectedChannelId) state.channels);
+
 let nativeOfTimeRanges (ranges: Audio_player.TimeRanges.t) => {
   open Audio_player;
   let length = TimeRanges.length ranges;
@@ -16,6 +19,24 @@ let nativeOfTimeRanges (ranges: Audio_player.TimeRanges.t) => {
       helper 0
     }
 };
+
+let pageTitleOfChannel (channel: State.channel) :string => {
+  open State;
+  let songTitle = Utils.mediaSrcToTitle channel.media;
+  let mediaState =
+    switch (channel.media.src, channel.mediaState) {
+    | (None, _) => ""
+    | (_, NotLoaded) => ""
+    | (_, Paused) => ": " ^ songTitle ^ " (paused)"
+    | (_, Playing) => ": " ^ songTitle ^ "(playing)"
+    };
+  channel.title ^ " - Kandan" ^ mediaState
+};
+
+let channelFromUri (channels: list State.channel) path =>
+  try (Some (List.find (fun (channel: State.channel) => channel.title == path) channels)) {
+  | Not_found => None
+  };
 
 let cursorPointer = ReactDOMRe.Style.make cursor::"pointer" ();
 
@@ -181,6 +202,7 @@ let searchField searchTerm onSearchUpdated =>
   <input
     _type="text"
     placeholder="Search..."
+    className="query"
     value=(
             switch searchTerm {
             | None => ""
@@ -212,7 +234,7 @@ let searchField searchTerm onSearchUpdated =>
 module Wip = {
   include ReactRe.Component.Stateful;
   let name = "Wip";
-  type props = {message: string, rootEl: Dom.element};
+  type props = {message: string, rootEl: Dom.element, path: string};
   type state = State.appState;
   let getInitialState _props => Demo.state;
   let sidebarToggled {state} which opened =>
@@ -239,6 +261,13 @@ module Wip = {
            volume: state.volume == 0.0 ? state.lastVolume : 0.0,
            lastVolume: state.volume
          };
+  let uriNavigated {state} (newPath: string) =>
+    State.(
+      switch (channelFromUri state.channels newPath) {
+      | None => None
+      | Some channel => Some {...state, selectedChannelId: channel.id}
+      }
+    );
   let channelSelected {state} channel =>
     Some State.{...state, selectedChannelId: channel.id, title: channel.title ^ " - Kandan"};
   let songSelected {state} (channel: State.channel) (media: State.media) => {
@@ -379,23 +408,23 @@ module Wip = {
       ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
     | MsgSubmitted channel _ _ =>
       ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
-    | AppTitleUpdated title _badge_count => Utils.setPageTitle title
     | Log str => Js.log str
     | Alert str => ReasonJs.Dom.Window.alert str ReasonJs.Dom.window
-    | SidebarToggled _ _ => ()
-    | SearchUpdated _ => ()
-    | SongSelected _ _ => ()
+    | SidebarToggled _ _
+    | SearchUpdated _
+    | SongSelected _ _
     | MediaStateUpdated _ _
     | MediaPlayerScrubbed _ _ _
     | MediaProgressUpdated _ _ _
     | MediaPlaybackFinished _
-    | MediaLoadProgressUpdated _ _ _ => ()
-    | ChatBoxFocused _ => ()
-    | UserMenuToggled _ => ()
+    | MediaLoadProgressUpdated _ _ _
+    | ChatBoxFocused _
+    | UserMenuToggled _
     | VolumeSet _
     | VolumeDecremented _
     | VolumeIncremented _
-    | VolumeMuteToggled => ()
+    | VolumeMuteToggled
+    | UriNavigated _ => ()
     };
     ()
   };
@@ -406,7 +435,7 @@ module Wip = {
   /* Used when calling from outside of React (window keydown event, etc.) */
   let dispatchEventless (action: State.action) componentBag () => {
     open State;
-    Js.log ("New EL action: " ^ stringOfAction action);
+    Js.log ("[EL]" ^ stringOfAction action);
     let newState =
       switch action {
       | SearchFormFocused focused => searchFormFocused componentBag focused
@@ -437,7 +466,7 @@ module Wip = {
       | ChatBoxFocused focused => chatBoxFocused componentBag focused
       | UserMenuToggled opened => userMenuToggled componentBag opened
       | MsgSubmitted channel user msg => msgSubmitted componentBag channel user msg
-      | AppTitleUpdated _ _ => raise (notAEventlessAction action)
+      | UriNavigated newPath => uriNavigated componentBag newPath
       };
     let {state} = componentBag;
     processEffects
@@ -459,7 +488,7 @@ module Wip = {
   /* Used when calling from a React handler. Most of the time they'll delegate to the eventless dispatcher, but they may need to do something to an event first */
   let dispatchEventful (action: State.action) componentBag (event: ReactEventRe.Synthetic.t) => {
     open State;
-    Js.log ("New EF action: " ^ stringOfAction action);
+    Js.log ("[EF] " ^ stringOfAction action);
     let (effectAlreadyProcessed, newState) =
       switch action {
       /* eventful */
@@ -483,7 +512,7 @@ module Wip = {
     };
     newState
   };
-  let render {state, updater} => {
+  let render {state, updater, setState} => {
     let me =
       switch (Utils.findMeOpt state) {
       | None => assert false
@@ -639,10 +668,14 @@ module Wip = {
             audioState=channel.mediaState
             percent=channel.mediaScrubbedTo
             onEnded=(
-                      fun _el => {
-                        Js.log ("Channel media order:  " ^ string_of_int channel.media.order);
-                        dispatchEL State.(MediaPlaybackFinished channel) ()
-                      }
+                      fun _el =>
+                        setState (
+                          fun ({state} as componentBag2) =>
+                            switch (mediaPlaybackFinished componentBag2 (findCurrentChannel state)) {
+                            | None => state
+                            | Some newState => newState
+                            }
+                        )
                     )
             onLoadProgress=(
                              fun _el buffered seekable => {
@@ -696,6 +729,26 @@ module Wip = {
         <div className="menu-text"> (text (Utils.mediaSrcToTitle media)) </div>
       </li>;
     <div className="container">
+      <Page_title title=(pageTitleOfChannel currentChannel) />
+      <Routes
+        path=(Routes.stateToPath state)
+        isHistorical=true
+        onHashChange=(
+                       fun _oldPath _oldUrl newUrl =>
+                         updater
+                           (
+                             fun latestComponentBag _ => {
+                               let currentActualPath = Routes.hashOfUri newUrl;
+                               let pathFromState = Routes.stateToPath latestComponentBag.state;
+                               currentActualPath == pathFromState ?
+                                 None :
+                                 dispatchEventless
+                                   (State.UriNavigated currentActualPath) latestComponentBag ()
+                             }
+                           )
+                           ()
+                     )
+      />
       (ReactRe.arrayToElement audioChannels)
       <Key_queue keyMap onMatch=dispatchEL />
       /* <div className="atop">
@@ -870,7 +923,6 @@ module Wip = {
                 )
               </div>
             </div>
-            <div className="artist"> (text "artist name (Probably can't get this)") </div>
           </div>
         </div>
         <div className="right controls">
@@ -890,8 +942,17 @@ module Wip = {
       </div>
     </div>
   };
+  let componentDidMount {state} => {
+    open State;
+    /* Figure out if we need to dispatch an initial action based on the route, in this case just setting the current channel based on the uri */
+    let path = Routes.pagePath ReasonJs.Dom.window;
+    switch (channelFromUri state.channels path) {
+    | None => None
+    | Some channel => Some {...state, selectedChannelId: channel.id}
+    }
+  };
 };
 
 include ReactRe.CreateComponent Wip;
 
-let createElement ::message ::rootEl => wrapProps {message, rootEl};
+let createElement ::message ::rootEl ::path => wrapProps {message, rootEl, path};

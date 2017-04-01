@@ -103,10 +103,11 @@ module Progress_bar = {
         | Some timeRanges =>
           timeRanges |>
           Array.map (
-            fun _timeRange => {
-              let (progressStart, progressEnd) = _timeRange;
+            fun timeRange => {
+              let (progressStart, progressEnd) = timeRange;
               <div
                 className="spent"
+                key=(string_of_float progressStart)
                 style=(
                         ReactDOMRe.Style.make
                           backgroundColor::"#717171"
