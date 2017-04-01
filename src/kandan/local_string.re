@@ -24,3 +24,5 @@ let matchString s1 s2 => Js.Null.to_opt (matchString_ s1 s2);
 external decodeURI : string => string = "window.decodeURI" [@@bs.val];
 
 external fromCharCode : int => string = "String.fromCharCode" [@@bs.val];
+
+external replace : string => Js.Re.t => string => string = "replace" [@@bs.send];

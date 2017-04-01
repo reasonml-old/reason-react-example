@@ -20,6 +20,19 @@ let nativeOfTimeRanges (ranges: Audio_player.TimeRanges.t) => {
     }
 };
 
+let generateMsgSubmittedAction (channels: list State.channel) (users: list State.user) => {
+  open State;
+  let channel = Demo.randArrEl (Array.of_list channels);
+  let userId = State.UserIdSet.choose channel.userIds;
+  let otherUsers =
+    List.filter
+      (fun (user: State.user) => State.UserIdSet.mem user.id channel.userIds && userId != user.id)
+      users;
+  let message = Demo.generateMessage userId otherUsers;
+  let action = MsgSubmitted channel message;
+  action
+};
+
 let pageTitleOfChannel (channel: State.channel) :string => {
   open State;
   let songTitle = Utils.mediaSrcToTitle channel.media;
@@ -353,7 +366,7 @@ module Wip = {
   let chatBoxFocused {state} focused => Some State.{...state, userMessageFocused: focused};
   let searchFormFocused {state} focused => Some State.{...state, searchFormFocused: focused};
   let userMenuToggled {state} opened => Some State.{...state, userMenuOpen: opened};
-  let msgSubmitted {state} (channel: State.channel) (_me: State.user) (msg: State.message) => {
+  let msgSubmitted {state} (channel: State.channel) (msg: State.message) => {
     let newMsg = {...msg, content: Local_string.trim msg.content};
     let mediaToQueue: option State.media =
       switch (Local_string.indexOf newMsg.content "/queue") {
@@ -406,7 +419,7 @@ module Wip = {
           (fun (a: State.channel) (b: State.channel) => compare a.title b.title) newState.channels;
       let channel = List.nth sortedChannels idx;
       ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
-    | MsgSubmitted channel _ _ =>
+    | MsgSubmitted channel _ =>
       ignore (Js.Global.setTimeout (fun () => scrollToLatestMessage props.rootEl channel.id) 100)
     | Log str => Js.log str
     | Alert str => ReasonJs.Dom.Window.alert str ReasonJs.Dom.window
@@ -424,7 +437,8 @@ module Wip = {
     | VolumeDecremented _
     | VolumeIncremented _
     | VolumeMuteToggled
-    | UriNavigated _ => ()
+    | UriNavigated _
+    | BotTalkToggled _ => ()
     };
     ()
   };
@@ -465,8 +479,9 @@ module Wip = {
         mediaLoadProgressUpdated componentBag channel buffered seekable
       | ChatBoxFocused focused => chatBoxFocused componentBag focused
       | UserMenuToggled opened => userMenuToggled componentBag opened
-      | MsgSubmitted channel user msg => msgSubmitted componentBag channel user msg
+      | MsgSubmitted channel msg => msgSubmitted componentBag channel msg
       | UriNavigated newPath => uriNavigated componentBag newPath
+      | BotTalkToggled enabled => Some {...componentBag.state, debug: {botTalkEnabled: enabled}}
       };
     let {state} = componentBag;
     processEffects
@@ -597,6 +612,8 @@ module Wip = {
             ["up", "up", "down", "down", "left", "right", "left", "right", "a", "b"],
             Alert "Konami code!"
           ),
+          (["ctrl+b"], BotTalkToggled (not state.debug.botTalkEnabled)),
+          (["ctrl+n"], generateMsgSubmittedAction state.channels state.users),
           /* Volume shortcuts: Support both shift and shiftless shortcuts */
           (["ctrl+-"], VolumeDecremented 0.1),
           (["ctrl+shift+_"], VolumeDecremented 0.1),
@@ -798,10 +815,7 @@ module Wip = {
             channel=currentChannel
             users=state.users
             onFocus=(fun focused => dispatchEL State.(ChatBoxFocused focused) ())
-            onMessageSubmitted=(
-                                 fun channel msg =>
-                                   dispatchEL State.(MsgSubmitted channel me msg) ()
-                               )
+            onMessageSubmitted=(fun channel msg => dispatchEL State.(MsgSubmitted channel msg) ())
           />
         </div>
         <div className="menu right">
@@ -942,8 +956,28 @@ module Wip = {
       </div>
     </div>
   };
-  let componentDidMount {state} => {
+  let componentDidMount {state, updater} => {
     open State;
+    /* Generate random messages in various channels */
+    let _intervalId =
+      Js.Global.setInterval
+        (
+          fun () =>
+            updater
+              (
+                fun latestComponentBag _ =>
+                  latestComponentBag.state.debug.botTalkEnabled ?
+                    {
+                      let action =
+                        generateMsgSubmittedAction
+                          latestComponentBag.state.channels latestComponentBag.state.users;
+                      dispatchEventless action latestComponentBag ()
+                    } :
+                    None
+              )
+              ()
+        )
+        1000;
     /* Figure out if we need to dispatch an initial action based on the route, in this case just setting the current channel based on the uri */
     let path = Routes.pagePath ReasonJs.Dom.window;
     switch (channelFromUri state.channels path) {

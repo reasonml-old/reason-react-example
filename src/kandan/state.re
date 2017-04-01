@@ -5,6 +5,8 @@ type userStatus =
   | Online
   | Away;
 
+type debug = {botTalkEnabled: bool};
+
 type user = {id: userId, email: string, name: option string, status: userStatus, username: string};
 
 type message = {content: string, userId, createdAt: float};
@@ -71,7 +73,8 @@ type appState = {
   search: option string,
   title: string,
   volume: float,
-  lastVolume: float
+  lastVolume: float,
+  debug
 };
 
 type emoji = {key: string, src: string, css: string, title: string};
@@ -92,12 +95,13 @@ type action =
   | MediaLoadProgressUpdated channel timeRange timeRange
   | ChatBoxFocused bool
   | UserMenuToggled bool
-  | MsgSubmitted channel user message
+  | MsgSubmitted channel message
   | VolumeSet float
   | VolumeIncremented float
   | VolumeDecremented float
   | VolumeMuteToggled
   | UriNavigated string
+  | BotTalkToggled bool
   | Log string
   | Alert string;
 
@@ -116,12 +120,13 @@ let stringOfAction (action: action) =>
   | MediaLoadProgressUpdated channel _ _ => "MediaLoadProgressUpdated on " ^ channel.title
   | ChatBoxFocused _ => "ChatBoxFocused"
   | UserMenuToggled _ => "UserMenuToggled"
-  | MsgSubmitted _ _ _ [@implicit_arity] => "MsgSubmitted"
+  | MsgSubmitted _ _ [@implicit_arity] => "MsgSubmitted"
   | VolumeSet _ => "VolumeSet"
   | VolumeIncremented _ => "VolumentIncremented"
   | VolumeDecremented _ => "VolumentDecremented"
   | VolumeMuteToggled => "VolumeMuteToggled"
   | UriNavigated _ => "UriNavigated"
+  | BotTalkToggled _ => "BotTalkToggled"
   | Log _ => "Log"
   | Alert _ => "Alert"
   };
