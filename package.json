@@ -23,7 +23,7 @@
     "todomvc-common": "^1.0.1"
   },
   "devDependencies": {
-    "bs-platform": "https://github.com/bloomberg/bucklescript.git",
+    "bs-platform": "^1.6.0",
     "webpack": "^1.14.0"
   }
 }
