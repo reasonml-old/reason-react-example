@@ -115,6 +115,7 @@ module Top = {
               todo == todoToSave ? {...todo, TodoItem.title: text} : todo
           )
           state.todos;
+      saveLocally todos;
       Some {...state, editing: None, todos}
     };
     let cancel {state} _ => Some {...state, editing: None};
