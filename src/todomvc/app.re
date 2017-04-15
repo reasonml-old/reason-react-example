@@ -1,8 +1,5 @@
 type router = Js.t {. init : (string => unit) [@bs.meth]};
 
-external routerMake : Js.t {..} => router =
-  "Router" [@@bs.module "director"] [@@bs.new];
-
 external unsafeJsonParse : string => 'a = "JSON.parse" [@@bs.val];
 
 external getItem : string => option string =
@@ -43,12 +40,12 @@ module Top = {
       let f2 {state} () => Some {...state, nowShowing: ActiveTodos};
       let f3 {state} () => Some {...state, nowShowing: CompletedTodos};
       let router =
-        routerMake {
+        DirectorRe.makeRouter {
           "/": updater f1,
           "/active": updater f2,
           "/completed": updater f3
         };
-      router##init "/";
+      DirectorRe.init router "/";
       None
     };
     let handleChange {state} event =>

@@ -5,7 +5,7 @@
 {
   "name" : "reason-react-example",
   "reason" : { "react-jsx" : true},
-  "bs-dependencies": ["reason-react"],
+  "bs-dependencies": ["reason-react", "bs-director"],
   "sources": [
     {
       "dir": "src",

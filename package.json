@@ -14,9 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "director": "^1.2.0",
-    "react-dom": "^15.4.2",
+    "bs-director": "^0.0.1",
     "react": "^15.4.2",
+    "react-dom": "^15.4.2",
     "reason-react": "https://github.com/reasonml/reason-react.git",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.1"
