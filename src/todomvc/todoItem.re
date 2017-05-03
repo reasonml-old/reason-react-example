@@ -55,7 +55,7 @@ module TodoItem = {
         editText: (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##value
       } :
       None;
-  let setEditFieldRef {state} r => state.editFieldRef = Some r;
+  let setEditFieldRef {state} r => state.editFieldRef = Js.Null.to_opt r;
 
   /**
    * Safely manipulate the DOM after updating the state when invoking
