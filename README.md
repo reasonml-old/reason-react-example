@@ -10,4 +10,4 @@ npm start
 npm run build
 ```
 
-After you see the webpack compilation succeed (the `npm run build` step), open up the nested html files in `src/*`! Then modify whichever file in `src` and refresh the page to see the changes.
+After you see the webpack compilation succeed (the `npm run build` step), open up the nested html files in `src/*` (**no server needed!**). Then modify whichever file in `src` and refresh the page to see the changes.
