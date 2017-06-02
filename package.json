@@ -17,12 +17,12 @@
     "bs-director": "^0.0.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason-react": "https://github.com/reasonml/reason-react.git",
+    "reason-react": "https://github.com/SanderSpies/react-on-reason.git",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.1"
   },
   "devDependencies": {
-    "bs-platform": "^1.7.3",
+    "bs-platform": "https://github.com/chenglou/bucklescript.git#2fe8fe6bacc2b272d9da16b14e0e7ec3bc4c932b",
     "webpack": "^1.14.0"
   }
 }
