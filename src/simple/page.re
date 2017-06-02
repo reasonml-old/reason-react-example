@@ -1,15 +1,9 @@
-module Page = {
-  include ReactRe.Component;
-  type props = {message: string};
-  let name = "Page";
-  let handleClick _ _ => {
-    Js.log "clicked!";
-    None
-  };
-  let render {props, updater} =>
-    <div onClick=(updater handleClick)> (ReactRe.stringToElement props.message) </div>;
+let component = ReasonReact.createComponent "Page";
+
+let handleClick _event _ _ => Js.log "clicked!";
+
+let make ::message _children => {
+  ...component,
+  render: fun () self =>
+    <div onClick=(self.handle handleClick)> (ReasonReact.stringToElement message) </div>
 };
-
-include ReactRe.CreateComponent Page;
-
-let createElement ::message => wrapProps {message: message};
