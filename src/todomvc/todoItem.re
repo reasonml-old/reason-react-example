@@ -54,9 +54,9 @@ let make ::todo ::editing ::onDestroy ::onSave ::onEdit ::onToggle ::onCancel _c
   {
     ...component,
     initialState: fun () => {editText: todo.title, editFieldRef: None, editing},
-    propsReceived: fun state _self => {...state, editing},
-    didUpdate: fun ::previous ::current _ =>
-      switch (previous.editing, editing, current.editFieldRef) {
+    willReceiveProps: fun state _self => {...state, editing},
+    didUpdate: fun ::previousState ::currentState _ =>
+      switch (previousState.editing, editing, currentState.editFieldRef) {
       | (false, true, Some field) =>
         let node = ReactDOMRe.domElementToObj field;
         ignore (node##focus ());
