@@ -22,7 +22,7 @@
     "todomvc-common": "^1.0.1"
   },
   "devDependencies": {
-    "bs-platform": "https://github.com/chenglou/bucklescript.git#2fe8fe6bacc2b272d9da16b14e0e7ec3bc4c932b",
+    "bs-platform": "https://github.com/chenglou/bucklescript.git#e940c7064915f56875cbae2b6e45afa479b43ebe",
     "webpack": "^1.14.0"
   }
 }
