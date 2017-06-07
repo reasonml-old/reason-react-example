@@ -82,7 +82,7 @@ module Top = {
     saveLocally todos;
     ReasonReact.Update {...state, todos}
   };
-  let component = ReasonReact.createComponent "TodoAppRe";
+  let component = ReasonReact.statefulComponent "TodoAppRe";
   let make _children => {
     ...component,
     initialState: fun () => {

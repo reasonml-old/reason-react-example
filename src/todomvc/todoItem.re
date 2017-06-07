@@ -14,7 +14,7 @@ type state = {
   editing: bool
 };
 
-let component = ReasonReact.createComponent "TodoItemRe";
+let component = ReasonReact.statefulComponent "TodoItemRe";
 
 let setEditFieldRef r state _self =>
   ReasonReact.SilentUpdate {...state, editFieldRef: Js.Null.to_opt r};

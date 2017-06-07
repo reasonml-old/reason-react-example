@@ -1,4 +1,4 @@
-let component = ReasonReact.createComponent "Page";
+let component = ReasonReact.statelessComponent "Page";
 
 let handleClick _event _ _ => Js.log "clicked!";
 

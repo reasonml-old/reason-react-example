@@ -1,4 +1,4 @@
-let component = ReasonReact.createComponent "PageReason";
+let component = ReasonReact.statelessComponent "PageReason";
 
 let make ::message ::extraGreeting=? _children => {
   ...component,

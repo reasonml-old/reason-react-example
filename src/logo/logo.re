@@ -43,7 +43,7 @@ let handleMouseUp _event state _self => {
  */
 let handleMouseDown _event state _self => ReasonReact.Update {...state, drag: mouseDownDrag};
 
-let component = ReasonReact.createComponent "LogoRe";
+let component = ReasonReact.statefulComponent "LogoRe";
 
 let make ::message _children => {
   ...component,

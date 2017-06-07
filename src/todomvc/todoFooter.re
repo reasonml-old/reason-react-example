@@ -3,7 +3,7 @@ type showingState =
   | ActiveTodos
   | CompletedTodos;
 
-let component = ReasonReact.createComponent "TodoFooterRe";
+let component = ReasonReact.statelessComponent "TodoFooterRe";
 
 let make ::count ::completedCount ::nowShowing ::onClearCompleted _children => {
   ...component,
