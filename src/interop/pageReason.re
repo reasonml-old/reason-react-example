@@ -12,10 +12,13 @@ let make ::message ::extraGreeting=? _children => {
   }
 };
 
-let jsPropsToReason jsProps =>
-  make
-    message::jsProps##message
-    extraGreeting::?(Js.Null_undefined.to_opt jsProps##extraGreeting)
-    [||];
-
-let comp = ReasonReact.createJsReactClass ::jsPropsToReason component;
+let comp =
+  ReasonReact.wrapReasonForJs
+    ::component
+    (
+      fun jsProps =>
+        make
+          message::jsProps##message
+          extraGreeting::?(Js.Null_undefined.to_opt jsProps##extraGreeting)
+          [||]
+    );
