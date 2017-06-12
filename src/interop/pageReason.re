@@ -1,26 +1,24 @@
-module PageReason = {
-  include ReactRe.Component.JsProps;
-  type props = {message: string, extraGreeting: option string};
-  let name = "PageReason";
-  let render {props} => {
+let component = ReasonReact.statelessComponent "PageReason";
+
+let make ::message ::extraGreeting=? _children => {
+  ...component,
+  render: fun () _self => {
     let greeting =
-      switch props.extraGreeting {
+      switch extraGreeting {
       | None => "How are you?"
       | Some g => g
       };
-    <div> <MyBannerRe show=true message=(props.message ^ " " ^ greeting) /> </div>
-  };
-  /* extraGreeting is optional, which means the JS side might pass in a null or undefined */
-  type jsProps = Js.t {. message : string, extraGreeting : Js.null_undefined string};
-  let jsPropsToReasonProps =
-    Some (
-      fun jsProps => {
-        message: jsProps##message,
-        extraGreeting: Js.Null_undefined.to_opt jsProps##extraGreeting
-      }
-    );
+    <div> <MyBannerRe show=true message=(message ^ " " ^ greeting) /> </div>
+  }
 };
 
-include ReactRe.CreateComponent PageReason;
-
-let createElement ::message ::extraGreeting=? => wrapProps {message, extraGreeting};
+let comp =
+  ReasonReact.wrapReasonForJs
+    ::component
+    (
+      fun jsProps =>
+        make
+          message::jsProps##message
+          extraGreeting::?(Js.Null_undefined.to_opt jsProps##extraGreeting)
+          [||]
+    );
