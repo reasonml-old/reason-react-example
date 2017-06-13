@@ -2,17 +2,12 @@ type router = Js.t {. init : (string => unit) [@bs.meth]};
 
 external unsafeJsonParse : string => 'a = "JSON.parse" [@@bs.val];
 
-external getItem : string => option string =
-  "localStorage.getItem" [@@bs.val] [@@bs.return null_to_opt];
-
-external setItem : string => string => unit = "localStorage.setItem" [@@bs.val];
-
 let namespace = "reason-react-todos";
 
 let saveLocally todos =>
   switch (Js.Json.stringifyAny todos) {
   | None => ()
-  | Some stringifiedTodos => setItem namespace stringifiedTodos
+  | Some stringifiedTodos => Dom.Storage.(localStorage |> setItem namespace stringifiedTodos)
   };
 
 module Top = {
@@ -87,7 +82,7 @@ module Top = {
     ...component,
     initialState: fun () => {
       let todos =
-        switch (getItem namespace) {
+        switch Dom.Storage.(localStorage |> getItem namespace) {
         | None => []
         | Some todos => unsafeJsonParse todos
         };
