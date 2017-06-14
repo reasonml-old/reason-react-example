@@ -1,4 +1,4 @@
-This is a repo with examples usages of [Reason-React](https://github.com/reasonml/reason-react), whose docs are [here](https://reasonml.github.io/reason-react/).
+This is a repo with examples usages of [ReasonReact](https://github.com/reasonml/reason-react), whose docs are [here](https://reasonml.github.io/reason-react/).
 Have something you don't understand? Join us on [Discord](https://discord.gg/reasonml)!
 
 ```

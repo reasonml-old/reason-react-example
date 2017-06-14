@@ -12,7 +12,7 @@ let make ::message ::extraGreeting=? _children => {
   }
 };
 
-let comp =
+let jsComponent =
   ReasonReact.wrapReasonForJs
     ::component
     (
