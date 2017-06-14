@@ -9,7 +9,7 @@
   "sources": [
     {
       "dir": "src",
-      "subdirs": ["interop", "logo", "simple", "todomvc"],
+      "subdirs": ["async", "interop", "logo", "simple", "todomvc"],
     }
   ],
 }
