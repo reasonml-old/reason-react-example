@@ -5,6 +5,7 @@ var React = require('react');
 var PageReason = require('../../lib/js/src/interop/pageReason').jsComponent;
 
 var App = React.createClass({
+  displayName: 'exampleInteropRoot',
   render: function() {
     return React.createElement('div', null,
       React.createElement(PageReason, {message: 'Hello!'})
