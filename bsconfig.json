@@ -4,7 +4,7 @@
   an issue! */
 {
   "name" : "reason-react-example",
-  "reason" : { "react-jsx" : 2},
+  "reason" : {"react-jsx" : 2},
   "bs-dependencies": ["reason-react", "bs-director"],
   "sources": [
     {

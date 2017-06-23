@@ -17,12 +17,12 @@ module Top = {
     newTodo: string,
     todos: list TodoItem.todo
   };
-  let handleChange event state _self =>
+  let handleChange event {ReasonReact.state: state} =>
     ReasonReact.Update {
       ...state,
       newTodo: (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##value
     };
-  let handleNewTodoKeyDown event state _self =>
+  let handleNewTodoKeyDown event {ReasonReact.state: state} =>
     if (ReactEventRe.Keyboard.keyCode event === 13 /* enter key */) {
       ReactEventRe.Keyboard.preventDefault event;
       switch (String.trim state.newTodo) {
@@ -38,14 +38,14 @@ module Top = {
     } else {
       ReasonReact.NoUpdate
     };
-  let toggleAll event state _self => {
+  let toggleAll event {ReasonReact.state: state} => {
     let checked = (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##checked;
     let todos =
       List.map (fun todo => {...todo, TodoItem.completed: Js.to_bool checked}) state.todos;
     saveLocally todos;
     ReasonReact.Update {...state, todos}
   };
-  let toggle todoToToggle _event state _self => {
+  let toggle todoToToggle _event {ReasonReact.state: state} => {
     let todos =
       List.map
         (
@@ -57,22 +57,22 @@ module Top = {
     saveLocally todos;
     ReasonReact.Update {...state, todos}
   };
-  let destroy todo _event state _self => {
+  let destroy todo _event {ReasonReact.state: state} => {
     let todos = List.filter (fun candidate => candidate !== todo) state.todos;
     saveLocally todos;
     ReasonReact.Update {...state, todos}
   };
-  let edit todo _event state _self =>
+  let edit todo _event {ReasonReact.state: state} =>
     ReasonReact.Update {...state, editing: Some TodoItem.(todo.id)};
-  let save todoToSave text state _self => {
+  let save todoToSave text {ReasonReact.state: state} => {
     let todos =
       List.map
         (fun todo => todo == todoToSave ? {...todo, TodoItem.title: text} : todo) state.todos;
     saveLocally todos;
     ReasonReact.Update {...state, editing: None, todos}
   };
-  let cancel _event state _self => ReasonReact.Update {...state, editing: None};
-  let clearCompleted _event state _self => {
+  let cancel _event {ReasonReact.state: state} => ReasonReact.Update {...state, editing: None};
+  let clearCompleted _event {ReasonReact.state: state} => {
     let todos = List.filter (fun todo => not TodoItem.(todo.completed)) state.todos;
     saveLocally todos;
     ReasonReact.Update {...state, todos}
@@ -88,20 +88,18 @@ module Top = {
         };
       {nowShowing: AllTodos, editing: None, newTodo: "", todos}
     },
-    didMount: fun _state self => {
-      let f1 () state _self => ReasonReact.Update {...state, nowShowing: AllTodos};
-      let f2 () state _self => ReasonReact.Update {...state, nowShowing: ActiveTodos};
-      let f3 () state _self => ReasonReact.Update {...state, nowShowing: CompletedTodos};
+    didMount: fun {update} => {
+      let f1 () {ReasonReact.state: state} => ReasonReact.Update {...state, nowShowing: AllTodos};
+      let f2 () {ReasonReact.state: state} =>
+        ReasonReact.Update {...state, nowShowing: ActiveTodos};
+      let f3 () {ReasonReact.state: state} =>
+        ReasonReact.Update {...state, nowShowing: CompletedTodos};
       let router =
-        DirectorRe.makeRouter {
-          "/": self.update f1,
-          "/active": self.update f2,
-          "/completed": self.update f3
-        };
+        DirectorRe.makeRouter {"/": update f1, "/active": update f2, "/completed": update f3};
       DirectorRe.init router "/";
       ReasonReact.NoUpdate
     },
-    render: fun state self => {
+    render: fun {state, update} => {
       let {todos, editing} = state;
       let todoItems =
         todos |>
@@ -125,12 +123,12 @@ module Top = {
             <TodoItem
               key=todo.id
               todo
-              onToggle=(self.update (toggle todo))
-              onDestroy=(self.update (destroy todo))
-              onEdit=(self.update (edit todo))
+              onToggle=(update (toggle todo))
+              onDestroy=(update (destroy todo))
+              onEdit=(update (edit todo))
               editing
-              onSave=(self.update (save todo))
-              onCancel=(self.update cancel)
+              onSave=(update (save todo))
+              onCancel=(update cancel)
             />
           }
         );
@@ -146,7 +144,7 @@ module Top = {
             count=activeTodoCount
             completedCount
             nowShowing=state.nowShowing
-            onClearCompleted=(self.update clearCompleted)
+            onClearCompleted=(update clearCompleted)
           />
         };
       let main =
@@ -156,7 +154,7 @@ module Top = {
             <input
               className="toggle-all"
               _type="checkbox"
-              onChange=(self.update toggleAll)
+              onChange=(update toggleAll)
               checked=(Js.Boolean.to_js_boolean (activeTodoCount === 0))
             />
             <ul className="todo-list"> (ReasonReact.arrayToElement (Array.of_list todoItems)) </ul>
@@ -168,8 +166,8 @@ module Top = {
             className="new-todo"
             placeholder="What needs to be done?"
             value=state.newTodo
-            onKeyDown=(self.update handleNewTodoKeyDown)
-            onChange=(self.update handleChange)
+            onKeyDown=(update handleNewTodoKeyDown)
+            onChange=(update handleChange)
             autoFocus=Js.true_
           />
         </header>

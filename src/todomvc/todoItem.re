@@ -16,11 +16,11 @@ type state = {
 
 let component = ReasonReact.statefulComponent "TodoItemRe";
 
-let setEditFieldRef r state _self =>
+let setEditFieldRef r {ReasonReact.state: state} =>
   ReasonReact.SilentUpdate {...state, editFieldRef: Js.Null.to_opt r};
 
 let make ::todo ::editing ::onDestroy ::onSave ::onEdit ::onToggle ::onCancel _children => {
-  let handleSubmit _event state _self =>
+  let handleSubmit _event {ReasonReact.state: state} =>
     switch (String.trim state.editText) {
     | "" =>
       onDestroy ();
@@ -29,41 +29,41 @@ let make ::todo ::editing ::onDestroy ::onSave ::onEdit ::onToggle ::onCancel _c
       onSave nonEmptyValue;
       ReasonReact.Update {...state, editText: nonEmptyValue}
     };
-  let handleKeyDown event state self =>
+  let handleKeyDown event self =>
     if (ReactEventRe.Keyboard.which event === escapeKey) {
       onCancel ();
-      ReasonReact.Update {...state, editText: todo.title}
+      ReasonReact.Update {...self.ReasonReact.state, editText: todo.title}
     } else if (
       ReactEventRe.Keyboard.which event === enterKey
     ) {
-      handleSubmit event state self
+      handleSubmit event self
     } else {
       ReasonReact.NoUpdate
     };
-  let handleChange event state _self =>
+  let handleChange event {ReasonReact.state: state} =>
     editing ?
       ReasonReact.Update {
         ...state,
         editText: (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##value
       } :
       ReasonReact.NoUpdate;
-  let handleEdit _event state _self => {
+  let handleEdit _event {ReasonReact.state: state} => {
     onEdit ();
     ReasonReact.Update {...state, editText: todo.title}
   };
   {
     ...component,
     initialState: fun () => {editText: todo.title, editFieldRef: None, editing},
-    willReceiveProps: fun state _self => {...state, editing},
-    didUpdate: fun ::previousState ::currentState _ =>
-      switch (previousState.editing, editing, currentState.editFieldRef) {
+    willReceiveProps: fun {state} => {...state, editing},
+    didUpdate: fun {oldSelf, newSelf} =>
+      switch (oldSelf.state.editing, editing, newSelf.state.editFieldRef) {
       | (false, true, Some field) =>
         let node = ReactDOMRe.domElementToObj field;
         ignore (node##focus ());
         ignore (node##setSelectionRange node##value##length node##value##length)
       | _ => ()
       },
-    render: fun state self => {
+    render: fun {state, update} => {
       let className =
         [todo.completed ? "completed" : "", editing ? "editing" : ""] |> String.concat " ";
       <li className>
@@ -74,18 +74,18 @@ let make ::todo ::editing ::onDestroy ::onSave ::onEdit ::onToggle ::onCancel _c
             checked=(Js.Boolean.to_js_boolean todo.completed)
             onChange=(fun _ => onToggle ())
           />
-          <label onDoubleClick=(self.update handleEdit)>
+          <label onDoubleClick=(update handleEdit)>
             (ReasonReact.stringToElement todo.title)
           </label>
           <button className="destroy" onClick=(fun _ => onDestroy ()) />
         </div>
         <input
-          ref=(self.update setEditFieldRef)
+          ref=(update setEditFieldRef)
           className="edit"
           value=state.editText
-          onBlur=(self.update handleSubmit)
-          onChange=(self.update handleChange)
-          onKeyDown=(self.update handleKeyDown)
+          onBlur=(update handleSubmit)
+          onChange=(update handleChange)
+          onKeyDown=(update handleKeyDown)
         />
       </li>
     }

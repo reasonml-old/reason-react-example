@@ -7,7 +7,7 @@ let component = ReasonReact.statelessComponent "TodoFooterRe";
 
 let make ::count ::completedCount ::nowShowing ::onClearCompleted _children => {
   ...component,
-  render: fun () _self => {
+  render: fun _self => {
     let activeTodoWord = count === 1 ? "item" : "items";
     let clearButton =
       completedCount > 0 ?
