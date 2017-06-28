@@ -6,7 +6,9 @@ git clone https://github.com/chenglou/reason-react-example.git
 cd reason-react-example
 npm install
 npm start
-# in another tab
+# during development, in another tab:
+npm run build:dev
+# to build smaller, production-ready files:
 npm run build
 ```
 
