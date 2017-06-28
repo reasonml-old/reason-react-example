@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "bsb -make-world -w",
-    "build": "webpack -w",
+    "build:dev": "webpack -w",
+    "build": "webpack -p --config ./webpack.production.config.js",
     "clean": "bsb -clean-world"
   },
   "keywords": [],
@@ -23,6 +24,6 @@
   },
   "devDependencies": {
     "bs-platform": "^1.7.5",
-    "webpack": "^1.14.0"
+    "webpack": "^3.0.0"
   }
 }
