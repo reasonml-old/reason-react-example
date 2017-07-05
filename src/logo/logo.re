@@ -31,7 +31,7 @@ let renderGraphic rotationStyle =>
 /**
  * On Mouse Up.
  */
-let handleMouseUp _event state _self => {
+let handleMouseUp _event {ReasonReact.state: state} => {
   let withAccel = state.velocity +. clickAccel;
   let nextVelocity = withAccel < maxVel ? withAccel : maxVel;
   ReasonReact.Update {...state, velocity: nextVelocity, drag: mouseUpDrag}
@@ -41,16 +41,17 @@ let handleMouseUp _event state _self => {
 /**
  * On Mouse Down.
  */
-let handleMouseDown _event state _self => ReasonReact.Update {...state, drag: mouseDownDrag};
+let handleMouseDown _event {ReasonReact.state: state} =>
+  ReasonReact.Update {...state, drag: mouseDownDrag};
 
 let component = ReasonReact.statefulComponent "LogoRe";
 
 let make ::message _children => {
   ...component,
   initialState: fun () => {drag: mouseUpDrag, degrees: 0.0, velocity: 0.1, lastMs: Js.Date.now ()},
-  didMount: fun _state self => {
+  didMount: fun {update} => {
     let rec onAnimationFrame () => {
-      let stateSetter () state _self => {
+      let stateSetter () {ReasonReact.state: state} => {
         let now = Js.Date.now ();
         /* How many 16ms virtual frames elapsed, even if clock runs at 30hz */
         let idealFramesSinceLast = 1. +. (now -. state.lastMs) /. 16.;
@@ -58,13 +59,13 @@ let make ::message _children => {
         let nextVelocity = state.velocity *. state.drag;
         ReasonReact.Update {...state, degrees: nextDegrees, velocity: nextVelocity, lastMs: now}
       };
-      self.update stateSetter ();
+      update stateSetter ();
       requestAnimationFrame onAnimationFrame
     };
     requestAnimationFrame onAnimationFrame;
     ReasonReact.NoUpdate
   },
-  render: fun state self => {
+  render: fun {state, update} => {
     let transform = "rotate(" ^ string_of_float state.degrees ^ "deg)";
     /* To create JS Objects in Reason, */
     let rotationStyle = ReactDOMRe.Style.make transformOrigin::"50% 50%" ::transform ();
@@ -86,8 +87,8 @@ let make ::message _children => {
         viewBox="0 0 700 700"
         version="1.1"
         style=(ReactDOMRe.Style.make cursor::"pointer" ())
-        onMouseUp=(self.update handleMouseUp)
-        onMouseDown=(self.update handleMouseDown)>
+        onMouseUp=(update handleMouseUp)
+        onMouseDown=(update handleMouseDown)>
         (renderGraphic rotationStyle)
       </svg>
     </div>
