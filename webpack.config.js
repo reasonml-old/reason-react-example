@@ -7,6 +7,7 @@ module.exports = {
     logo: './lib/js/src/logo/logoRoot.js',
     todomvc: './lib/js/src/todomvc/app.js',
     interop: './src/interop/interopRoot.js',
+    retainedProps: './lib/js/src/retainedProps/retainedPropsRoot.js',
   },
   output: {
     path: path.join(__dirname, "bundledOutputs"),
