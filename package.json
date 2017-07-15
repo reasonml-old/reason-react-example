@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "bsb -make-world -w",
-    "build": "webpack -w",
+    "start": "concurrently --kill-others --names bs,wp -c blue,grey \"bsb -make-world -w\" \"webpack -w\"",
+    "build": "bsb -make-world && webpack",
     "clean": "bsb -clean-world"
   },
   "keywords": [],
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "bs-platform": "^1.8.0",
+    "concurrently": "^3.5.0",
     "webpack": "^1.14.0"
   }
 }
