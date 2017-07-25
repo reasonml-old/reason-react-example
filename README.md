@@ -4,16 +4,16 @@ Have something you don't understand? Join us on [Discord](https://discord.gg/rea
 ```sh
 git clone https://github.com/chenglou/reason-react-example.git
 cd reason-react-example
+npm install
 npm run build
-open src/index.html
 ```
 
-Opening up `src/index.html` file has links to the examples (**no server needed!**). 
+Then open `src/index.html` to see the links to the examples (**no server needed!**). 
 
-To do development work run:
+To keep a watcher open, do:
 
 ```sh
 npm start
 ```
 
-This builds and watches the files, you can then modify whichever file in `src` and refresh the page to see the changes.
+This builds and watches the files. You can then modify whichever file in `src` and refresh the page to see the changes.
