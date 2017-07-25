@@ -9,7 +9,7 @@
   "sources": [
     {
       "dir": "src",
-      "subdirs": ["async", "interop", "logo", "simple", "todomvc", "retainedProps"],
+      "subdirs": ["async", "interop", "logo", "simple", "todomvc", "retainedProps"]
     }
-  ],
+  ]
 }
