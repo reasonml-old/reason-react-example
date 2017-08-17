@@ -6,18 +6,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently --kill-others --names bs,wp -c blue,grey \"bsb -make-world -w\" \"webpack -w\"",
+    "start": "bsb -make-world -w",
+    "start-webpack": "webpack -w",
     "build": "bsb -make-world && webpack",
     "clean": "bsb -clean-world"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bs-director": "^0.0.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason-react": ">=0.2.3",
+    "reason-react": "file:../../reason-react",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.1"
   },
