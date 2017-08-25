@@ -5,11 +5,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "bsb -make-world -w",
-    "start-webpack": "webpack -w",
     "build": "bsb -make-world && webpack",
-    "clean": "bsb -clean-world"
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "exit 0",
+    "start-webpack": "webpack -w"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +23,7 @@
     "todomvc-common": "^1.0.1"
   },
   "devDependencies": {
-    "bs-platform": "^1.8.2",
+    "bs-platform": "^1.9.0",
     "concurrently": "^3.5.0",
     "webpack": "^1.14.0"
   }
