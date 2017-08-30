@@ -18,7 +18,7 @@
     "bs-director": "^0.0.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason-react": "file:../../reason-react",
+    "reason-react": "^0.2.3",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.1"
   },
