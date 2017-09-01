@@ -54,14 +54,6 @@ let make ::message _children => {
     },
   didMount: fun {reduce} => {
     let rec onAnimationFrame () => {
-      /* let stateSetter () {ReasonReact.state: state} => {
-           let now = Js.Date.now ();
-           /* How many 16ms virtual frames elapsed, even if clock runs at 30hz */
-           let idealFramesSinceLast = 1. +. (now -. state.lastMs) /. 16.;
-           let nextDegrees = state.degrees +. (baseVel +. state.velocity) *. idealFramesSinceLast;
-           let nextVelocity = state.velocity *. state.drag;
-           ReasonReact.Update {...state, degrees: nextDegrees, velocity: nextVelocity, lastMs: now}
-         }; */
       reduce (fun _ => Spin) ();
       requestAnimationFrame onAnimationFrame
     };
