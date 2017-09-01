@@ -11,75 +11,98 @@ let saveLocally todos =>
   };
 
 module Top = {
+  type action =
+    /* router actions */
+    | ShowAll
+    | ShowActive
+    | ShowCompleted
+    /* todo actions */
+    | NewTodoEnterKeyDown
+    | NewTodoOtherKeyDown
+    | ClearCompleted
+    | Cancel
+    | ChangeTodo string
+    | Save TodoItem.todo string
+    | Edit TodoItem.todo
+    | Destroy TodoItem.todo
+    | Toggle TodoItem.todo
+    | ToggleAll bool;
   type state = {
     nowShowing: TodoFooter.showingState,
     editing: option string,
     newTodo: string,
     todos: list TodoItem.todo
   };
-  let handleChange event {ReasonReact.state: state} =>
-    ReasonReact.Update {
-      ...state,
-      newTodo: (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##value
-    };
-  let handleNewTodoKeyDown event {ReasonReact.state: state} =>
-    if (ReactEventRe.Keyboard.keyCode event === 13 /* enter key */) {
+  let changeTodo event =>
+    ChangeTodo (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##value;
+  let newTodoKeyDown event =>
+    if (ReactEventRe.Keyboard.keyCode event === 13) {
       ReactEventRe.Keyboard.preventDefault event;
-      switch (String.trim state.newTodo) {
-      | "" => ReasonReact.NoUpdate
-      | nonEmptyValue =>
-        let todos =
-          state.todos @ [
-            {id: string_of_float (Js.Date.now ()), title: nonEmptyValue, completed: false}
-          ];
-        saveLocally todos;
-        ReasonReact.Update {...state, newTodo: "", todos}
-      }
+      NewTodoEnterKeyDown
     } else {
-      ReasonReact.NoUpdate
+      NewTodoOtherKeyDown
     };
-  let toggleAll event {ReasonReact.state: state} => {
-    let checked = (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##checked;
-    let todos =
-      List.map (fun todo => {...todo, TodoItem.completed: Js.to_bool checked}) state.todos;
-    saveLocally todos;
-    ReasonReact.Update {...state, todos}
+  let toggleAll event => {
+    let checked =
+      Js.to_bool (ReactDOMRe.domElementToObj (ReactEventRe.Form.target event))##checked;
+    ToggleAll checked
   };
-  let toggle todoToToggle _event {ReasonReact.state: state} => {
-    let todos =
-      List.map
-        (
-          fun todo =>
-            todo == todoToToggle ?
-              {...todo, TodoItem.completed: not TodoItem.(todo.completed)} : todo
-        )
-        state.todos;
-    saveLocally todos;
-    ReasonReact.Update {...state, todos}
-  };
-  let destroy todo _event {ReasonReact.state: state} => {
-    let todos = List.filter (fun candidate => candidate !== todo) state.todos;
-    saveLocally todos;
-    ReasonReact.Update {...state, todos}
-  };
-  let edit todo _event {ReasonReact.state: state} =>
-    ReasonReact.Update {...state, editing: Some TodoItem.(todo.id)};
-  let save todoToSave text {ReasonReact.state: state} => {
-    let todos =
-      List.map
-        (fun todo => todo == todoToSave ? {...todo, TodoItem.title: text} : todo) state.todos;
-    saveLocally todos;
-    ReasonReact.Update {...state, editing: None, todos}
-  };
-  let cancel _event {ReasonReact.state: state} => ReasonReact.Update {...state, editing: None};
-  let clearCompleted _event {ReasonReact.state: state} => {
-    let todos = List.filter (fun todo => not TodoItem.(todo.completed)) state.todos;
-    saveLocally todos;
-    ReasonReact.Update {...state, todos}
-  };
-  let component = ReasonReact.statefulComponent "TodoAppRe";
+  let toggle todo _event => Toggle todo;
+  let destroy todo _event => Destroy todo;
+  let edit todo _event => Edit todo;
+  let save todoToSave text => Save todoToSave text;
+  let cancel _event => Cancel;
+  let clearCompleted _event => ClearCompleted;
+  let component = ReasonReact.reducerComponent "TodoAppRe";
   let make _children => {
     ...component,
+    reducer: fun action state =>
+      switch action {
+      /* router actions */
+      | ShowAll => ReasonReact.Update {...state, nowShowing: AllTodos}
+      | ShowActive => ReasonReact.Update {...state, nowShowing: ActiveTodos}
+      | ShowCompleted => ReasonReact.Update {...state, nowShowing: CompletedTodos}
+      /* todo actions */
+      | Cancel => ReasonReact.Update {...state, editing: None}
+      | ChangeTodo text => ReasonReact.Update {...state, newTodo: text}
+      | NewTodoOtherKeyDown => ReasonReact.NoUpdate
+      | NewTodoEnterKeyDown =>
+        switch (String.trim state.newTodo) {
+        | "" => ReasonReact.NoUpdate
+        | nonEmptyValue =>
+          let todos =
+            state.todos
+            @ [{id: string_of_float (Js.Date.now ()), title: nonEmptyValue, completed: false}];
+          saveLocally todos;
+          ReasonReact.Update {...state, newTodo: "", todos}
+        }
+      | ClearCompleted =>
+        let todos = List.filter (fun todo => not TodoItem.(todo.completed)) state.todos;
+        ReasonReact.UpdateWithSideEffects {...state, todos} (fun _self => saveLocally todos)
+      | ToggleAll checked =>
+        let todos = List.map (fun todo => {...todo, TodoItem.completed: checked}) state.todos;
+        ReasonReact.UpdateWithSideEffects {...state, todos} (fun _self => saveLocally todos)
+      | Save todoToSave text =>
+        let todos =
+          List.map
+            (fun todo => todo == todoToSave ? {...todo, TodoItem.title: text} : todo) state.todos;
+        ReasonReact.UpdateWithSideEffects
+          {...state, editing: None, todos} (fun _self => saveLocally todos)
+      | Edit todo => ReasonReact.Update {...state, editing: Some TodoItem.(todo.id)}
+      | Destroy todo =>
+        let todos = List.filter (fun candidate => candidate !== todo) state.todos;
+        ReasonReact.UpdateWithSideEffects {...state, todos} (fun _self => saveLocally todos)
+      | Toggle todoToToggle =>
+        let todos =
+          List.map
+            (
+              fun todo =>
+                todo == todoToToggle ?
+                  {...todo, TodoItem.completed: not TodoItem.(todo.completed)} : todo
+            )
+            state.todos;
+        ReasonReact.UpdateWithSideEffects {...state, todos} (fun _self => saveLocally todos)
+      },
     initialState: fun () => {
       let todos =
         switch Dom.Storage.(localStorage |> getItem namespace) {
@@ -88,50 +111,49 @@ module Top = {
         };
       {nowShowing: AllTodos, editing: None, newTodo: "", todos}
     },
-    didMount: fun {update} => {
-      let f1 () {ReasonReact.state: state} => ReasonReact.Update {...state, nowShowing: AllTodos};
-      let f2 () {ReasonReact.state: state} =>
-        ReasonReact.Update {...state, nowShowing: ActiveTodos};
-      let f3 () {ReasonReact.state: state} =>
-        ReasonReact.Update {...state, nowShowing: CompletedTodos};
+    didMount: fun {reduce} => {
       let router =
-        DirectorRe.makeRouter {"/": update f1, "/active": update f2, "/completed": update f3};
+        DirectorRe.makeRouter {
+          "/": reduce (fun _ => ShowAll),
+          "/active": reduce (fun _ => ShowActive),
+          "/completed": reduce (fun _ => ShowCompleted)
+        };
       DirectorRe.init router "/";
       ReasonReact.NoUpdate
     },
-    render: fun {state, update} => {
+    render: fun {state, reduce} => {
       let {todos, editing} = state;
       let todoItems =
-        todos |>
-        List.filter (
-          fun todo =>
-            TodoItem.(
-              switch state.nowShowing {
-              | ActiveTodos => not todo.completed
-              | CompletedTodos => todo.completed
-              | AllTodos => true
-              }
-            )
-        ) |>
-        List.map (
-          fun todo => {
-            let editing =
-              switch editing {
-              | None => false
-              | Some editing => editing === TodoItem.(todo.id)
-              };
-            <TodoItem
-              key=todo.id
-              todo
-              onToggle=(update (toggle todo))
-              onDestroy=(update (destroy todo))
-              onEdit=(update (edit todo))
-              editing
-              onSave=(update (save todo))
-              onCancel=(update cancel)
-            />
-          }
-        );
+        todos
+        |> List.filter (
+             fun todo =>
+               TodoItem.(
+                 switch state.nowShowing {
+                 | ActiveTodos => not todo.completed
+                 | CompletedTodos => todo.completed
+                 | AllTodos => true
+                 }
+               )
+           )
+        |> List.map (
+             fun todo => {
+               let editing =
+                 switch editing {
+                 | None => false
+                 | Some editing => editing === TodoItem.(todo.id)
+                 };
+               <TodoItem
+                 key=todo.id
+                 todo
+                 onToggle=(reduce (toggle todo))
+                 onDestroy=(reduce (destroy todo))
+                 onEdit=(reduce (edit todo))
+                 editing
+                 onSave=(reduce (save todo))
+                 onCancel=(reduce cancel)
+               />
+             }
+           );
       let todosLength = List.length todos;
       let completedCount =
         todos |> List.filter (fun todo => TodoItem.(todo.completed)) |> List.length;
@@ -144,7 +166,7 @@ module Top = {
             count=activeTodoCount
             completedCount
             nowShowing=state.nowShowing
-            onClearCompleted=(update clearCompleted)
+            onClearCompleted=(reduce clearCompleted)
           />
         };
       let main =
@@ -154,7 +176,7 @@ module Top = {
             <input
               className="toggle-all"
               _type="checkbox"
-              onChange=(update toggleAll)
+              onChange=(reduce toggleAll)
               checked=(Js.Boolean.to_js_boolean (activeTodoCount === 0))
             />
             <ul className="todo-list"> (ReasonReact.arrayToElement (Array.of_list todoItems)) </ul>
@@ -166,8 +188,8 @@ module Top = {
             className="new-todo"
             placeholder="What needs to be done?"
             value=state.newTodo
-            onKeyDown=(update handleNewTodoKeyDown)
-            onChange=(update handleChange)
+            onKeyDown=(reduce newTodoKeyDown)
+            onChange=(reduce changeTodo)
             autoFocus=Js.true_
           />
         </header>

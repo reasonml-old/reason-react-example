@@ -2,13 +2,6 @@ external requestAnimationFrame : (unit => unit) => unit = "" [@@bs.val];
 
 open Constants;
 
-type state = {
-  degrees: float,
-  velocity: float,
-  drag: float,
-  lastMs: float
-};
-
 let renderGraphic rotationStyle =>
   <g fill="none" stroke="none">
     <g transform="scale(1.5, 1.5) translate(100.000000, 105.000000)">
@@ -27,47 +20,57 @@ let renderGraphic rotationStyle =>
     </g>
   </g>;
 
+type action =
+  | MouseUp
+  | MouseDown
+  | Spin;
 
-/**
- * On Mouse Up.
- */
-let handleMouseUp _event {ReasonReact.state: state} => {
-  let withAccel = state.velocity +. clickAccel;
-  let nextVelocity = withAccel < maxVel ? withAccel : maxVel;
-  ReasonReact.Update {...state, velocity: nextVelocity, drag: mouseUpDrag}
+type state = {
+  degrees: float,
+  velocity: float,
+  drag: float,
+  lastMs: float
 };
 
-
-/**
- * On Mouse Down.
- */
-let handleMouseDown _event {ReasonReact.state: state} =>
-  ReasonReact.Update {...state, drag: mouseDownDrag};
-
-let component = ReasonReact.statefulComponent "LogoRe";
+let component = ReasonReact.reducerComponent "LogoRe";
 
 let make ::message _children => {
   ...component,
   initialState: fun () => {drag: mouseUpDrag, degrees: 0.0, velocity: 0.1, lastMs: Js.Date.now ()},
-  didMount: fun {update} => {
+  reducer: fun action state =>
+    switch action {
+    | MouseUp =>
+      let withAccel = state.velocity +. clickAccel;
+      let nextVelocity = withAccel < maxVel ? withAccel : maxVel;
+      ReasonReact.Update {...state, velocity: nextVelocity, drag: mouseUpDrag}
+    | MouseDown => ReasonReact.Update {...state, drag: mouseDownDrag}
+    | Spin =>
+      let now = Js.Date.now ();
+      /* How many 16ms virtual frames elapsed, even if clock runs at 30hz */
+      let idealFramesSinceLast = 1. +. (now -. state.lastMs) /. 16.;
+      let nextDegrees = state.degrees +. (baseVel +. state.velocity) *. idealFramesSinceLast;
+      let nextVelocity = state.velocity *. state.drag;
+      ReasonReact.Update {...state, degrees: nextDegrees, velocity: nextVelocity, lastMs: now}
+    },
+  didMount: fun {reduce} => {
     let rec onAnimationFrame () => {
-      let stateSetter () {ReasonReact.state: state} => {
-        let now = Js.Date.now ();
-        /* How many 16ms virtual frames elapsed, even if clock runs at 30hz */
-        let idealFramesSinceLast = 1. +. (now -. state.lastMs) /. 16.;
-        let nextDegrees = state.degrees +. (baseVel +. state.velocity) *. idealFramesSinceLast;
-        let nextVelocity = state.velocity *. state.drag;
-        ReasonReact.Update {...state, degrees: nextDegrees, velocity: nextVelocity, lastMs: now}
-      };
-      update stateSetter ();
+      /* let stateSetter () {ReasonReact.state: state} => {
+           let now = Js.Date.now ();
+           /* How many 16ms virtual frames elapsed, even if clock runs at 30hz */
+           let idealFramesSinceLast = 1. +. (now -. state.lastMs) /. 16.;
+           let nextDegrees = state.degrees +. (baseVel +. state.velocity) *. idealFramesSinceLast;
+           let nextVelocity = state.velocity *. state.drag;
+           ReasonReact.Update {...state, degrees: nextDegrees, velocity: nextVelocity, lastMs: now}
+         }; */
+      reduce (fun _ => Spin) ();
       requestAnimationFrame onAnimationFrame
     };
     requestAnimationFrame onAnimationFrame;
     ReasonReact.NoUpdate
   },
-  render: fun {state, update} => {
+  render: fun {state, reduce} => {
     let transform = "rotate(" ^ string_of_float state.degrees ^ "deg)";
-    /* To create JS Objects in Reason, */
+    /* One of the ways to create JS Objects in Reason, through BuckleScript's `external`s */
     let rotationStyle = ReactDOMRe.Style.make transformOrigin::"50% 50%" ::transform ();
     <div
       style=(
@@ -87,8 +90,8 @@ let make ::message _children => {
         viewBox="0 0 700 700"
         version="1.1"
         style=(ReactDOMRe.Style.make cursor::"pointer" ())
-        onMouseUp=(update handleMouseUp)
-        onMouseDown=(update handleMouseDown)>
+        onMouseUp=(reduce (fun _ => MouseUp))
+        onMouseDown=(reduce (fun _ => MouseDown))>
         (renderGraphic rotationStyle)
       </svg>
     </div>
