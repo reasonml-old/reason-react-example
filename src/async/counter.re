@@ -1,3 +1,5 @@
+/* This is a stateful component. In ReasonReact, we call them reducer components */
+
 /* A list of state transitions, to be used in self.reduce and reducer */
 type action =
   | Tick;
@@ -23,8 +25,8 @@ let make _children => {
     ReasonReact.NoUpdate
   },
   render: fun {state: {count}} => {
-    let timesMessage = count == 1 ? "time" : "times";
-    let greeting = {j|You've clicked the button $count $timesMessage!|j};
+    let timesMessage = count == 1 ? "second" : "seconds";
+    let greeting = {j|You've spent $count $timesMessage on this page!|j};
     <div> (ReasonReact.stringToElement greeting) </div>
   }
 };

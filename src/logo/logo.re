@@ -1,3 +1,5 @@
+/* Here's a big spinning logo. No reason why. It's nice */
+
 external requestAnimationFrame : (unit => unit) => unit = "" [@@bs.val];
 
 open Constants;
