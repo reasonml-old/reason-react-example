@@ -1,3 +1,5 @@
+/* The component's retainedProps type. It can be anything, including, commonly, being a record type */
+/* retainedProps allows you to access the previous props information, like how ReactJS does it for you in lifecycle events */
 type retainedProps = {message: string};
 
 let component = ReasonReact.statelessComponentWithRetainedProps "RetainedPropsExample";
