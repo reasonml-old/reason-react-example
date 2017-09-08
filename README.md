@@ -16,4 +16,9 @@ To keep a watcher open, do:
 npm start
 ```
 
+In another tab, also do
+```sh
+npm run start-webpack
+```
+
 This builds and watches the files. You can then modify whichever file in `src` and refresh the page to see the changes.
