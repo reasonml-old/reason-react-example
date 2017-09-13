@@ -6,7 +6,6 @@ git clone https://github.com/chenglou/reason-react-example.git
 cd reason-react-example
 npm install
 npm run build
-npm run start-webpack
 ```
 
 Then open `src/index.html` to see the links to the examples (**no server needed!**). 
