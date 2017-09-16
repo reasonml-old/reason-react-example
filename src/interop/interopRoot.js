@@ -2,10 +2,10 @@ var ReactDOM = require('react-dom');
 var React = require('react');
 
 // Import a ReasonReact component! `comp` is the exposed, underlying ReactJS class
-var PageReason = require('../../lib/js/src/interop/greetingRe').jsComponent;
+var PageReason = require('../../lib/js/src/interop/GreetingRe').jsComponent;
 
 var App = React.createClass({
-  displayName: 'exampleInteropRoot',
+  displayName: 'ExampleInteropRoot',
   render: function() {
     return React.createElement('div', null,
       React.createElement(PageReason, {message: 'Hello!'})

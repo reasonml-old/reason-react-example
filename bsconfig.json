@@ -8,5 +8,10 @@
       "dir": "src",
       "subdirs": true
     }
-  ]
+  ],
+  // here's a config to make the JS artifacts output alongside your Reason files:
+  // "package-specs": {
+  //   "module": "commonjs",
+  //   "in-source": true,
+  // },
 }
