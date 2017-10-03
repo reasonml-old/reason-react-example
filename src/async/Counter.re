@@ -24,6 +24,12 @@ let make _children => {
     self.state.timerId := Some (Js.Global.setInterval (self.reduce (fun _ => Tick)) 1000);
     ReasonReact.NoUpdate
   },
+  willUnmount: fun {state} => {
+    switch !state.timerId {
+    | Some id => Js.Global.clearInterval id
+    | _  => ()
+    }
+  },
   render: fun {state: {count}} => {
     let timesMessage = count == 1 ? "second" : "seconds";
     let greeting = {j|You've spent $count $timesMessage on this page!|j};
