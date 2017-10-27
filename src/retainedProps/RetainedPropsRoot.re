@@ -1,12 +1,14 @@
-let toggle = ref false;
+let toggle = ref(false);
 
-let render () => {
-  toggle := not toggle.contents;
-  ReactDOMRe.renderToElementWithId
-    <RetainedPropsExample message=(toggle.contents ? "Hello!" : "Goodbye") /> "index"
+let render = () => {
+  toggle := ! toggle.contents;
+  ReactDOMRe.renderToElementWithId(
+    <RetainedPropsExample message=(toggle.contents ? "Hello!" : "Goodbye") />,
+    "index"
+  )
 };
 
-Js.Global.setInterval render 1000;
+Js.Global.setInterval(render, 1000);
 
 /* render once first! */
-render ();
+render();

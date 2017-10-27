@@ -2,15 +2,15 @@
 /* retainedProps allows you to access the previous props information, like how ReactJS does it for you in lifecycle events */
 type retainedProps = {message: string};
 
-let component = ReasonReact.statelessComponentWithRetainedProps "RetainedPropsExample";
+let component = ReasonReact.statelessComponentWithRetainedProps("RetainedPropsExample");
 
-let make ::message _children => {
+let make = (~message, _children) => {
   ...component,
   retainedProps: {message: message},
-  didUpdate: fun {oldSelf, newSelf} =>
+  didUpdate: ({oldSelf, newSelf}) =>
     if (oldSelf.retainedProps.message !== newSelf.retainedProps.message) {
       /* do whatever sneaky imperative things here */
-      Js.log "props `message` changed!"
+      Js.log("props `message` changed!")
     },
-  render: fun _self => <div> (ReasonReact.stringToElement message) </div>
+  render: (_self) => <div> (ReasonReact.stringToElement(message)) </div>
 };

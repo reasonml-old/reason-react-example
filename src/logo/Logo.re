@@ -1,10 +1,9 @@
 /* Here's a big spinning logo. No reason why. It's nice */
-
-external requestAnimationFrame : (unit => unit) => unit = "" [@@bs.val];
+[@bs.val] external requestAnimationFrame : (unit => unit) => unit = "";
 
 open Constants;
 
-let renderGraphic rotationStyle =>
+let renderGraphic = (rotationStyle) =>
   <g fill="none" stroke="none">
     <g transform="scale(1.5, 1.5) translate(100.000000, 105.000000)">
       <path fill="rgba(0,0,0,0.1)" d=border_path />
@@ -34,59 +33,60 @@ type state = {
   lastMs: float
 };
 
-let component = ReasonReact.reducerComponent "LogoRe";
+let component = ReasonReact.reducerComponent("LogoRe");
 
-let make ::message _children => {
+let make = (~message, _children) => {
   ...component,
-  initialState: fun () => {drag: mouseUpDrag, degrees: 0.0, velocity: 0.1, lastMs: Js.Date.now ()},
-  reducer: fun action state =>
+  initialState: () => {drag: mouseUpDrag, degrees: 0.0, velocity: 0.1, lastMs: Js.Date.now()},
+  reducer: (action, state) =>
     switch action {
     | MouseUp =>
       let withAccel = state.velocity +. clickAccel;
       let nextVelocity = withAccel < maxVel ? withAccel : maxVel;
-      ReasonReact.Update {...state, velocity: nextVelocity, drag: mouseUpDrag}
-    | MouseDown => ReasonReact.Update {...state, drag: mouseDownDrag}
+      ReasonReact.Update({...state, velocity: nextVelocity, drag: mouseUpDrag})
+    | MouseDown => ReasonReact.Update({...state, drag: mouseDownDrag})
     | Spin =>
-      let now = Js.Date.now ();
+      let now = Js.Date.now();
       /* How many 16ms virtual frames elapsed, even if clock runs at 30hz */
       let idealFramesSinceLast = 1. +. (now -. state.lastMs) /. 16.;
       let nextDegrees = state.degrees +. (baseVel +. state.velocity) *. idealFramesSinceLast;
       let nextVelocity = state.velocity *. state.drag;
-      ReasonReact.Update {...state, degrees: nextDegrees, velocity: nextVelocity, lastMs: now}
+      ReasonReact.Update({...state, degrees: nextDegrees, velocity: nextVelocity, lastMs: now})
     },
-  didMount: fun {reduce} => {
-    let rec onAnimationFrame () => {
-      reduce (fun _ => Spin) ();
-      requestAnimationFrame onAnimationFrame
+  didMount: ({reduce}) => {
+    let rec onAnimationFrame = () => {
+      reduce((_) => Spin, ());
+      requestAnimationFrame(onAnimationFrame)
     };
-    requestAnimationFrame onAnimationFrame;
+    requestAnimationFrame(onAnimationFrame);
     ReasonReact.NoUpdate
   },
-  render: fun {state, reduce} => {
-    let transform = "rotate(" ^ string_of_float state.degrees ^ "deg)";
+  render: ({state, reduce}) => {
+    let transform = "rotate(" ++ (string_of_float(state.degrees) ++ "deg)");
     /* One of the ways to create JS Objects in Reason, through BuckleScript's `external`s */
-    let rotationStyle = ReactDOMRe.Style.make transformOrigin::"50% 50%" ::transform ();
+    let rotationStyle = ReactDOMRe.Style.make(~transformOrigin="50% 50%", ~transform, ());
     <div
       style=(
-        ReactDOMRe.Style.make
-          color::"#444444"
-          userSelect::"none"
-          paddingTop::"40px"
-          fontSize::"68px"
-          fontFamily::"Montserrat"
-          textAlign::"center"
+        ReactDOMRe.Style.make(
+          ~color="#444444",
+          ~userSelect="none",
+          ~paddingTop="40px",
+          ~fontSize="68px",
+          ~fontFamily="Montserrat",
+          ~textAlign="center",
           ()
+        )
       )>
-      (ReasonReact.stringToElement message)
+      (ReasonReact.stringToElement(message))
       <svg
         width="100%"
         height="100%"
         viewBox="0 0 700 700"
         version="1.1"
-        style=(ReactDOMRe.Style.make cursor::"pointer" ())
-        onMouseUp=(reduce (fun _ => MouseUp))
-        onMouseDown=(reduce (fun _ => MouseDown))>
-        (renderGraphic rotationStyle)
+        style=(ReactDOMRe.Style.make(~cursor="pointer", ()))
+        onMouseUp=(reduce((_) => MouseUp))
+        onMouseDown=(reduce((_) => MouseDown))>
+        (renderGraphic(rotationStyle))
       </svg>
     </div>
   }

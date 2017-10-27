@@ -1,1 +1,1 @@
-ReactDOMRe.renderToElementWithId <Logo message="REASON REACT" /> "index";
+ReactDOMRe.renderToElementWithId(<Logo message="REASON REACT" />, "index");
