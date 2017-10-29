@@ -29,15 +29,9 @@ let make = (~count, ~completedCount, ~nowShowing, ~onClearCompleted, _children) 
       <ul className="filters">
         <li> <a href="#/" className=all> (ReasonReact.stringToElement("All")) </a> </li>
         (ReasonReact.stringToElement(" "))
-        <li>
-          <a href="#/active" className=active> (ReasonReact.stringToElement("Active")) </a>
-        </li>
+        <li> <a href="#/active" className=active> (ReasonReact.stringToElement("Active")) </a> </li>
         (ReasonReact.stringToElement(" "))
-        <li>
-          <a href="#/completed" className=completed>
-            (ReasonReact.stringToElement("Completed"))
-          </a>
-        </li>
+        <li> <a href="#/completed" className=completed> (ReasonReact.stringToElement("Completed")) </a> </li>
       </ul>
       clearButton
     </footer>

@@ -33,8 +33,7 @@ module Top = {
     newTodo: string,
     todos: list(TodoItem.todo)
   };
-  let changeTodo = (event) =>
-    ChangeTodo(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value);
+  let changeTodo = (event) => ChangeTodo(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value);
   let newTodoKeyDown = (event) =>
     if (ReactEventRe.Keyboard.keyCode(event) === 13) {
       ReactEventRe.Keyboard.preventDefault(event);
@@ -69,9 +68,7 @@ module Top = {
         switch (String.trim(state.newTodo)) {
         | "" => ReasonReact.NoUpdate
         | nonEmptyValue =>
-          let todos =
-            state.todos
-            @ [{id: string_of_float(Js.Date.now()), title: nonEmptyValue, completed: false}];
+          let todos = state.todos @ [{id: string_of_float(Js.Date.now()), title: nonEmptyValue, completed: false}];
           saveLocally(todos);
           ReasonReact.Update({...state, newTodo: "", todos})
         }
@@ -82,15 +79,8 @@ module Top = {
         let todos = List.map((todo) => {...todo, TodoItem.completed: checked}, state.todos);
         ReasonReact.UpdateWithSideEffects({...state, todos}, ((_self) => saveLocally(todos)))
       | Save(todoToSave, text) =>
-        let todos =
-          List.map(
-            (todo) => todo == todoToSave ? {...todo, TodoItem.title: text} : todo,
-            state.todos
-          );
-        ReasonReact.UpdateWithSideEffects(
-          {...state, editing: None, todos},
-          ((_self) => saveLocally(todos))
-        )
+        let todos = List.map((todo) => todo == todoToSave ? {...todo, TodoItem.title: text} : todo, state.todos);
+        ReasonReact.UpdateWithSideEffects({...state, editing: None, todos}, ((_self) => saveLocally(todos)))
       | Edit(todo) => ReasonReact.Update({...state, editing: Some(TodoItem.(todo.id))})
       | Destroy(todo) =>
         let todos = List.filter((candidate) => candidate !== todo, state.todos);
@@ -98,9 +88,7 @@ module Top = {
       | Toggle(todoToToggle) =>
         let todos =
           List.map(
-            (todo) =>
-              todo == todoToToggle ?
-                {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} : todo,
+            (todo) => todo == todoToToggle ? {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} : todo,
             state.todos
           );
         ReasonReact.UpdateWithSideEffects({...state, todos}, ((_self) => saveLocally(todos)))
@@ -157,8 +145,7 @@ module Top = {
              }
            );
       let todosLength = List.length(todos);
-      let completedCount =
-        todos |> List.filter((todo) => TodoItem.(todo.completed)) |> List.length;
+      let completedCount = todos |> List.filter((todo) => TodoItem.(todo.completed)) |> List.length;
       let activeTodoCount = todosLength - completedCount;
       let footer =
         switch (activeTodoCount, completedCount) {
