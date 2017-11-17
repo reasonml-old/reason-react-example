@@ -18,7 +18,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("TodoItemRe");
 
-let setEditFieldRef = (r, {ReasonReact.state}) => state.editFieldRef := Js.Null.to_opt(r);
+let setEditFieldRef = (r, {ReasonReact.state}) => state.editFieldRef := Js.Nullable.to_opt(r);
 
 let make = (~todo, ~editing, ~onDestroy, ~onSave, ~onEdit, ~onToggle, ~onCancel, _children) => {
   let submitHelper = (state) =>
