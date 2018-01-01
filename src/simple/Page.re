@@ -1,7 +1,7 @@
 /* This is the basic component. */
 let component = ReasonReact.statelessComponent("Page");
 
-/* Your familiar handleClick from ReactJS. This mandatorily takes the payload,
+/* You're familiar handleClick from ReactJS. This mandatorily takes the payload,
    then the `self` record, which contains state (none here), `handle`, `reduce`
    and other utilities */
 let handleClick = (_event, _self) => Js.log("clicked!");
