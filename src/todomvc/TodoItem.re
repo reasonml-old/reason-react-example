@@ -18,45 +18,51 @@ type action =
 
 let component = ReasonReact.reducerComponent("TodoItemRe");
 
-let setEditFieldRef = (r, {ReasonReact.state}) => state.editFieldRef := Js.Nullable.to_opt(r);
+let setEditFieldRef = (r, {ReasonReact.state}) =>
+  state.editFieldRef := Js.Nullable.to_opt(r);
 
-let make = (~todo, ~editing, ~onDestroy, ~onSave, ~onEdit, ~onToggle, ~onCancel, _children) => {
-  let submitHelper = (state) =>
+let make =
+    (
+      ~todo,
+      ~editing,
+      ~onDestroy,
+      ~onSave,
+      ~onEdit,
+      ~onToggle,
+      ~onCancel,
+      _children
+    ) => {
+  let submitHelper = state =>
     switch (String.trim(state.editText)) {
-    | "" => ReasonReact.SideEffects(((_self) => onDestroy()))
+    | "" => ReasonReact.SideEffects((_self => onDestroy()))
     | nonEmptyValue =>
       ReasonReact.UpdateWithSideEffects(
         {...state, editText: nonEmptyValue},
-        ((_self) => onSave(nonEmptyValue))
+        (_self => onSave(nonEmptyValue))
       )
     };
-  let submit = (_event) => Submit;
-  let keyDown = (event) => KeyDown(ReactEventRe.Keyboard.which(event));
-  let change = (event) =>
-    Change(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value);
-  let edit = (_event) => {
-    onEdit();
-    Edit
-  };
   {
     ...component,
-    initialState: () => {editText: todo.title, editFieldRef: ref(None), editing},
-    reducer: (action, state) =>
-      switch action {
-      | Edit => ReasonReact.Update({...state, editText: todo.title})
-      | Submit => submitHelper(state)
-      | Change(text) =>
-        editing ? ReasonReact.Update({...state, editText: text}) : ReasonReact.NoUpdate
-      | KeyDown(27) =>
-        /* escape key */
-        ReasonReact.UpdateWithSideEffects(
-          {...state, editText: todo.title},
-          ((_self) => onCancel())
+    initialState: () => {
+      editText: todo.title,
+      editFieldRef: ref(None),
+      editing
+    },
+    reducer: action =>
+      switch (action) {
+      | Edit => (state => ReasonReact.Update({...state, editText: todo.title}))
+      | Submit => submitHelper
+      | Change(text) => (
+          state =>
+            editing ?
+              ReasonReact.Update({...state, editText: text}) :
+              ReasonReact.NoUpdate
         )
-      | KeyDown(13) =>
-        /* enter key */
-        submitHelper(state)
-      | KeyDown(_) => ReasonReact.NoUpdate
+      | KeyDown(27) =>
+        onCancel();
+        (state => ReasonReact.Update({...state, editText: todo.title}));
+      | KeyDown(13) => submitHelper
+      | KeyDown(_) => (_state => ReasonReact.NoUpdate)
       },
     willReceiveProps: ({state}) => {...state, editing},
     didUpdate: ({oldSelf, newSelf}) =>
@@ -64,12 +70,16 @@ let make = (~todo, ~editing, ~onDestroy, ~onSave, ~onEdit, ~onToggle, ~onCancel,
       | (false, true, Some(field)) =>
         let node = ReactDOMRe.domElementToObj(field);
         ignore(node##focus());
-        ignore(node##setSelectionRange(node##value##length, node##value##length))
+        ignore(
+          node##setSelectionRange(node##value##length, node##value##length)
+        );
       | _ => ()
       },
-    render: ({state, handle, reduce}) => {
+    /* escape key */
+    render: ({state, handle, send}) => {
       let className =
-        [todo.completed ? "completed" : "", editing ? "editing" : ""] |> String.concat(" ");
+        [todo.completed ? "completed" : "", editing ? "editing" : ""]
+        |> String.concat(" ");
       <li className>
         <div className="view">
           <input
@@ -78,18 +88,36 @@ let make = (~todo, ~editing, ~onDestroy, ~onSave, ~onEdit, ~onToggle, ~onCancel,
             checked=(Js.Boolean.to_js_boolean(todo.completed))
             onChange=((_) => onToggle())
           />
-          <label onDoubleClick=(reduce(edit))> (ReasonReact.stringToElement(todo.title)) </label>
+          <label
+            onDoubleClick=(
+              _event => {
+                onEdit();
+                send(Edit);
+              }
+            )>
+            (ReasonReact.stringToElement(todo.title))
+          </label>
           <button className="destroy" onClick=((_) => onDestroy()) />
         </div>
         <input
           ref=(handle(setEditFieldRef))
           className="edit"
           value=state.editText
-          onBlur=(reduce(submit))
-          onChange=(reduce(change))
-          onKeyDown=(reduce(keyDown))
+          onBlur=(_event => send(Submit))
+          onChange=(
+            event =>
+              send(
+                Change(
+                  ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value
+                )
+              )
+          )
+          onKeyDown=(
+            event => send(KeyDown(ReactEventRe.Keyboard.which(event)))
+          )
         />
-      </li>
+      </li>;
     }
-  }
+    /* enter key */
+  };
 };

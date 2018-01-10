@@ -4,10 +4,11 @@ type router = {. "init": [@bs.meth] (string => unit)};
 
 let namespace = "reason-react-todos";
 
-let saveLocally = (todos) =>
+let saveLocally = todos =>
   switch (Js.Json.stringifyAny(todos)) {
   | None => ()
-  | Some(stringifiedTodos) => Dom.Storage.(localStorage |> setItem(namespace, stringifiedTodos))
+  | Some(stringifiedTodos) =>
+    Dom.Storage.(localStorage |> setItem(namespace, stringifiedTodos))
   };
 
 module Top = {
@@ -33,35 +34,15 @@ module Top = {
     newTodo: string,
     todos: list(TodoItem.todo)
   };
-  let changeTodo = (event) =>
-    ChangeTodo(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value);
-  let newTodoKeyDown = (event) =>
-    if (ReactEventRe.Keyboard.keyCode(event) === 13) {
-      ReactEventRe.Keyboard.preventDefault(event);
-      NewTodoEnterKeyDown
-    } else {
-      NewTodoOtherKeyDown
-    };
-  let toggleAll = (event) => {
-    let checked = Js.to_bool(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##checked);
-    ToggleAll(checked)
-  };
-  let toggle = (todo, _event) => Toggle(todo);
-  let destroy = (todo, _event) => Destroy(todo);
-  let edit = (todo, _event) => Edit(todo);
-  let save = (todoToSave, text) => Save(todoToSave, text);
-  let cancel = (_event) => Cancel;
-  let clearCompleted = (_event) => ClearCompleted;
   let component = ReasonReact.reducerComponent("TodoAppRe");
-  let make = (_children) => {
+  let make = _children => {
     ...component,
     reducer: (action, state) =>
-      switch action {
-      /* router actions */
+      switch (action) {
       | ShowAll => ReasonReact.Update({...state, nowShowing: AllTodos})
       | ShowActive => ReasonReact.Update({...state, nowShowing: ActiveTodos})
-      | ShowCompleted => ReasonReact.Update({...state, nowShowing: CompletedTodos})
-      /* todo actions */
+      | ShowCompleted =>
+        ReasonReact.Update({...state, nowShowing: CompletedTodos})
       | Cancel => ReasonReact.Update({...state, editing: None})
       | ChangeTodo(text) => ReasonReact.Update({...state, newTodo: text})
       | NewTodoOtherKeyDown => ReasonReact.NoUpdate
@@ -71,94 +52,121 @@ module Top = {
         | nonEmptyValue =>
           let todos =
             state.todos
-            @ [{id: string_of_float(Js.Date.now()), title: nonEmptyValue, completed: false}];
+            @ [
+              {
+                id: string_of_float(Js.Date.now()),
+                title: nonEmptyValue,
+                completed: false
+              }
+            ];
           saveLocally(todos);
-          ReasonReact.Update({...state, newTodo: "", todos})
+          ReasonReact.Update({...state, newTodo: "", todos});
         }
       | ClearCompleted =>
-        let todos = List.filter((todo) => ! TodoItem.(todo.completed), state.todos);
-        ReasonReact.UpdateWithSideEffects({...state, todos}, ((_self) => saveLocally(todos)))
+        let todos =
+          List.filter(todo => ! TodoItem.(todo.completed), state.todos);
+        ReasonReact.UpdateWithSideEffects(
+          {...state, todos},
+          (_self => saveLocally(todos))
+        );
       | ToggleAll(checked) =>
-        let todos = List.map((todo) => {...todo, TodoItem.completed: checked}, state.todos);
-        ReasonReact.UpdateWithSideEffects({...state, todos}, ((_self) => saveLocally(todos)))
+        let todos =
+          List.map(
+            todo => {...todo, TodoItem.completed: checked},
+            state.todos
+          );
+        ReasonReact.UpdateWithSideEffects(
+          {...state, todos},
+          (_self => saveLocally(todos))
+        );
       | Save(todoToSave, text) =>
         let todos =
           List.map(
-            (todo) => todo == todoToSave ? {...todo, TodoItem.title: text} : todo,
+            todo =>
+              todo == todoToSave ? {...todo, TodoItem.title: text} : todo,
             state.todos
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, editing: None, todos},
-          ((_self) => saveLocally(todos))
-        )
-      | Edit(todo) => ReasonReact.Update({...state, editing: Some(TodoItem.(todo.id))})
+          (_self => saveLocally(todos))
+        );
+      | Edit(todo) =>
+        ReasonReact.Update({...state, editing: Some(TodoItem.(todo.id))})
       | Destroy(todo) =>
-        let todos = List.filter((candidate) => candidate !== todo, state.todos);
-        ReasonReact.UpdateWithSideEffects({...state, todos}, ((_self) => saveLocally(todos)))
+        let todos = List.filter(candidate => candidate !== todo, state.todos);
+        ReasonReact.UpdateWithSideEffects(
+          {...state, todos},
+          (_self => saveLocally(todos))
+        );
       | Toggle(todoToToggle) =>
         let todos =
           List.map(
-            (todo) =>
+            todo =>
               todo == todoToToggle ?
-                {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} : todo,
+                {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} :
+                todo,
             state.todos
           );
-        ReasonReact.UpdateWithSideEffects({...state, todos}, ((_self) => saveLocally(todos)))
+        ReasonReact.UpdateWithSideEffects(
+          {...state, todos},
+          (_self => saveLocally(todos))
+        );
       },
     initialState: () => {
       let todos =
-        switch Dom.Storage.(localStorage |> getItem(namespace)) {
+        switch (Dom.Storage.(localStorage |> getItem(namespace))) {
         | None => []
         | Some(todos) => unsafeJsonParse(todos)
         };
-      {nowShowing: AllTodos, editing: None, newTodo: "", todos}
+      {nowShowing: AllTodos, editing: None, newTodo: "", todos};
     },
-    didMount: ({reduce}) => {
-      let router =
-        DirectorRe.makeRouter({
-          "/": reduce((_) => ShowAll),
-          "/active": reduce((_) => ShowActive),
-          "/completed": reduce((_) => ShowCompleted)
-        });
-      DirectorRe.init(router, "/");
-      ReasonReact.NoUpdate
-    },
-    render: ({state, reduce}) => {
+    subscriptions: self => [
+      Sub(
+        () =>
+          ReasonReact.Router.watchUrl(url =>
+            switch (url.hash) {
+            | "active" => self.send(ShowActive)
+            | "completed" => self.send(ShowCompleted)
+            | _ => self.send(ShowAll)
+            }
+          ),
+        ReasonReact.Router.unwatchUrl
+      )
+    ],
+    /* router actions */
+    render: ({state, send}) => {
       let {todos, editing} = state;
       let todoItems =
         todos
-        |> List.filter(
-             (todo) =>
-               TodoItem.(
-                 switch state.nowShowing {
-                 | ActiveTodos => ! todo.completed
-                 | CompletedTodos => todo.completed
-                 | AllTodos => true
-                 }
-               )
+        |> List.filter(todo =>
+             TodoItem.(
+               switch (state.nowShowing) {
+               | ActiveTodos => ! todo.completed
+               | CompletedTodos => todo.completed
+               | AllTodos => true
+               }
+             )
            )
-        |> List.map(
-             (todo) => {
-               let editing =
-                 switch editing {
-                 | None => false
-                 | Some(editing) => editing === TodoItem.(todo.id)
-                 };
-               <TodoItem
-                 key=todo.id
-                 todo
-                 onToggle=(reduce(toggle(todo)))
-                 onDestroy=(reduce(destroy(todo)))
-                 onEdit=(reduce(edit(todo)))
-                 editing
-                 onSave=(reduce(save(todo)))
-                 onCancel=(reduce(cancel))
-               />
-             }
-           );
+        |> List.map(todo => {
+             let editing =
+               switch (editing) {
+               | None => false
+               | Some(editing) => editing === TodoItem.(todo.id)
+               };
+             <TodoItem
+               key=todo.id
+               todo
+               onToggle=(_event => send(Toggle(todo)))
+               onDestroy=(_event => send(Destroy(todo)))
+               onEdit=(_event => send(Edit(todo)))
+               editing
+               onSave=(text => send(Save(todo, text)))
+               onCancel=(_event => send(Cancel))
+             />;
+           });
       let todosLength = List.length(todos);
       let completedCount =
-        todos |> List.filter((todo) => TodoItem.(todo.completed)) |> List.length;
+        todos |> List.filter(todo => TodoItem.(todo.completed)) |> List.length;
       let activeTodoCount = todosLength - completedCount;
       let footer =
         switch (activeTodoCount, completedCount) {
@@ -168,7 +176,7 @@ module Top = {
             count=activeTodoCount
             completedCount
             nowShowing=state.nowShowing
-            onClearCompleted=(reduce(clearCompleted))
+            onClearCompleted=(_event => send(ClearCompleted))
           />
         };
       let main =
@@ -178,10 +186,22 @@ module Top = {
             <input
               className="toggle-all"
               _type="checkbox"
-              onChange=(reduce(toggleAll))
+              onChange=(
+                event => {
+                  let checked =
+                    Js.to_bool(
+                      ReactDOMRe.domElementToObj(
+                        ReactEventRe.Form.target(event)
+                      )##checked
+                    );
+                  send(ToggleAll(checked));
+                }
+              )
               checked=(Js.Boolean.to_js_boolean(activeTodoCount === 0))
             />
-            <ul className="todo-list"> (ReasonReact.arrayToElement(Array.of_list(todoItems))) </ul>
+            <ul className="todo-list">
+              (ReasonReact.arrayToElement(Array.of_list(todoItems)))
+            </ul>
           </section>;
       <div>
         <header className="header">
@@ -190,14 +210,29 @@ module Top = {
             className="new-todo"
             placeholder="What needs to be done?"
             value=state.newTodo
-            onKeyDown=(reduce(newTodoKeyDown))
-            onChange=(reduce(changeTodo))
+            onKeyDown=(
+              event =>
+                if (ReactEventRe.Keyboard.keyCode(event) === 13) {
+                  ReactEventRe.Keyboard.preventDefault(event);
+                  send(NewTodoEnterKeyDown);
+                } else {
+                  send(NewTodoOtherKeyDown);
+                }
+            )
+            onChange=(
+              event =>
+                send(
+                  ChangeTodo(
+                    ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value
+                  )
+                )
+            )
             autoFocus=Js.true_
           />
         </header>
         main
         footer
-      </div>
+      </div>;
     }
   };
 };

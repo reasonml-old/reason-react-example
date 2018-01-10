@@ -5,13 +5,13 @@ let component = ReasonReact.statelessComponent("PageReason");
 
 let make = (~message, ~extraGreeting=?, _children) => {
   ...component,
-  render: (_self) => {
+  render: _self => {
     let greeting =
-      switch extraGreeting {
+      switch (extraGreeting) {
       | None => "How are you?"
       | Some(g) => g
       };
-    <div> <MyBannerRe show=true message=(message ++ (" " ++ greeting)) /> </div>
+    <div> <MyBannerRe show=true message=(message ++ " " ++ greeting) /> </div>;
   }
 };
 
@@ -22,12 +22,10 @@ let make = (~message, ~extraGreeting=?, _children) => {
    the correct babel/webpack setup, you can also do `let default = ...` and use it
    on the JS side as a default export. */
 let jsComponent =
-  ReasonReact.wrapReasonForJs(
-    ~component,
-    (jsProps) =>
-      make(
-        ~message=jsProps##message,
-        ~extraGreeting=?Js.Null_undefined.to_opt(jsProps##extraGreeting),
-        [||]
-      )
+  ReasonReact.wrapReasonForJs(~component, jsProps =>
+    make(
+      ~message=jsProps##message,
+      ~extraGreeting=?Js.Null_undefined.to_opt(jsProps##extraGreeting),
+      [||]
+    )
   );

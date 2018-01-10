@@ -2,7 +2,7 @@
 let component = ReasonReact.statelessComponent("Page");
 
 /* This is your familiar handleClick from ReactJS. This mandatorily takes the payload,
-   then the `self` record, which contains state (none here), `handle`, `reduce`
+   then the `self` record, which contains state (none here), `handle`, `send`
    and other utilities */
 let handleClick = (_event, _self) => Js.log("clicked!");
 
@@ -16,6 +16,8 @@ let handleClick = (_event, _self) => Js.log("clicked!");
    `ReasonReact.element (Page.make message::"hello" [||])` */
 let make = (~message, _children) => {
   ...component,
-  render: (self) =>
-    <div onClick=(self.handle(handleClick))> (ReasonReact.stringToElement(message)) </div>
+  render: self =>
+    <div onClick=(self.handle(handleClick))>
+      (ReasonReact.stringToElement(message))
+    </div>
 };
