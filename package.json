@@ -9,12 +9,14 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "test": "exit 0",
-    "webpack": "webpack -w"
+    "webpack": "webpack -w",
+    "webpackp": "webpack -p"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "director": "^1.2.8",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "reason-react": "0.3.1",
