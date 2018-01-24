@@ -5,12 +5,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "bsb -make-world && webpack",
-    "start": "bsb -make-world -w",
+    "build:watch": "bsb -make-world -w",
+    "webpack:watch": "webpack -w",
+    "build:production": "bsb -make-world && webpack -p --config ./webpack.production.config.js",
     "clean": "bsb -clean-world",
-    "test": "exit 0",
-    "webpack": "webpack -w",
-    "webpackp": "webpack -p"
+    "test": "exit 0"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +25,6 @@
   "devDependencies": {
     "bs-platform": "^2.1.0",
     "concurrently": "^3.5.0",
-    "webpack": "^1.14.0"
+    "webpack": "^3.0.0"
   }
 }
