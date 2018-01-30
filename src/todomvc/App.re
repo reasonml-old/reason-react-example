@@ -13,10 +13,7 @@ let saveLocally = todos =>
 
 module Top = {
   type action =
-    /* router actions */
-    | ShowAll
-    | ShowActive
-    | ShowCompleted
+    | Navigate(TodoFooter.showingState)
     /* todo actions */
     | NewTodoEnterKeyDown
     | NewTodoOtherKeyDown
@@ -34,15 +31,18 @@ module Top = {
     newTodo: string,
     todos: list(TodoItem.todo)
   };
+  let urlToShownPage = hash =>
+    switch (hash) {
+    | "active" => TodoFooter.ActiveTodos
+    | "completed" => CompletedTodos
+    | _ => AllTodos
+    };
   let component = ReasonReact.reducerComponent("TodoAppRe");
   let make = _children => {
     ...component,
     reducer: (action, state) =>
       switch (action) {
-      | ShowAll => ReasonReact.Update({...state, nowShowing: AllTodos})
-      | ShowActive => ReasonReact.Update({...state, nowShowing: ActiveTodos})
-      | ShowCompleted =>
-        ReasonReact.Update({...state, nowShowing: CompletedTodos})
+      | Navigate(page) => ReasonReact.Update({...state, nowShowing: page})
       | Cancel => ReasonReact.Update({...state, editing: None})
       | ChangeTodo(text) => ReasonReact.Update({...state, newTodo: text})
       | NewTodoOtherKeyDown => ReasonReact.NoUpdate
@@ -118,17 +118,19 @@ module Top = {
         | None => []
         | Some(todos) => unsafeJsonParse(todos)
         };
-      {nowShowing: AllTodos, editing: None, newTodo: "", todos};
+      {
+        nowShowing:
+          urlToShownPage(ReasonReact.Router.dangerouslyGetInitialUrl().hash),
+        editing: None,
+        newTodo: "",
+        todos
+      };
     },
     subscriptions: self => [
       Sub(
         () =>
           ReasonReact.Router.watchUrl(url =>
-            switch (url.hash) {
-            | "active" => self.send(ShowActive)
-            | "completed" => self.send(ShowCompleted)
-            | _ => self.send(ShowAll)
-            }
+            self.send(Navigate(urlToShownPage(url.hash)))
           ),
         ReasonReact.Router.unwatchUrl
       )
