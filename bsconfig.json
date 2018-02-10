@@ -5,7 +5,7 @@
   "bs-dependencies": [
     "reason-react",
     "bs-fetch",
-    "bs-json"
+    "@glennsl/bs-json"
   ],
   "sources": [
     {

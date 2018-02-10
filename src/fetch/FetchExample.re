@@ -1,64 +1,58 @@
-type tDog = string;
+type dog = string;
 
-type tArrayDogs = array(tDog);
+type arrayDogs = array(dog);
 
-type state = { dogs: tArrayDogs, isLoading: bool, error: bool };
+type state = { dogs: arrayDogs, isLoading: bool, error: bool };
 
 type action =
-  | DogFetch
-  | DogFetched(tArrayDogs)
-  | DogFailedToFetch;
+  | DogsFetch
+  | DogsFetched(arrayDogs)
+  | DogsFailedToFetch;
+
+module Decode = {
+  let dogs = json : arrayDogs =>
+  Json.Decode.(
+    json |> field("message", array(string))
+         |> Array.map(dog => dog)
+  );
+};
 
 let component = ReasonReact.reducerComponent("FetchExample");
 
-module Decode = {
-  let dogs = json : tArrayDogs =>
-    Array.map(
-      dog => dog,
-      json |> Json.Decode.field("message", 
-        Json.Decode.array(Json.Decode.string)
-      )
-    );
-};
-
 let make = _children => {
   ...component,
-  initialState: () => { dogs: [||], isLoading: false, error: false },
+  initialState: () => { dogs: [||], isLoading: true, error: false },
   reducer: (action, state) => 
     switch action {
-    | DogFetch =>
-        ReasonReact.Update({
-          ...state,
-          isLoading: true
-        })
-    | DogFetched(dogs) =>
+    | DogsFetch =>
+        ReasonReact.SideEffects(self => 
+          Js.Promise.(
+            Fetch.fetch("https://dog.ceo/api/breeds/list")
+            |> then_(Fetch.Response.json)
+            |> then_(json => 
+              json
+                |> Decode.dogs
+                |> (dogs => {
+                  self.send(DogsFetched(dogs));
+                })
+            |> resolve)
+            |> catch(_err => Js.Promise.resolve(self.send(DogsFailedToFetch)) )
+          |> ignore )
+        )
+    | DogsFetched(dogs) =>
       ReasonReact.Update({
         ...state,
         isLoading: false,
         dogs
       })
-    | DogFailedToFetch => 
+    | DogsFailedToFetch => 
       ReasonReact.Update({
         ...state,
         error: true
       })
     },
   didMount: self => {
-    self.send(DogFetch);
-
-    Js.Promise.(
-      Fetch.fetch("https://dog.ceo/api/breeds/list")
-      |> then_(Fetch.Response.json)
-      |> then_(json => {
-        json
-          |> Decode.dogs
-          |> (dogs => {
-            self.send(DogFetched(dogs));
-          })
-      }
-      |> resolve)
-      |> catch(_err => Js.Promise.resolve(self.send(DogFailedToFetch)) )
-    |> ignore );
+    self.send(DogsFetch);
     ReasonReact.NoUpdate
   },
   render: self => {
@@ -79,8 +73,8 @@ let make = _children => {
           <ul>
           (
             self.state.dogs
-            |> Array.mapi((index, dog) =>
-              <li key={string_of_int(index)}>
+            |> Array.mapi((_index, dog) =>
+              <li key={dog}>
                 (ReasonReact.stringToElement(dog))
               </li>
             )
