@@ -59,6 +59,10 @@ let make = _children => {
     | Loaded(dogs) =>
       <div>
         <h1> (ReasonReact.stringToElement("Dogs")) </h1>
+        <p> (ReasonReact.stringToElement("Source: ")) </p>
+        <a href="https://dog.ceo">
+          (ReasonReact.stringToElement("https://dog.ceo"))
+        </a>
         <ul>
           (
             dogs
