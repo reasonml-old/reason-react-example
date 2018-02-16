@@ -15,5 +15,5 @@ let make = (~show, ~message, children) =>
       "show": Js.Boolean.to_js_boolean(show), /* ^ don't forget to convert an OCaml bool into a JS boolean! */
       "message": message /* OCaml string maps to JS string, no conversion needed here */
     },
-    children
+    children,
   );

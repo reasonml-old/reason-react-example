@@ -4,7 +4,7 @@ let render = () => {
   toggle := ! toggle.contents;
   ReactDOMRe.renderToElementWithId(
     <RetainedPropsExample message=(toggle.contents ? "Hello!" : "Goodbye") />,
-    "index"
+    "index",
   );
 };
 

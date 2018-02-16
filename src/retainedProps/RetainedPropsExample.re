@@ -8,12 +8,12 @@ let component =
 let make = (~message, _children) => {
   ...component,
   retainedProps: {
-    message: message
+    message: message,
   },
   didUpdate: ({oldSelf, newSelf}) =>
     if (oldSelf.retainedProps.message !== newSelf.retainedProps.message) {
       Js.log("props `message` changed!");
     },
-  render: _self => <div> (ReasonReact.stringToElement(message)) </div>
+  render: _self => <div> (ReasonReact.stringToElement(message)) </div>,
   /* do whatever sneaky imperative things here */
 };

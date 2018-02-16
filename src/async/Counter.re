@@ -19,9 +19,9 @@ let make = _children => {
   subscriptions: self => [
     Sub(
       () => Js.Global.setInterval(() => self.send(Tick), 1000),
-      Js.Global.clearInterval
-    )
+      Js.Global.clearInterval,
+    ),
   ],
   render: ({state}) =>
-    <div> (ReasonReact.stringToElement(string_of_int(state.count))) </div>
+    <div> (ReasonReact.stringToElement(string_of_int(state.count))) </div>,
 };

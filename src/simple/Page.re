@@ -19,5 +19,5 @@ let make = (~message, _children) => {
   render: self =>
     <div onClick=(self.handle(handleClick))>
       (ReasonReact.stringToElement(message))
-    </div>
+    </div>,
 };

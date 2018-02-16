@@ -23,7 +23,7 @@ let make = _children => {
   ...component,
   initialState: _state => Loading,
   reducer: (action, _state) =>
-    switch action {
+    switch (action) {
     | DogsFetch =>
       ReasonReact.UpdateWithSideEffects(
         Loading,
@@ -43,7 +43,7 @@ let make = _children => {
                  )
               |> ignore
             )
-        )
+        ),
       )
     | DogsFetched(dogs) => ReasonReact.Update(Loaded(dogs))
     | DogsFailedToFetch => ReasonReact.Update(Error)
@@ -53,8 +53,9 @@ let make = _children => {
     ReasonReact.NoUpdate;
   },
   render: self =>
-    switch self.state {
-    | Error => <div> (ReasonReact.stringToElement("An error occurred!")) </div>
+    switch (self.state) {
+    | Error =>
+      <div> (ReasonReact.stringToElement("An error occurred!")) </div>
     | Loading => <div> (ReasonReact.stringToElement("Loading...")) </div>
     | Loaded(dogs) =>
       <div>
@@ -73,5 +74,5 @@ let make = _children => {
           )
         </ul>
       </div>
-    }
+    },
 };

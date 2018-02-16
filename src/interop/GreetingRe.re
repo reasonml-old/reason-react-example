@@ -12,7 +12,7 @@ let make = (~message, ~extraGreeting=?, _children) => {
       | Some(g) => g
       };
     <div> <MyBannerRe show=true message=(message ++ " " ++ greeting) /> </div>;
-  }
+  },
 };
 
 /* This exposes a `jsComponent` that the ReactJS side can use as
@@ -26,6 +26,6 @@ let jsComponent =
     make(
       ~message=jsProps##message,
       ~extraGreeting=?Js.Null_undefined.to_opt(jsProps##extraGreeting),
-      [||]
+      [||],
     )
   );

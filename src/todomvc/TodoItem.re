@@ -1,13 +1,13 @@
 type todo = {
   id: string,
   title: string,
-  completed: bool
+  completed: bool,
 };
 
 type state = {
   editText: string,
   editing: bool,
-  editFieldRef: ref(option(Dom.element))
+  editFieldRef: ref(option(Dom.element)),
 };
 
 type action =
@@ -30,7 +30,7 @@ let make =
       ~onEdit,
       ~onToggle,
       ~onCancel,
-      _children
+      _children,
     ) => {
   let submitHelper = state =>
     switch (String.trim(state.editText)) {
@@ -38,7 +38,7 @@ let make =
     | nonEmptyValue =>
       ReasonReact.UpdateWithSideEffects(
         {...state, editText: nonEmptyValue},
-        (_self => onSave(nonEmptyValue))
+        (_self => onSave(nonEmptyValue)),
       )
     };
   {
@@ -46,11 +46,13 @@ let make =
     initialState: () => {
       editText: todo.title,
       editFieldRef: ref(None),
-      editing
+      editing,
     },
     reducer: action =>
       switch (action) {
-      | Edit => (state => ReasonReact.Update({...state, editText: todo.title}))
+      | Edit => (
+          state => ReasonReact.Update({...state, editText: todo.title})
+        )
       | Submit => submitHelper
       | Change(text) => (
           state =>
@@ -71,7 +73,7 @@ let make =
         let node = ReactDOMRe.domElementToObj(field);
         ignore(node##focus());
         ignore(
-          node##setSelectionRange(node##value##length, node##value##length)
+          node##setSelectionRange(node##value##length, node##value##length),
         );
       | _ => ()
       },
@@ -108,8 +110,8 @@ let make =
             event =>
               send(
                 Change(
-                  ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value
-                )
+                  ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value,
+                ),
               )
           )
           onKeyDown=(
@@ -117,7 +119,6 @@ let make =
           )
         />
       </li>;
-    }
-    /* enter key */
+    },
   };
 };

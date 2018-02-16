@@ -1,14 +1,14 @@
-type router = {. "init": [@bs.meth] (string => unit)};
-
 [@bs.val] external unsafeJsonParse : string => 'a = "JSON.parse";
 
-let namespace = "reason-react-todos";
+let localStorageNamespace = "reason-react-todos";
 
 let saveLocally = todos =>
   switch (Js.Json.stringifyAny(todos)) {
   | None => ()
   | Some(stringifiedTodos) =>
-    Dom.Storage.(localStorage |> setItem(namespace, stringifiedTodos))
+    Dom.Storage.(
+      localStorage |> setItem(localStorageNamespace, stringifiedTodos)
+    )
   };
 
 module Top = {
@@ -29,7 +29,7 @@ module Top = {
     nowShowing: TodoFooter.showingState,
     editing: option(string),
     newTodo: string,
-    todos: list(TodoItem.todo)
+    todos: list(TodoItem.todo),
   };
   let urlToShownPage = hash =>
     switch (hash) {
@@ -56,8 +56,8 @@ module Top = {
               {
                 id: string_of_float(Js.Date.now()),
                 title: nonEmptyValue,
-                completed: false
-              }
+                completed: false,
+              },
             ];
           saveLocally(todos);
           ReasonReact.Update({...state, newTodo: "", todos});
@@ -67,28 +67,28 @@ module Top = {
           List.filter(todo => ! TodoItem.(todo.completed), state.todos);
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
-          (_self => saveLocally(todos))
+          (_self => saveLocally(todos)),
         );
       | ToggleAll(checked) =>
         let todos =
           List.map(
             todo => {...todo, TodoItem.completed: checked},
-            state.todos
+            state.todos,
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
-          (_self => saveLocally(todos))
+          (_self => saveLocally(todos)),
         );
       | Save(todoToSave, text) =>
         let todos =
           List.map(
             todo =>
               todo == todoToSave ? {...todo, TodoItem.title: text} : todo,
-            state.todos
+            state.todos,
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, editing: None, todos},
-          (_self => saveLocally(todos))
+          (_self => saveLocally(todos)),
         );
       | Edit(todo) =>
         ReasonReact.Update({...state, editing: Some(TodoItem.(todo.id))})
@@ -96,7 +96,7 @@ module Top = {
         let todos = List.filter(candidate => candidate !== todo, state.todos);
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
-          (_self => saveLocally(todos))
+          (_self => saveLocally(todos)),
         );
       | Toggle(todoToToggle) =>
         let todos =
@@ -105,16 +105,16 @@ module Top = {
               todo == todoToToggle ?
                 {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} :
                 todo,
-            state.todos
+            state.todos,
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
-          (_self => saveLocally(todos))
+          (_self => saveLocally(todos)),
         );
       },
     initialState: () => {
       let todos =
-        switch (Dom.Storage.(localStorage |> getItem(namespace))) {
+        switch (Dom.Storage.(localStorage |> getItem(localStorageNamespace))) {
         | None => []
         | Some(todos) => unsafeJsonParse(todos)
         };
@@ -123,7 +123,7 @@ module Top = {
           urlToShownPage(ReasonReact.Router.dangerouslyGetInitialUrl().hash),
         editing: None,
         newTodo: "",
-        todos
+        todos,
       };
     },
     subscriptions: self => [
@@ -132,8 +132,8 @@ module Top = {
           ReasonReact.Router.watchUrl(url =>
             self.send(Navigate(urlToShownPage(url.hash)))
           ),
-        ReasonReact.Router.unwatchUrl
-      )
+        ReasonReact.Router.unwatchUrl,
+      ),
     ],
     /* router actions */
     render: ({state, send}) => {
@@ -193,8 +193,8 @@ module Top = {
                   let checked =
                     Js.to_bool(
                       ReactDOMRe.domElementToObj(
-                        ReactEventRe.Form.target(event)
-                      )##checked
+                        ReactEventRe.Form.target(event),
+                      )##checked,
                     );
                   send(ToggleAll(checked));
                 }
@@ -225,8 +225,10 @@ module Top = {
               event =>
                 send(
                   ChangeTodo(
-                    ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value
-                  )
+                    ReactDOMRe.domElementToObj(
+                      ReactEventRe.Form.target(event),
+                    )##value,
+                  ),
                 )
             )
             autoFocus=Js.true_
@@ -235,7 +237,7 @@ module Top = {
         main
         footer
       </div>;
-    }
+    },
   };
 };
 

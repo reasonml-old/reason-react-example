@@ -30,7 +30,7 @@ type state = {
   degrees: float,
   velocity: float,
   drag: float,
-  lastMs: float
+  lastMs: float,
 };
 
 let component = ReasonReact.reducerComponent("LogoRe");
@@ -41,7 +41,7 @@ let make = (~message, _children) => {
     drag: mouseUpDrag,
     degrees: 0.0,
     velocity: 0.1,
-    lastMs: Js.Date.now()
+    lastMs: Js.Date.now(),
   },
   reducer: (action, state) =>
     switch (action) {
@@ -51,7 +51,7 @@ let make = (~message, _children) => {
       ReasonReact.Update({
         ...state,
         velocity: nextVelocity,
-        drag: mouseUpDrag
+        drag: mouseUpDrag,
       });
     | MouseDown => ReasonReact.Update({...state, drag: mouseDownDrag})
     | Spin =>
@@ -64,7 +64,7 @@ let make = (~message, _children) => {
         ...state,
         degrees: nextDegrees,
         velocity: nextVelocity,
-        lastMs: now
+        lastMs: now,
       });
     },
   didMount: self => {
@@ -89,7 +89,7 @@ let make = (~message, _children) => {
           ~fontSize="68px",
           ~fontFamily="Montserrat",
           ~textAlign="center",
-          ()
+          (),
         )
       )>
       (ReasonReact.stringToElement(message))
@@ -104,6 +104,6 @@ let make = (~message, _children) => {
         (renderGraphic(rotationStyle))
       </svg>
     </div>;
-  }
+  },
   /* One of the ways to create JS Objects in Reason, through BuckleScript's `external`s */
 };
