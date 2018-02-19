@@ -92,15 +92,10 @@ let mergeDiff = [%raw
 |}
 ];
 
-/*module Fragment = {
-    [@bs.module "react"] external fragment : ReasonReact.reactClass = "Fragment";
-    let make = children =>
-      ReasonReact.wrapJsForReason(
-        ~reactClass=fragment,
-        ~props=Js.Obj.empty(),
-        children,
-      );
-  };
+/*mergeDiff(self.state |> Belt.List.toArray, keys |> Belt.List.toArray, onLeave, key =>
+    self.send(KillItem(key))
+  )
+  |> Belt.List.ofArray;
   */
 type animation =
   | Timeout(int)
@@ -108,53 +103,52 @@ type animation =
   | CSSClass(string, int);
 
 module RR2 = {
-  type action =
-    | KillItem(string);
-  let component = ReasonReact.reducerComponent("keyed");
-  let make = (~keys, ~f, ~onLeave, ()) => {
-    ...component,
-    initialState: () => keys,
-    willReceiveProps: self =>
-      mergeDiff(
-        self.state |> Belt.List.toArray, keys |> Belt.List.toArray, onLeave, (key) =>
-        self.send(KillItem(key))
-      )
-      |> Belt.List.ofArray,
-    reducer: (action, state) =>
-      switch (action) {
-      | KillItem(key) =>
-        Js.log2("received kill order", key);
-        let newState = Belt.List.keep(state, key1 => key1 !== key);
-        ReasonReact.Update(newState);
-      },
-    render: ({state}) => {
-      let children =
-        Belt.List.map(state, key => <div key> (f(key)) </div>)
-        |> Belt.List.toArray;
-      <div>
-        (ReasonReact.stringToElement("hi"))
-        (ReasonReact.arrayToElement(children))
-      </div>;
-    },
+  module Animated = {
+    type t =
+      | Mounting
+      | Mounted
+      | Unmounting;
   };
-  let dynamic = (~keys, ~onLeave, f) =>
-    ReasonReact.element(make(~keys, ~f, ~onLeave, ()));
 };
 
-[@bs.val] external unsafeJsonParse : string => 'a = "JSON.parse";
+[@bs.val] external unsafeJsonParse : string => list(TodoItem.todo) = "JSON.parse";
 
 let localStorageNamespace = "reason-react-todos";
 
-let saveLocally = todos =>
+let saveLocally = todos => {
+  let todos = Belt.List.map(todos, snd);
   switch (Js.Json.stringifyAny(todos)) {
   | None => ()
   | Some(stringifiedTodos) =>
-    Dom.Storage.(
-      localStorage |> setItem(localStorageNamespace, stringifiedTodos)
-    )
+    Dom.Storage.(localStorage |> setItem(localStorageNamespace, stringifiedTodos))
   };
+};
 
+/* TODO:
+
+   - new item animation
+   - deletion animation
+   - deletion while deleting animation
+   - delete item while it's being created
+   
+   - change view animation
+   - reorder animation
+
+   - filter items animation
+   - clear all animation
+
+   */
+/*[(t, a), (t2, c), (t3, b)]
+  [b, c]
+
+  willReceiveProps: a => {
+
+  }
+  */
 module Top = {
+  type howAnimatedIn =
+    | NewItem
+    | ChangedView;
   type action =
     | Navigate(TodoFooter.showingState)
     /* todo actions */
@@ -166,13 +160,14 @@ module Top = {
     | Save(TodoItem.todo, string)
     | Edit(TodoItem.todo)
     | Destroy(TodoItem.todo)
+    | TrulyDestroy(TodoItem.todo)
     | Toggle(TodoItem.todo)
     | ToggleAll(bool);
   type state = {
     nowShowing: TodoFooter.showingState,
     editing: option(string),
     newTodo: string,
-    todos: list(TodoItem.todo),
+    todos: list((RR2.Animated.t, TodoItem.todo)),
   };
   let urlToShownPage = hash =>
     switch (hash) {
@@ -183,6 +178,19 @@ module Top = {
   let component = ReasonReact.reducerComponent("TodoAppRe");
   let make = _children => {
     ...component,
+    initialState: () => {
+      let todos =
+        switch (Dom.Storage.(localStorage |> getItem(localStorageNamespace))) {
+        | None => []
+        | Some(todos) => unsafeJsonParse(todos)
+        };
+      {
+        nowShowing: urlToShownPage(ReasonReact.Router.dangerouslyGetInitialUrl().hash),
+        editing: None,
+        newTodo: "",
+        todos: Belt.List.map(todos, todo => (RR2.Animated.Mounted, todo)),
+      };
+    },
     reducer: (action, state) =>
       switch (action) {
       | Navigate(page) => ReasonReact.Update({...state, nowShowing: page})
@@ -196,134 +204,157 @@ module Top = {
           let todos =
             state.todos
             @ [
-              {
-                id: string_of_float(Js.Date.now()),
-                title: nonEmptyValue,
-                completed: false,
-              },
+              (
+                Mounting,
+                {id: string_of_float(Js.Date.now()), title: nonEmptyValue, completed: false},
+              ),
             ];
           saveLocally(todos);
           ReasonReact.Update({...state, newTodo: "", todos});
         }
       | ClearCompleted =>
+        /* TODO: what if we need a clear animation that's different from the typical unmounting one */
+        /*        let todos =
+                            Belt.List.filter(state.todos, todo =>
+                              switch (todo) {
+                              | Mounting(todo) => ! TodoItem.(todo.completed)
+                              | Mounted(todo) => ! TodoItem.(todo.completed)
+                              | Unmounting(todo) => ! TodoItem.(todo.completed)
+                              }
+                            );
+                  */
         let todos =
-          List.filter(todo => ! TodoItem.(todo.completed), state.todos);
-        ReasonReact.UpdateWithSideEffects(
-          {...state, todos},
-          (_self => saveLocally(todos)),
-        );
+          Belt.List.map(state.todos, ((transition, todo)) =>
+            switch (transition, todo) {
+            | (Mounting | Mounted | Unmounting, {completed: true}) => (
+                RR2.Animated.Unmounting,
+                todo,
+              )
+            | todo => todo
+            }
+          );
+        ReasonReact.UpdateWithSideEffects({...state, todos}, (_self => saveLocally(todos)));
       | ToggleAll(checked) =>
         let todos =
-          List.map(
-            todo => {...todo, TodoItem.completed: checked},
-            state.todos,
+          Belt.List.map(state.todos, ((transition, todo)) =>
+            (transition, {...todo, TodoItem.completed: checked})
           );
-        ReasonReact.UpdateWithSideEffects(
-          {...state, todos},
-          (_self => saveLocally(todos)),
-        );
+        ReasonReact.UpdateWithSideEffects({...state, todos}, (_self => saveLocally(todos)));
       | Save(todoToSave, text) =>
         let todos =
-          List.map(
-            todo =>
-              todo == todoToSave ? {...todo, TodoItem.title: text} : todo,
-            state.todos,
+          Belt.List.map(state.todos, ((transition, todo)) =>
+            todo == todoToSave ?
+              (transition, {...todo, TodoItem.title: text}) : (transition, todo)
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, editing: None, todos},
           (_self => saveLocally(todos)),
         );
-      | Edit(todo) =>
-        ReasonReact.Update({...state, editing: Some(TodoItem.(todo.id))})
+      | Edit(todo) => ReasonReact.Update({...state, editing: Some(TodoItem.(todo.id))})
       | Destroy(todo) =>
-        let todos = List.filter(candidate => candidate !== todo, state.todos);
-        ReasonReact.UpdateWithSideEffects(
-          {...state, todos},
-          (_self => saveLocally(todos)),
-        );
-      | Toggle(todoToToggle) =>
         let todos =
-          List.map(
-            todo =>
-              todo == todoToToggle ?
-                {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} :
-                todo,
-            state.todos,
+          Belt.List.map(state.todos, ((transition, candidate)) =>
+            if (candidate.id === todo.id) {
+              (RR2.Animated.Unmounting, candidate);
+            } else {
+              (transition, candidate);
+            }
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
-          (_self => saveLocally(todos)),
+          (
+            self => {
+              let todos =
+                Belt.List.keep(state.todos, ((_, candidate)) => candidate.id !== todo.id);
+              saveLocally(todos);
+              Js.Global.setTimeout(() => self.ReasonReact.send(TrulyDestroy(todo)), 5000)
+              |> ignore;
+            }
+          ),
         );
+      | TrulyDestroy(todo) =>
+        let todos = Belt.List.keep(state.todos, ((_, candidate)) => candidate.id !== todo.id);
+        ReasonReact.Update({...state, todos});
+      | Toggle(todoToToggle) =>
+        let todos =
+          Belt.List.map(state.todos, ((transition, todo)) =>
+            todo == todoToToggle ?
+              (transition, {...todo, TodoItem.completed: ! TodoItem.(todo.completed)}) :
+              (transition, todo)
+          );
+        ReasonReact.UpdateWithSideEffects({...state, todos}, (_self => saveLocally(todos)));
       },
-    initialState: () => {
-      let todos =
-        switch (Dom.Storage.(localStorage |> getItem(localStorageNamespace))) {
-        | None => []
-        | Some(todos) => unsafeJsonParse(todos)
-        };
-      {
-        nowShowing:
-          urlToShownPage(ReasonReact.Router.dangerouslyGetInitialUrl().hash),
-        editing: None,
-        newTodo: "",
-        todos,
-      };
-    },
     subscriptions: self => [
       Sub(
-        () =>
-          ReasonReact.Router.watchUrl(url =>
-            self.send(Navigate(urlToShownPage(url.hash)))
-          ),
+        () => ReasonReact.Router.watchUrl(url => self.send(Navigate(urlToShownPage(url.hash)))),
         ReasonReact.Router.unwatchUrl,
       ),
     ],
     /* router actions */
     render: ({state, send}) => {
       let {todos, editing} = state;
-      /*      let todoItems =
-                      todos
-                      |> List.filter(todo =>
-                           TodoItem.(
-                             switch (state.nowShowing) {
-                             | ActiveTodos => ! todo.completed
-                             | CompletedTodos => todo.completed
-                             | AllTodos => true
-                             }
-                           )
-                         )
-                      |> List.map(todo => {
-                           let editing =
-                             switch (editing) {
-                             | None => false
-                             | Some(editing) => editing === TodoItem.(todo.id)
-                             };
-                           <TodoItem
-                             key=todo.id
-                             todo
-                             onToggle=(_event => send(Toggle(todo)))
-                             onDestroy=(_event => send(Destroy(todo)))
-                             onEdit=(_event => send(Edit(todo)))
-                             editing
-                             onSave=(text => send(Save(todo, text)))
-                             onCancel=(_event => send(Cancel))
-                           />;
-                         });
-              */
-      let displayableTodoKeys =
-        Belt.List.keepMap(todos, todo =>
+      let todoItems =
+        Belt.List.keepMap(todos, ((transition, todo)) =>
           TodoItem.(
             switch (state.nowShowing, todo.completed) {
             | (ActiveTodos, false)
             | (CompletedTodos, true)
-            | (AllTodos, _) => Some(todo.id)
+            | (AllTodos, _) =>
+              let editing =
+                switch (editing) {
+                | None => false
+                | Some(editing) => editing === todo.id
+                };
+              let todo =
+                switch (transition) {
+                | Mounting =>
+                  <div key=todo.id className="fade-in">
+                    <div> (ReasonReact.stringToElement("imagine an animation here!")) </div>
+                    <TodoItem
+                      todo
+                      onToggle=(_event => send(Toggle(todo)))
+                      onDestroy=(_event => send(Destroy(todo)))
+                      onEdit=(_event => send(Edit(todo)))
+                      editing
+                      onSave=(text => send(Save(todo, text)))
+                      onCancel=(_event => send(Cancel))
+                    />
+                  </div>
+                | Unmounting =>
+                  <div key=todo.id className="fade-out">
+                    <div> (ReasonReact.stringToElement("unmounting!")) </div>
+                    <TodoItem
+                      todo
+                      onToggle=(_event => send(Toggle(todo)))
+                      onDestroy=(_event => send(Destroy(todo)))
+                      onEdit=(_event => send(Edit(todo)))
+                      editing
+                      onSave=(text => send(Save(todo, text)))
+                      onCancel=(_event => send(Cancel))
+                    />
+                  </div>
+                | _ =>
+                  <TodoItem
+                    key=todo.id
+                    todo
+                    onToggle=(_event => send(Toggle(todo)))
+                    onDestroy=(_event => send(Destroy(todo)))
+                    onEdit=(_event => send(Edit(todo)))
+                    editing
+                    onSave=(text => send(Save(todo, text)))
+                    onCancel=(_event => send(Cancel))
+                  />
+                };
+              Some(todo);
             | _ => None
             }
           )
-        );
+        )
+        |> Belt.List.toArray
+        |> ReasonReact.arrayToElement;
       let todosLength = List.length(todos);
       let completedCount =
-        todos |> List.filter(todo => TodoItem.(todo.completed)) |> List.length;
+        Belt.List.keep(todos, ((_, todo)) => TodoItem.(todo.completed)) |> List.length;
       let activeTodoCount = todosLength - completedCount;
       let footer =
         switch (activeTodoCount, completedCount) {
@@ -347,57 +378,14 @@ module Top = {
                 event => {
                   let checked =
                     Js.to_bool(
-                      ReactDOMRe.domElementToObj(
-                        ReactEventRe.Form.target(event),
-                      )##checked,
+                      ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##checked,
                     );
                   send(ToggleAll(checked));
                 }
               )
               checked=(Js.Boolean.to_js_boolean(activeTodoCount === 0))
             />
-            <ul className="todo-list">
-              (
-                RR2.dynamic(
-                  ~keys=displayableTodoKeys,
-                  ~onLeave=
-                    (i, b, cb) => {
-                      /* TODO: callbacks are nice but troublesome; might kill an item but it's already back */
-                      Js.log3("remove", i, b);
-                      Js.Global.setTimeout(
-                        () => {
-                          Js.log3("kill now: ", i, b);
-                          cb();
-                        },
-                        1000 * (i + 1),
-                      )
-                      |> ignore;
-                      Timeout(1000);
-                    },
-                  key => {
-                    let todo =
-                      switch (Belt.List.getBy(todos, ({id}) => id === key)) {
-                      | None => assert false
-                      | Some(todo) => todo
-                      };
-                    let editing =
-                      switch (editing) {
-                      | None => false
-                      | Some(editing) => editing === TodoItem.(todo.id)
-                      };
-                    <TodoItem
-                      todo
-                      onToggle=(_event => send(Toggle(todo)))
-                      onDestroy=(_event => send(Destroy(todo)))
-                      onEdit=(_event => send(Edit(todo)))
-                      editing
-                      onSave=(text => send(Save(todo, text)))
-                      onCancel=(_event => send(Cancel))
-                    />;
-                  },
-                )
-              )
-            </ul>
+            <ul className="todo-list"> todoItems </ul>
           </section>;
       <div>
         <header className="header">
@@ -419,9 +407,7 @@ module Top = {
               event =>
                 send(
                   ChangeTodo(
-                    ReactDOMRe.domElementToObj(
-                      ReactEventRe.Form.target(event),
-                    )##value,
+                    ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value,
                   ),
                 )
             )
