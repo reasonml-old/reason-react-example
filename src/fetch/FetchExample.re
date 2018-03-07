@@ -1,3 +1,6 @@
+/* The new stdlib additions */
+open Belt;
+
 type dog = string;
 
 type state =
@@ -13,7 +16,7 @@ type action =
 module Decode = {
   let dogs = json : array(dog) =>
     Json.Decode.(
-      json |> field("message", array(string)) |> Array.map(dog => dog)
+      json |> field("message", array(string)) |> Array.map(_, dog => dog)
     );
 };
 
@@ -66,10 +69,9 @@ let make = _children => {
         </a>
         <ul>
           (
-            dogs
-            |> Array.map(dog =>
-                 <li key=dog> (ReasonReact.stringToElement(dog)) </li>
-               )
+            Array.map(dogs, dog =>
+              <li key=dog> (ReasonReact.stringToElement(dog)) </li>
+            )
             |> ReasonReact.arrayToElement
           )
         </ul>

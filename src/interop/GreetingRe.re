@@ -25,7 +25,7 @@ let jsComponent =
   ReasonReact.wrapReasonForJs(~component, jsProps =>
     make(
       ~message=jsProps##message,
-      ~extraGreeting=?Js.Null_undefined.to_opt(jsProps##extraGreeting),
+      ~extraGreeting=?Js.Nullable.toOption(jsProps##extraGreeting),
       [||],
     )
   );

@@ -1,3 +1,6 @@
+/* The new stdlib additions */
+open Belt;
+
 [@bs.val] external unsafeJsonParse : string => 'a = "JSON.parse";
 
 let localStorageNamespace = "reason-react-todos";
@@ -64,16 +67,15 @@ module Top = {
         }
       | ClearCompleted =>
         let todos =
-          List.filter(todo => ! TodoItem.(todo.completed), state.todos);
+          List.keep(state.todos, todo => ! TodoItem.(todo.completed));
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
           (_self => saveLocally(todos)),
         );
       | ToggleAll(checked) =>
         let todos =
-          List.map(
-            todo => {...todo, TodoItem.completed: checked},
-            state.todos,
+          List.map(state.todos, todo =>
+            {...todo, TodoItem.completed: checked}
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
@@ -81,10 +83,8 @@ module Top = {
         );
       | Save(todoToSave, text) =>
         let todos =
-          List.map(
-            todo =>
-              todo == todoToSave ? {...todo, TodoItem.title: text} : todo,
-            state.todos,
+          List.map(state.todos, todo =>
+            todo == todoToSave ? {...todo, TodoItem.title: text} : todo
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, editing: None, todos},
@@ -93,19 +93,17 @@ module Top = {
       | Edit(todo) =>
         ReasonReact.Update({...state, editing: Some(TodoItem.(todo.id))})
       | Destroy(todo) =>
-        let todos = List.filter(candidate => candidate !== todo, state.todos);
+        let todos = List.keep(state.todos, candidate => candidate !== todo);
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
           (_self => saveLocally(todos)),
         );
       | Toggle(todoToToggle) =>
         let todos =
-          List.map(
-            todo =>
-              todo == todoToToggle ?
-                {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} :
-                todo,
-            state.todos,
+          List.map(state.todos, todo =>
+            todo == todoToToggle ?
+              {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} :
+              todo
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
@@ -139,36 +137,38 @@ module Top = {
     render: ({state, send}) => {
       let {todos, editing} = state;
       let todoItems =
-        todos
-        |> List.filter(todo =>
-             TodoItem.(
-               switch (state.nowShowing) {
-               | ActiveTodos => ! todo.completed
-               | CompletedTodos => todo.completed
-               | AllTodos => true
-               }
-             )
-           )
-        |> List.map(todo => {
-             let editing =
-               switch (editing) {
-               | None => false
-               | Some(editing) => editing === TodoItem.(todo.id)
-               };
-             <TodoItem
-               key=todo.id
-               todo
-               onToggle=(_event => send(Toggle(todo)))
-               onDestroy=(_event => send(Destroy(todo)))
-               onEdit=(_event => send(Edit(todo)))
-               editing
-               onSave=(text => send(Save(todo, text)))
-               onCancel=(_event => send(Cancel))
-             />;
-           });
+        List.keep(todos, todo =>
+          TodoItem.(
+            switch (state.nowShowing) {
+            | ActiveTodos => ! todo.completed
+            | CompletedTodos => todo.completed
+            | AllTodos => true
+            }
+          )
+        )
+        |> List.map(
+             _,
+             todo => {
+               let editing =
+                 switch (editing) {
+                 | None => false
+                 | Some(editing) => editing === TodoItem.(todo.id)
+                 };
+               <TodoItem
+                 key=todo.id
+                 todo
+                 onToggle=(_event => send(Toggle(todo)))
+                 onDestroy=(_event => send(Destroy(todo)))
+                 onEdit=(_event => send(Edit(todo)))
+                 editing
+                 onSave=(text => send(Save(todo, text)))
+                 onCancel=(_event => send(Cancel))
+               />;
+             },
+           );
       let todosLength = List.length(todos);
       let completedCount =
-        todos |> List.filter(todo => TodoItem.(todo.completed)) |> List.length;
+        List.keep(todos, todo => TodoItem.(todo.completed)) |> List.length;
       let activeTodoCount = todosLength - completedCount;
       let footer =
         switch (activeTodoCount, completedCount) {
@@ -202,7 +202,7 @@ module Top = {
               checked=(Js.Boolean.to_js_boolean(activeTodoCount === 0))
             />
             <ul className="todo-list">
-              (ReasonReact.arrayToElement(Array.of_list(todoItems)))
+              (ReasonReact.arrayToElement(List.toArray(todoItems)))
             </ul>
           </section>;
       <div>

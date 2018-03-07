@@ -19,7 +19,7 @@ type action =
 let component = ReasonReact.reducerComponent("TodoItemRe");
 
 let setEditFieldRef = (r, {ReasonReact.state}) =>
-  state.editFieldRef := Js.Nullable.to_opt(r);
+  state.editFieldRef := Js.Nullable.toOption(r);
 
 let make =
     (
