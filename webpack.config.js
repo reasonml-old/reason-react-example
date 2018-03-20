@@ -1,5 +1,7 @@
 const path = require('path');
 
+const isProd = process.env.NODE_ENV === 'production';
+
 module.exports = {
   entry: {
     async: './lib/js/src/async/CounterRoot.js',
@@ -10,6 +12,7 @@ module.exports = {
     interop: './src/interop/InteropRoot.js',
     retainedProps: './lib/js/src/retainedProps/RetainedPropsRoot.js',
   },
+  mode: isProd ? 'production' : 'development',
   output: {
     path: path.join(__dirname, "bundledOutputs"),
     filename: '[name].js',

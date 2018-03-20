@@ -6,19 +6,34 @@ git clone https://github.com/chenglou/reason-react-example.git
 cd reason-react-example
 npm install
 npm run build
+npm run webpack
 ```
 
-Then open `src/index.html` to see the links to the examples (**no server needed!**). 
+Then open `src/index.html` to see the links to the examples (**no server needed!**).
 
-To keep a watcher open, do:
+## Watch File Changes
+
+The above commands works for a one-time build. To continuously build when a file changes, do:
 
 ```sh
 npm start
 ```
 
-In another tab, also do
+Then in another tab, do:
+
 ```sh
 npm run webpack
 ```
 
-This builds and watches the files. You can then modify whichever file in `src` and refresh the page to see the changes.
+You can then modify whichever file in `src` and refresh the html page to see the changes.
+
+## Build for Production
+
+```sh
+npm run build
+npm run webpack:production
+```
+
+This will replace the development JS artifact for an optimized version.
+
+**To enable dead code elimination**, change `bsconfig.json`'s `package-specs` `module` from `"commonjs"` to `"es6"`. Then re-run the above 2 commands. This will allow Webpack to remove unused code.
