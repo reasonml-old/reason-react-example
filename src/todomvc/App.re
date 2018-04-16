@@ -191,15 +191,13 @@ module Top = {
               onChange=(
                 event => {
                   let checked =
-                    Js.to_bool(
-                      ReactDOMRe.domElementToObj(
-                        ReactEventRe.Form.target(event),
-                      )##checked,
-                    );
+                    ReactDOMRe.domElementToObj(
+                      ReactEventRe.Form.target(event),
+                    )##checked;
                   send(ToggleAll(checked));
                 }
               )
-              checked=(Js.Boolean.to_js_boolean(activeTodoCount === 0))
+              checked=(activeTodoCount === 0)
             />
             <ul className="todo-list">
               (ReasonReact.arrayToElement(List.toArray(todoItems)))
@@ -231,7 +229,7 @@ module Top = {
                   ),
                 )
             )
-            autoFocus=Js.true_
+            autoFocus=true
           />
         </header>
         main

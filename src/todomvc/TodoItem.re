@@ -87,7 +87,7 @@ let make =
           <input
             className="toggle"
             _type="checkbox"
-            checked=(Js.Boolean.to_js_boolean(todo.completed))
+            checked=(todo.completed)
             onChange=((_) => onToggle())
           />
           <label
