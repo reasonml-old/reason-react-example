@@ -20,7 +20,7 @@
     "bs-fetch": "^0.2.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason-react": "^0.3.4",
+    "reason-react": "^0.4.0",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.1"
   },

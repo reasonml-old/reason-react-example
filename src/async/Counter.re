@@ -23,5 +23,5 @@ let make = _children => {
     ),
   ],
   render: ({state}) =>
-    <div> (ReasonReact.stringToElement(string_of_int(state.count))) </div>,
+    <div> (ReasonReact.string(string_of_int(state.count))) </div>,
 };

@@ -18,9 +18,9 @@ let make =
     let clearButton =
       completedCount > 0 ?
         <button className="clear-completed" onClick=onClearCompleted>
-          (ReasonReact.stringToElement("Clear completed"))
+          (ReasonReact.string("Clear completed"))
         </button> :
-        ReasonReact.nullElement;
+        ReasonReact.null;
     let (all, active, completed) =
       switch (nowShowing) {
       | AllTodos => ("selected", "", "")
@@ -29,27 +29,25 @@ let make =
       };
     <footer className="footer">
       <span className="todo-count">
-        <strong>
-          (ReasonReact.stringToElement(string_of_int(count)))
-        </strong>
-        (ReasonReact.stringToElement(" " ++ activeTodoWord ++ " left"))
+        <strong> (ReasonReact.string(string_of_int(count))) </strong>
+        (ReasonReact.string(" " ++ activeTodoWord ++ " left"))
       </span>
       <ul className="filters">
         <li>
           <a onClick=(push("")) className=all>
-            (ReasonReact.stringToElement("All"))
+            (ReasonReact.string("All"))
           </a>
         </li>
-        (ReasonReact.stringToElement(" "))
+        (ReasonReact.string(" "))
         <li>
           <a onClick=(push("active")) className=active>
-            (ReasonReact.stringToElement("Active"))
+            (ReasonReact.string("Active"))
           </a>
         </li>
-        (ReasonReact.stringToElement(" "))
+        (ReasonReact.string(" "))
         <li>
           <a onClick=(push("completed")) className=completed>
-            (ReasonReact.stringToElement("Completed"))
+            (ReasonReact.string("Completed"))
           </a>
         </li>
       </ul>

@@ -51,28 +51,24 @@ let make = _children => {
     | DogsFetched(dogs) => ReasonReact.Update(Loaded(dogs))
     | DogsFailedToFetch => ReasonReact.Update(Error)
     },
-  didMount: self => {
-    self.send(DogsFetch);
-    ReasonReact.NoUpdate;
-  },
+  didMount: self => self.send(DogsFetch),
   render: self =>
     switch (self.state) {
-    | Error =>
-      <div> (ReasonReact.stringToElement("An error occurred!")) </div>
-    | Loading => <div> (ReasonReact.stringToElement("Loading...")) </div>
+    | Error => <div> (ReasonReact.string("An error occurred!")) </div>
+    | Loading => <div> (ReasonReact.string("Loading...")) </div>
     | Loaded(dogs) =>
       <div>
-        <h1> (ReasonReact.stringToElement("Dogs")) </h1>
-        <p> (ReasonReact.stringToElement("Source: ")) </p>
+        <h1> (ReasonReact.string("Dogs")) </h1>
+        <p> (ReasonReact.string("Source: ")) </p>
         <a href="https://dog.ceo">
-          (ReasonReact.stringToElement("https://dog.ceo"))
+          (ReasonReact.string("https://dog.ceo"))
         </a>
         <ul>
           (
             Array.map(dogs, dog =>
-              <li key=dog> (ReasonReact.stringToElement(dog)) </li>
+              <li key=dog> (ReasonReact.string(dog)) </li>
             )
-            |> ReasonReact.arrayToElement
+            |> ReasonReact.array
           )
         </ul>
       </div>

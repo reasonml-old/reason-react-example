@@ -172,7 +172,7 @@ module Top = {
       let activeTodoCount = todosLength - completedCount;
       let footer =
         switch (activeTodoCount, completedCount) {
-        | (0, 0) => ReasonReact.nullElement
+        | (0, 0) => ReasonReact.null
         | _ =>
           <TodoFooter
             count=activeTodoCount
@@ -183,29 +183,28 @@ module Top = {
         };
       let main =
         todosLength === 0 ?
-          ReasonReact.nullElement :
+          ReasonReact.null :
           <section className="main">
             <input
               className="toggle-all"
               _type="checkbox"
               onChange=(
                 event => {
-                  let checked =
-                    ReactDOMRe.domElementToObj(
-                      ReactEventRe.Form.target(event),
-                    )##checked;
+                  let checked = ReactDOMRe.domElementToObj(
+                                  ReactEventRe.Form.target(event),
+                                )##checked;
                   send(ToggleAll(checked));
                 }
               )
               checked=(activeTodoCount === 0)
             />
             <ul className="todo-list">
-              (ReasonReact.arrayToElement(List.toArray(todoItems)))
+              (ReasonReact.array(List.toArray(todoItems)))
             </ul>
           </section>;
       <div>
         <header className="header">
-          <h1> (ReasonReact.stringToElement("todos")) </h1>
+          <h1> (ReasonReact.string("todos")) </h1>
           <input
             className="new-todo"
             placeholder="What needs to be done?"

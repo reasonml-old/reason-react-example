@@ -87,7 +87,7 @@ let make =
           <input
             className="toggle"
             _type="checkbox"
-            checked=(todo.completed)
+            checked=todo.completed
             onChange=((_) => onToggle())
           />
           <label
@@ -97,7 +97,7 @@ let make =
                 send(Edit);
               }
             )>
-            (ReasonReact.stringToElement(todo.title))
+            (ReasonReact.string(todo.title))
           </label>
           <button className="destroy" onClick=((_) => onDestroy()) />
         </div>

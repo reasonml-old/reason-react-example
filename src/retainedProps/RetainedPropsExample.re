@@ -14,6 +14,6 @@ let make = (~message, _children) => {
     if (oldSelf.retainedProps.message !== newSelf.retainedProps.message) {
       Js.log("props `message` changed!");
     },
-  render: _self => <div> (ReasonReact.stringToElement(message)) </div>,
+  render: _self => <div> (ReasonReact.string(message)) </div>,
   /* do whatever sneaky imperative things here */
 };
