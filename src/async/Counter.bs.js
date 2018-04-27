@@ -13,7 +13,15 @@ function make() {
           /* reactClassInternal */component[/* reactClassInternal */1],
           /* handedOffState */component[/* handedOffState */2],
           /* willReceiveProps */component[/* willReceiveProps */3],
-          /* didMount */component[/* didMount */4],
+          /* didMount */(function (self) {
+              var intervalId = setInterval((function () {
+                      return Curry._1(self[/* send */3], /* Tick */0);
+                    }), 1000);
+              return Curry._1(self[/* onUnmount */4], (function () {
+                            clearInterval(intervalId);
+                            return /* () */0;
+                          }));
+            }),
           /* didUpdate */component[/* didUpdate */5],
           /* willUnmount */component[/* willUnmount */6],
           /* willUpdate */component[/* willUpdate */7],
@@ -28,22 +36,7 @@ function make() {
           /* reducer */(function (_, state) {
               return /* Update */Block.__(0, [/* record */[/* count */state[/* count */0] + 1 | 0]]);
             }),
-          /* subscriptions */(function (self) {
-              return /* :: */[
-                      /* Sub */[
-                        (function () {
-                            return setInterval((function () {
-                                          return Curry._1(self[/* send */3], /* Tick */0);
-                                        }), 1000);
-                          }),
-                        (function (prim) {
-                            clearInterval(prim);
-                            return /* () */0;
-                          })
-                      ],
-                      /* [] */0
-                    ];
-            }),
+          /* subscriptions */component[/* subscriptions */13],
           /* jsElementWrapped */component[/* jsElementWrapped */14]
         ];
 }

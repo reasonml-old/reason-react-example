@@ -16,12 +16,10 @@ let make = _children => {
     switch (action) {
     | Tick => ReasonReact.Update({count: state.count + 1})
     },
-  subscriptions: self => [
-    Sub(
-      () => Js.Global.setInterval(() => self.send(Tick), 1000),
-      Js.Global.clearInterval,
-    ),
-  ],
+  didMount: self => {
+    let intervalId = Js.Global.setInterval(() => self.send(Tick), 1000);
+    self.onUnmount(() => Js.Global.clearInterval(intervalId));
+  },
   render: ({state}) =>
     <div> (ReasonReact.string(string_of_int(state.count))) </div>,
 };
