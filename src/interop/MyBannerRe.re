@@ -5,7 +5,7 @@
 /* This isn't ideal; but if you turn on in-source js generation (check this file's bsconfig.json then you'd only need `"./MyBanner"`) */
 [@bs.module]
 external myBanner : ReasonReact.reactClass =
-  "../../../../src/interop/MyBanner";
+  "./MyBanner";
 
 /* This is like declaring a normal ReasonReact component's `make` function, except the body is a the interop hook wrapJsForReason */
 let make = (~show, ~message, children) =>
