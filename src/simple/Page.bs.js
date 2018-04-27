@@ -1,13 +1,17 @@
 'use strict';
 
+var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
-var MyBannerRe = require("./MyBannerRe.js");
-var ReasonReact = require("reason-react/lib/js/src/ReasonReact.js");
-var Js_primitive = require("bs-platform/lib/js/js_primitive.js");
+var ReasonReact = require("reason-react/src/ReasonReact.js");
 
-var component = ReasonReact.statelessComponent("PageReason");
+var component = ReasonReact.statelessComponent("Page");
 
-function make(message, extraGreeting, _) {
+function handleClick(_, _$1) {
+  console.log("clicked!");
+  return /* () */0;
+}
+
+function make(message, _) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -18,9 +22,10 @@ function make(message, extraGreeting, _) {
           /* willUnmount */component[/* willUnmount */6],
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
-          /* render */(function () {
-              var greeting = extraGreeting ? extraGreeting[0] : "How are you?";
-              return React.createElement("div", undefined, ReasonReact.element(/* None */0, /* None */0, MyBannerRe.make(true, message + (" " + greeting), /* array */[])));
+          /* render */(function (self) {
+              return React.createElement("div", {
+                          onClick: Curry._1(self[/* handle */0], handleClick)
+                        }, message);
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
@@ -30,11 +35,7 @@ function make(message, extraGreeting, _) {
         ];
 }
 
-var jsComponent = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(jsProps.message, Js_primitive.null_undefined_to_opt(jsProps.extraGreeting), /* array */[]);
-      }));
-
 exports.component = component;
+exports.handleClick = handleClick;
 exports.make = make;
-exports.jsComponent = jsComponent;
 /* component Not a pure module */

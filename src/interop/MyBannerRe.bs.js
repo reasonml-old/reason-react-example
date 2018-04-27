@@ -1,6 +1,6 @@
 'use strict';
 
-var ReasonReact = require("reason-react/lib/js/src/ReasonReact.js");
+var ReasonReact = require("reason-react/src/ReasonReact.js");
 var MyBanner = require("../../../../src/interop/MyBanner");
 
 function make(show, message, children) {

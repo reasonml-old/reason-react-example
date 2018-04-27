@@ -5,12 +5,12 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var $$String = require("bs-platform/lib/js/string.js");
 var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
-var TodoItem = require("./TodoItem.js");
+var TodoItem = require("./TodoItem.bs.js");
 var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var Pervasives = require("bs-platform/lib/js/pervasives.js");
-var ReactDOMRe = require("reason-react/lib/js/src/ReactDOMRe.js");
-var TodoFooter = require("./TodoFooter.js");
-var ReasonReact = require("reason-react/lib/js/src/ReasonReact.js");
+var ReactDOMRe = require("reason-react/src/ReactDOMRe.js");
+var TodoFooter = require("./TodoFooter.bs.js");
+var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var localStorageNamespace = "reason-react-todos";
 

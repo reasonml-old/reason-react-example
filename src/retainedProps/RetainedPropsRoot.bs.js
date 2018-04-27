@@ -1,8 +1,8 @@
 'use strict';
 
-var ReactDOMRe = require("reason-react/lib/js/src/ReactDOMRe.js");
-var ReasonReact = require("reason-react/lib/js/src/ReasonReact.js");
-var RetainedPropsExample = require("./RetainedPropsExample.js");
+var ReactDOMRe = require("reason-react/src/ReactDOMRe.js");
+var ReasonReact = require("reason-react/src/ReasonReact.js");
+var RetainedPropsExample = require("./RetainedPropsExample.bs.js");
 
 var toggle = [false];
 

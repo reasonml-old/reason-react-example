@@ -4,8 +4,8 @@ var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
-var Json_decode = require("@glennsl/bs-json/lib/js/src/Json_decode.bs.js");
-var ReasonReact = require("reason-react/lib/js/src/ReasonReact.js");
+var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
+var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 function dogs(json) {
   var __x = Json_decode.field("message", (function (param) {

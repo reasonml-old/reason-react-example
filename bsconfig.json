@@ -13,10 +13,10 @@
       "subdirs": true
     }
   ],
-  // here's a config to make the JS artifacts output alongside your Reason files:
-  // "package-specs": {
-  //   "module": "commonjs",
-  //   "in-source": true,
-  // },
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true,
+  },
+  "suffix": ".bs.js",
   "refmt": 3
 }

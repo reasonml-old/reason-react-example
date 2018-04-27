@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require("react");
-var ReasonReact = require("reason-react/lib/js/src/ReasonReact.js");
+var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("TodoFooterRe");
 

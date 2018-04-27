@@ -4,12 +4,12 @@ const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
   entry: {
-    async: './lib/js/src/async/CounterRoot.js',
-    simple: './lib/js/src/simple/SimpleRoot.js',
-    fetch: './lib/js/src/fetch/FetchExampleRoot.js',
-    todomvc: './lib/js/src/todomvc/App.js',
+    async: './src/async/CounterRoot.js',
+    simple: './src/simple/SimpleRoot.js',
+    fetch: './src/fetch/FetchExampleRoot.js',
+    todomvc: './src/todomvc/App.js',
     interop: './src/interop/InteropRoot.js',
-    retainedProps: './lib/js/src/retainedProps/RetainedPropsRoot.js',
+    retainedProps: './src/retainedProps/RetainedPropsRoot.js',
   },
   mode: isProd ? 'production' : 'development',
   output: {
