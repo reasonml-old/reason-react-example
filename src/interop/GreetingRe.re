@@ -15,6 +15,12 @@ let make = (~message, ~extraGreeting=?, _children) => {
   },
 };
 
+[@bs.deriving abstract]
+type jsProps = {
+  message: string,
+  extraGreeting: Js.nullable(string),
+};
+
 /* This exposes a `jsComponent` that the ReactJS side can use as
    require('greetingRe.js').jsComponent
 
@@ -24,8 +30,8 @@ let make = (~message, ~extraGreeting=?, _children) => {
 let jsComponent =
   ReasonReact.wrapReasonForJs(~component, jsProps =>
     make(
-      ~message=jsProps##message,
-      ~extraGreeting=?Js.Nullable.toOption(jsProps##extraGreeting),
+      ~message=jsProps |. message,
+      ~extraGreeting=?Js.Nullable.toOption(jsProps |. extraGreeting),
       [||],
     )
   );
