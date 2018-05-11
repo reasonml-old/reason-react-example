@@ -23,7 +23,7 @@ function make(message, _) {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (self) {
-              return React.createElement("div", {
+              return React.createElement("button", {
                           onClick: Curry._1(self[/* handle */0], handleClick)
                         }, message);
             }),
