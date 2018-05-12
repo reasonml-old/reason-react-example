@@ -10,6 +10,7 @@ module.exports = {
     todomvc: './src/todomvc/App.bs.js',
     interop: './src/interop/InteropRoot.js',
     retainedProps: './src/retainedProps/RetainedPropsRoot.bs.js',
+    animation: './src/animation/AnimationRoot.bs.js',
   },
   mode: isProd ? 'production' : 'development',
   output: {
