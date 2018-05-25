@@ -15,17 +15,22 @@ let make = (~message, ~extraGreeting=?, _children) => {
   },
 };
 
-/* This exposes a `jsComponent` that the ReactJS side can use as
-   require('greetingRe.js').jsComponent
+/* The following exposes a `jsComponent` that the ReactJS side can use as
+   require('greetingRe.js').jsComponent */
+[@bs.deriving abstract]
+type jsProps = {
+  message: string,
+  extraGreeting: Js.nullable(string),
+};
 
-   if **you know what you're doing** and have
+/* if **you know what you're doing** and have
    the correct babel/webpack setup, you can also do `let default = ...` and use it
    on the JS side as a default export. */
 let jsComponent =
   ReasonReact.wrapReasonForJs(~component, jsProps =>
     make(
-      ~message=jsProps##message,
-      ~extraGreeting=?Js.Nullable.toOption(jsProps##extraGreeting),
+      ~message=jsProps |. message,
+      ~extraGreeting=?Js.Nullable.toOption(jsProps |. extraGreeting),
       [||],
     )
   );
