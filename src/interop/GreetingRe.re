@@ -11,7 +11,7 @@ let make = (~message, ~extraGreeting=?, _children) => {
       | None => "How are you?"
       | Some(g) => g
       };
-    <div> <MyBannerRe show=true message=(message ++ " " ++ greeting) /> </div>;
+    <div> <MyBannerRe show=true message={message ++ " " ++ greeting} /> </div>;
   },
 };
 
