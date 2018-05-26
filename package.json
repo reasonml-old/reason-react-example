@@ -25,7 +25,7 @@
     "todomvc-common": "^1.0.1"
   },
   "devDependencies": {
-    "bs-platform": "^3.1.0",
+    "bs-platform": "^3.1.4",
     "concurrently": "^3.5.0",
     "webpack": "^4.0.1",
     "webpack-cli": "^2.0.10"
