@@ -19,8 +19,8 @@ function make(message, extraGreeting, _) {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              var greeting = extraGreeting ? extraGreeting[0] : "How are you?";
-              return React.createElement("div", undefined, ReasonReact.element(/* None */0, /* None */0, MyBannerRe.make(true, message + (" " + greeting), /* array */[])));
+              var greeting = extraGreeting !== undefined ? extraGreeting : "How are you?";
+              return React.createElement("div", undefined, ReasonReact.element(undefined, undefined, MyBannerRe.make(true, message + (" " + greeting), /* array */[])));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
@@ -31,7 +31,7 @@ function make(message, extraGreeting, _) {
 }
 
 var jsComponent = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(jsProps.message, Js_primitive.null_undefined_to_opt(jsProps.extraGreeting), /* array */[]);
+        return make(jsProps.message, Js_primitive.nullable_to_opt(jsProps.extraGreeting), /* array */[]);
       }));
 
 exports.component = component;

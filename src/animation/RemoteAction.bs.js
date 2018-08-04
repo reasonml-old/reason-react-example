@@ -13,10 +13,9 @@ function create() {
 function subscribe(send, x) {
   if (x[/* send */0] === sendDefault) {
     x[/* send */0] = send;
-    return /* Some */[x];
-  } else {
-    return /* None */0;
+    return x;
   }
+  
 }
 
 function unsubscribe(x) {

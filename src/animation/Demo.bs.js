@@ -7,6 +7,7 @@ var Printf = require("bs-platform/lib/js/printf.js");
 var $$String = require("bs-platform/lib/js/string.js");
 var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
+var Js_primitive = require("bs-platform/lib/js/js_primitive.js");
 var RemoteAction = require("./RemoteAction.bs.js");
 var SpringAnimation = require("./SpringAnimation.bs.js");
 
@@ -172,7 +173,7 @@ function make$3() {
               var send = param[/* send */3];
               var state = param[/* state */1];
               var update = Curry.__1(send);
-              return React.createElement("div", undefined, ReasonReact.element(/* None */0, /* None */0, make(state, update, /* array */[])), ReasonReact.element(/* None */0, /* None */0, make$1(state, update, /* array */[])), ReasonReact.element(/* None */0, /* None */0, make$1(state, update, /* array */[])), ReasonReact.element(/* None */0, /* None */0, make$2(state, update, /* array */[])));
+              return React.createElement("div", undefined, ReasonReact.element(undefined, undefined, make(state, update, /* array */[])), ReasonReact.element(undefined, undefined, make$1(state, update, /* array */[])), ReasonReact.element(undefined, undefined, make$1(state, update, /* array */[])), ReasonReact.element(undefined, undefined, make$2(state, update, /* array */[])));
             }),
           /* initialState */(function () {
               return initial;
@@ -289,7 +290,7 @@ function make$6() {
           /* willUpdate */component$6[/* willUpdate */7],
           /* shouldUpdate */component$6[/* shouldUpdate */8],
           /* render */(function () {
-              return React.createElement("div", undefined, ReasonReact.element(/* None */0, /* None */0, make$4(/* array */[])), ReasonReact.element(/* None */0, /* None */0, make$4(/* array */[])), ReasonReact.element(/* None */0, /* None */0, make$4(/* array */[])), ReasonReact.element(/* None */0, /* None */0, make$5(/* array */[])));
+              return React.createElement("div", undefined, ReasonReact.element(undefined, undefined, make$4(/* array */[])), ReasonReact.element(undefined, undefined, make$4(/* array */[])), ReasonReact.element(undefined, undefined, make$4(/* array */[])), ReasonReact.element(undefined, undefined, make$5(/* array */[])));
             }),
           /* initialState */component$6[/* initialState */10],
           /* retainedProps */component$6[/* retainedProps */11],
@@ -311,13 +312,13 @@ function textOfEvent(e) {
 }
 
 function make$7($staropt$star, $staropt$star$1, $staropt$star$2, _) {
-  var onChange = $staropt$star ? $staropt$star[0] : (function () {
+  var onChange = $staropt$star !== undefined ? $staropt$star : (function () {
         return /* () */0;
       });
-  var showText = $staropt$star$1 ? $staropt$star$1[0] : (function (x) {
+  var showText = $staropt$star$1 !== undefined ? $staropt$star$1 : (function (x) {
         return x;
       });
-  var initial = $staropt$star$2 ? $staropt$star$2[0] : "";
+  var initial = $staropt$star$2 !== undefined ? $staropt$star$2 : "";
   return /* record */[
           /* debugName */component$7[/* debugName */0],
           /* reactClassInternal */component$7[/* reactClassInternal */1],
@@ -372,12 +373,12 @@ function make$8(renderValue, _) {
               var arg = function (value) {
                 return Curry._1(send, /* Value */[value]);
               };
-              var arg$1 = /* Some */[state[/* target */2]];
+              var arg$1 = state[/* target */2];
               Curry._1((function (param, param$1, param$2, param$3) {
                         return (function (param$4) {
                             return SpringAnimation.setOnChange(param, param$1, param$2, param$3, arg, arg$1, param$4);
                           });
-                      })(/* None */0, /* None */0, /* None */0, /* None */0), eta);
+                      })(undefined, undefined, undefined, undefined), eta);
               return Curry._1(param[/* onUnmount */4], (function () {
                             return SpringAnimation.stop(state[/* animation */0]);
                           }));
@@ -464,7 +465,7 @@ function make$9() {
           /* willUpdate */component$9[/* willUpdate */7],
           /* shouldUpdate */component$9[/* shouldUpdate */8],
           /* render */(function () {
-              return ReasonReact.element(/* None */0, /* None */0, make$8(renderValue, /* array */[]));
+              return ReasonReact.element(undefined, undefined, make$8(renderValue, /* array */[]));
             }),
           /* initialState */component$9[/* initialState */10],
           /* retainedProps */component$9[/* retainedProps */11],
@@ -491,9 +492,9 @@ function shrinkText(text, value) {
 }
 
 function renderValue$1(value) {
-  return ReasonReact.element(/* None */0, /* None */0, make$7(/* None */0, /* Some */[(function (text) {
-                      return shrinkText(text, value);
-                    })], /* Some */["edit this or click target"], /* array */[]));
+  return ReasonReact.element(undefined, undefined, make$7(undefined, (function (text) {
+                    return shrinkText(text, value);
+                  }), "edit this or click target", /* array */[]));
 }
 
 var component$10 = ReasonReact.statelessComponent("AnimatedTextInput");
@@ -510,7 +511,7 @@ function make$10() {
           /* willUpdate */component$10[/* willUpdate */7],
           /* shouldUpdate */component$10[/* shouldUpdate */8],
           /* render */(function () {
-              return ReasonReact.element(/* None */0, /* None */0, make$8(renderValue$1, /* array */[]));
+              return ReasonReact.element(undefined, undefined, make$8(renderValue$1, /* array */[]));
             }),
           /* initialState */component$10[/* initialState */10],
           /* retainedProps */component$10[/* retainedProps */11],
@@ -534,13 +535,13 @@ function textOfEvent$1(e) {
 }
 
 function make$11(remoteAction, $staropt$star, $staropt$star$1, $staropt$star$2, _) {
-  var onChange = $staropt$star ? $staropt$star[0] : (function () {
+  var onChange = $staropt$star !== undefined ? $staropt$star : (function () {
         return /* () */0;
       });
-  var showText = $staropt$star$1 ? $staropt$star$1[0] : (function (x) {
+  var showText = $staropt$star$1 !== undefined ? $staropt$star$1 : (function (x) {
         return x;
       });
-  var initial = $staropt$star$2 ? $staropt$star$2[0] : "";
+  var initial = $staropt$star$2 !== undefined ? $staropt$star$2 : "";
   return /* record */[
           /* debugName */component$11[/* debugName */0],
           /* reactClassInternal */component$11[/* reactClassInternal */1],
@@ -549,8 +550,8 @@ function make$11(remoteAction, $staropt$star, $staropt$star$1, $staropt$star$2, 
           /* didMount */(function (param) {
               var token = RemoteAction.subscribe(param[/* send */3], remoteAction);
               return Curry._1(param[/* onUnmount */4], (function () {
-                            if (token) {
-                              return RemoteAction.unsubscribe(token[0]);
+                            if (token !== undefined) {
+                              return RemoteAction.unsubscribe(Js_primitive.valFromOption(token));
                             } else {
                               return /* () */0;
                             }
@@ -606,9 +607,9 @@ function shrinkText$1(text, value) {
 var remoteAction = RemoteAction.create(/* () */0);
 
 function renderValue$2(value) {
-  return ReasonReact.element(/* None */0, /* None */0, make$11(remoteAction, /* None */0, /* Some */[(function (text) {
-                      return shrinkText$1(text, value);
-                    })], /* Some */["edit this or click target"], /* array */[]));
+  return ReasonReact.element(undefined, undefined, make$11(remoteAction, undefined, (function (text) {
+                    return shrinkText$1(text, value);
+                  }), "edit this or click target", /* array */[]));
 }
 
 var component$12 = ReasonReact.statelessComponent("AnimatedTextInput");
@@ -629,7 +630,7 @@ function make$12() {
                               onClick: (function () {
                                   return RemoteAction.send(remoteAction, /* Reset */0);
                                 })
-                            }, "reset text"), React.createElement("div", undefined, "-----"), ReasonReact.element(/* None */0, /* None */0, make$8(renderValue$2, /* array */[])));
+                            }, "reset text"), React.createElement("div", undefined, "-----"), ReasonReact.element(undefined, undefined, make$8(renderValue$2, /* array */[])));
             }),
           /* initialState */component$12[/* initialState */10],
           /* retainedProps */component$12[/* retainedProps */11],
@@ -658,8 +659,8 @@ function make$13(remoteAction, _) {
           /* didMount */(function (param) {
               var token = RemoteAction.subscribe(param[/* send */3], remoteAction);
               return Curry._1(param[/* onUnmount */4], (function () {
-                            if (token) {
-                              return RemoteAction.unsubscribe(token[0]);
+                            if (token !== undefined) {
+                              return RemoteAction.unsubscribe(Js_primitive.valFromOption(token));
                             } else {
                               return /* () */0;
                             }
@@ -707,7 +708,7 @@ function make$14(remoteAction, _) {
           /* willUpdate */component$14[/* willUpdate */7],
           /* shouldUpdate */component$14[/* shouldUpdate */8],
           /* render */(function () {
-              return React.createElement("div", undefined, "in child", ReasonReact.element(/* None */0, /* None */0, make$13(remoteAction, /* array */[])));
+              return React.createElement("div", undefined, "in child", ReasonReact.element(undefined, undefined, make$13(remoteAction, /* array */[])));
             }),
           /* initialState */component$14[/* initialState */10],
           /* retainedProps */component$14[/* retainedProps */11],
@@ -741,7 +742,7 @@ function make$15() {
                               onClick: (function () {
                                   return RemoteAction.send(state, /* Incr */0);
                                 })
-                            }, "in parent"), ReasonReact.element(/* None */0, /* None */0, make$14(state, /* array */[])));
+                            }, "in parent"), ReasonReact.element(undefined, undefined, make$14(state, /* array */[])));
             }),
           /* initialState */(function () {
               return RemoteAction.create(/* () */0);

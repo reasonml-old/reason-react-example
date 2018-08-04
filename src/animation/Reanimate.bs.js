@@ -14,6 +14,7 @@ var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Caml_int32 = require("bs-platform/lib/js/caml_int32.js");
 var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
+var Js_primitive = require("bs-platform/lib/js/js_primitive.js");
 var RemoteAction = require("./RemoteAction.bs.js");
 var SpringAnimation = require("./SpringAnimation.bs.js");
 var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exceptions.js");
@@ -26,7 +27,7 @@ function pxF(v) {
   return String(v | 0) + "px";
 }
 
-var counter = [0];
+var counter = /* record */[/* contents */0];
 
 function gen() {
   counter[0] = counter[0] + 1 | 0;
@@ -120,8 +121,8 @@ var ImageTransition = /* module */[
 var component = ReasonReact.reducerComponent("ImagesExample");
 
 function make($staropt$star, $staropt$star$1, _) {
-  var initialImage = $staropt$star ? $staropt$star[0] : 0;
-  var animateMount = $staropt$star$1 ? $staropt$star$1[0] : true;
+  var initialImage = $staropt$star !== undefined ? $staropt$star : 0;
+  var animateMount = $staropt$star$1 !== undefined ? $staropt$star$1 : true;
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -133,8 +134,8 @@ function make($staropt$star, $staropt$star$1, _) {
                 return Curry._1(send, /* SetCursor */[cursor]);
               };
               Curry._2((function (param, param$1, param$2) {
-                        return Curry._5(SpringAnimation.setOnChange, param, param$1, /* Some */[0.05], param$2, arg);
-                      })(/* None */0, /* None */0, /* None */0), /* None */0, param[/* state */1][/* animation */0]);
+                        return Curry._5(SpringAnimation.setOnChange, param, param$1, 0.05, param$2, arg);
+                      })(undefined, undefined, undefined), undefined, param[/* state */1][/* animation */0]);
               if (animateMount) {
                 return Curry._1(send, /* Click */0);
               } else {
@@ -229,8 +230,8 @@ var Text = /* module */[
 var component$2 = ReasonReact.reducerComponent("ButtonAnimation");
 
 function make$2($staropt$star, rAction, $staropt$star$1, onClose, _) {
-  var text = $staropt$star ? $staropt$star[0] : "Button";
-  var animateMount = $staropt$star$1 ? $staropt$star$1[0] : true;
+  var text = $staropt$star !== undefined ? $staropt$star : "Button";
+  var animateMount = $staropt$star$1 !== undefined ? $staropt$star$1 : true;
   return /* record */[
           /* debugName */component$2[/* debugName */0],
           /* reactClassInternal */component$2[/* reactClassInternal */1],
@@ -265,7 +266,7 @@ function make$2($staropt$star, rAction, $staropt$star$1, onClose, _) {
                           onClick: (function () {
                               return Curry._1(send, /* Click */0);
                             })
-                        }, ReasonReact.element(/* None */0, /* None */0, make$1(buttonLabel(state), /* array */[])));
+                        }, ReasonReact.element(undefined, undefined, make$1(buttonLabel(state), /* array */[])));
             }),
           /* initialState */(function () {
               return /* record */[
@@ -326,26 +327,26 @@ function make$2($staropt$star, rAction, $staropt$star$1, onClose, _) {
                                       return Curry._1(send, /* Width */[w | 0]);
                                     };
                                     var match$1 = match[/* size */2] === /* Small */0;
-                                    var arg$1 = /* Some */[match$1 ? 250 : 450];
+                                    var arg$1 = match$1 ? 250 : 450;
                                     var arg$2 = function (param, param$1, param$2) {
-                                      return Curry._6(SpringAnimation.setOnChange, param, param$1, /* Some */[10], param$2, arg, arg$1);
+                                      return Curry._6(SpringAnimation.setOnChange, param, param$1, 10, param$2, arg, arg$1);
                                     };
                                     return (function (eta) {
-                                                return Curry._1(arg$2(/* None */0, /* None */0, /* None */0), eta);
+                                                return Curry._1(arg$2(undefined, undefined, undefined), eta);
                                               })(match[/* animation */0]);
                                   })
                               ]);
                   case 4 : 
                       return /* SideEffects */Block.__(1, [(function (param) {
                                     var send = param[/* send */3];
-                                    var arg = /* Some */[onClose];
+                                    var arg = Js_primitive.some(onClose);
                                     var arg$1 = function (w) {
                                       return Curry._1(send, /* Width */[w | 0]);
                                     };
-                                    var arg$2 = /* Some */[50];
+                                    var arg$2 = 50;
                                     return Curry._1((function (param) {
-                                                    return Curry._6(SpringAnimation.setOnChange, param, /* Some */[0.3], /* Some */[10], arg, arg$1, arg$2);
-                                                  })(/* None */0), param[/* state */1][/* animation */0]);
+                                                    return Curry._6(SpringAnimation.setOnChange, param, 0.3, 10, arg, arg$1, arg$2);
+                                                  })(undefined), param[/* state */1][/* animation */0]);
                                   })]);
                   
                 }
@@ -387,7 +388,7 @@ function make$3(rAction, targetHeight, children) {
               RemoteAction.subscribe(send, rAction);
               return Curry._1(send, /* Animate */Block.__(3, [
                             targetHeight,
-                            /* None */0
+                            undefined
                           ]));
             }),
           /* didUpdate */component$3[/* didUpdate */5],
@@ -425,8 +426,8 @@ function make$3(rAction, targetHeight, children) {
                     var onClose = action[1];
                     var onBeginClosing = action[0];
                     return /* SideEffects */Block.__(1, [(function (param) {
-                                  if (onBeginClosing) {
-                                    Curry._1(onBeginClosing[0], /* () */0);
+                                  if (onBeginClosing !== undefined) {
+                                    Curry._1(onBeginClosing, /* () */0);
                                   }
                                   return Curry._1(param[/* send */3], /* Animate */Block.__(3, [
                                                 0,
@@ -446,14 +447,14 @@ function make$3(rAction, targetHeight, children) {
                     var finalValue = action[0];
                     return /* SideEffects */Block.__(1, [(function (param) {
                                   var send = param[/* send */3];
-                                  var arg = /* Some */[onStop];
+                                  var arg = Js_primitive.some(onStop);
                                   var arg$1 = function (h) {
                                     return Curry._1(send, /* Height */Block.__(4, [h]));
                                   };
-                                  var arg$2 = /* Some */[finalValue];
+                                  var arg$2 = finalValue;
                                   return Curry._1((function (param, param$1) {
-                                                  return Curry._6(SpringAnimation.setOnChange, param, param$1, /* Some */[10], arg, arg$1, arg$2);
-                                                })(/* None */0, /* None */0), state[/* animation */1]);
+                                                  return Curry._6(SpringAnimation.setOnChange, param, param$1, 10, arg, arg$1, arg$2);
+                                                })(undefined, undefined), state[/* animation */1]);
                                 })]);
                 case 4 : 
                     return /* Update */Block.__(0, [/* record */[
@@ -494,11 +495,11 @@ function createButton(removeFromList, animateMount, number) {
   var rActionHeight = RemoteAction.create(/* () */0);
   var key = gen(/* () */0);
   var onClose = function () {
-    return RemoteAction.send(rActionHeight, /* Close */Block.__(2, [/* Some */[(function () {
-                        return Curry._1(removeFromList, rActionHeight);
-                      })]]));
+    return RemoteAction.send(rActionHeight, /* Close */Block.__(2, [(function () {
+                      return Curry._1(removeFromList, rActionHeight);
+                    })]));
   };
-  var element = ReasonReact.element(/* Some */[key], /* None */0, make$3(rActionHeight, 30, /* array */[ReasonReact.element(/* Some */[key], /* None */0, make$2(/* Some */["Button#" + String(number)], rActionButton, animateMount, /* Some */[onClose], /* array */[]))]));
+  var element = ReasonReact.element(key, undefined, make$3(rActionHeight, 30, /* array */[ReasonReact.element(key, undefined, make$2("Button#" + String(number), rActionButton, animateMount, onClose, /* array */[]))]));
   return /* record */[
           /* element */element,
           /* rActionButton */rActionButton,
@@ -510,9 +511,9 @@ function createButton(removeFromList, animateMount, number) {
 function createImage(animateMount, number) {
   var key = gen(/* () */0);
   var rActionButton = RemoteAction.create(/* () */0);
-  var imageGalleryAnimation = ReasonReact.element(/* Some */[gen(/* () */0)], /* None */0, make(/* Some */[number], animateMount, /* array */[]));
+  var imageGalleryAnimation = ReasonReact.element(gen(/* () */0), undefined, make(number, animateMount, /* array */[]));
   var rActionHeight = RemoteAction.create(/* () */0);
-  var element = ReasonReact.element(/* Some */[key], /* None */0, make$3(rActionHeight, 200, /* array */[imageGalleryAnimation]));
+  var element = ReasonReact.element(key, undefined, make$3(rActionHeight, 200, /* array */[imageGalleryAnimation]));
   return /* record */[
           /* element */element,
           /* rActionButton */rActionButton,
@@ -553,7 +554,7 @@ function make$4(showAllButtons, _) {
                 if (match > 5 || match < 0) {
                   throw [
                         Caml_builtin_exceptions.assert_failure,
-                        [
+                        /* tuple */[
                           "Reanimate.re",
                           424,
                           19
@@ -595,8 +596,8 @@ function make$4(showAllButtons, _) {
           /* render */(function (param) {
               var state = param[/* state */1];
               var button = function ($staropt$star, $staropt$star$1, txt, action) {
-                var repeat = $staropt$star ? $staropt$star[0] : 1;
-                var hide = $staropt$star$1 ? $staropt$star$1[0] : false;
+                var repeat = $staropt$star !== undefined ? $staropt$star : 1;
+                var hide = $staropt$star$1 !== undefined ? $staropt$star$1 : false;
                 if (hide) {
                   return null;
                 } else {
@@ -620,9 +621,9 @@ function make$4(showAllButtons, _) {
                           className: "componentBox"
                         }, React.createElement("div", {
                               className: "componentColumn"
-                            }, "Control:", button(/* None */0, /* None */0, "Add Button", /* AddButton */Block.__(1, [true])), button(/* None */0, /* None */0, "Add Image", /* AddImage */Block.__(3, [true])), button(/* None */0, /* None */0, "Add Button On Top", /* AddButtonFirst */Block.__(2, [true])), button(/* None */0, /* None */0, "Remove Item", /* RemoveItem */4), button(/* Some */[100], /* Some */[hide], "Add 100 Buttons On Top", /* AddButtonFirst */Block.__(2, [false])), button(/* Some */[100], /* Some */[hide], "Add 100 Images", /* AddImage */Block.__(3, [false])), button(/* None */0, /* None */0, "Click all the Buttons", /* IncrementAllButtons */2), button(/* None */0, /* Some */[hide], "Unclick all the Buttons", /* DecrementAllButtons */1), button(/* None */0, /* None */0, "Close all the Buttons", /* CloseAllButtons */3), button(/* Some */[10], /* Some */[hide], "Click all the Buttons 10 times", /* IncrementAllButtons */2), button(/* None */0, /* Some */[hide], "Reset all the Buttons' states", /* ResetAllButtons */5), button(/* None */0, /* None */0, "Reverse Items", /* ReverseItemsAnimation */6), button(/* None */0, /* None */0, "Random Animation " + (
+                            }, "Control:", button(undefined, undefined, "Add Button", /* AddButton */Block.__(1, [true])), button(undefined, undefined, "Add Image", /* AddImage */Block.__(3, [true])), button(undefined, undefined, "Add Button On Top", /* AddButtonFirst */Block.__(2, [true])), button(undefined, undefined, "Remove Item", /* RemoveItem */4), button(100, hide, "Add 100 Buttons On Top", /* AddButtonFirst */Block.__(2, [false])), button(100, hide, "Add 100 Images", /* AddImage */Block.__(3, [false])), button(undefined, undefined, "Click all the Buttons", /* IncrementAllButtons */2), button(undefined, hide, "Unclick all the Buttons", /* DecrementAllButtons */1), button(undefined, undefined, "Close all the Buttons", /* CloseAllButtons */3), button(10, hide, "Click all the Buttons 10 times", /* IncrementAllButtons */2), button(undefined, hide, "Reset all the Buttons' states", /* ResetAllButtons */5), button(undefined, undefined, "Reverse Items", /* ReverseItemsAnimation */6), button(undefined, undefined, "Random Animation " + (
                                   match ? "ON" : "OFF"
-                                ), /* ToggleRandomAnimation */7), button(/* None */0, /* None */0, "Add Self", /* AddSelf */0)), React.createElement("div", {
+                                ), /* ToggleRandomAnimation */7), button(undefined, undefined, "Add Self", /* AddSelf */0)), React.createElement("div", {
                               className: "componentColumn",
                               style: {
                                 width: "500px"
@@ -643,7 +644,7 @@ function make$4(showAllButtons, _) {
                       var key = gen(/* () */0);
                       var rActionButton = RemoteAction.create(/* () */0);
                       var rActionHeight = RemoteAction.create(/* () */0);
-                      var element = ReasonReact.element(/* Some */[key], /* None */0, make$3(rActionHeight, 500, /* array */[ReasonReact.element(/* Some */[key], /* None */0, make$4(showAllButtons, /* array */[]))]));
+                      var element = ReasonReact.element(key, undefined, make$3(rActionHeight, 500, /* array */[ReasonReact.element(key, undefined, make$4(showAllButtons, /* array */[]))]));
                       var item = /* record */[
                         /* element */element,
                         /* rActionButton */rActionButton,
@@ -668,15 +669,15 @@ function make$4(showAllButtons, _) {
                       var match = Belt_List.getBy(items, (function (item) {
                               return item[/* closing */3] === false;
                             }));
-                      if (match) {
-                        var firstItemNotClosing = match[0];
-                        var onBeginClosing = /* Some */[(function () {
-                              firstItemNotClosing[/* closing */3] = true;
-                              return /* () */0;
-                            })];
-                        var onClose = /* Some */[(function () {
-                              return Curry._1(act, /* FilterOutItem */Block.__(4, [firstItemNotClosing[/* rActionHeight */2]]));
-                            })];
+                      if (match !== undefined) {
+                        var firstItemNotClosing = match;
+                        var onBeginClosing = (function () {
+                            firstItemNotClosing[/* closing */3] = true;
+                            return /* () */0;
+                          });
+                        var onClose = (function () {
+                            return Curry._1(act, /* FilterOutItem */Block.__(4, [firstItemNotClosing[/* rActionHeight */2]]));
+                          });
                         return /* SideEffects */Block.__(1, [(function () {
                                       return RemoteAction.send(firstItemNotClosing[/* rActionHeight */2], /* BeginClosing */Block.__(1, [
                                                     onBeginClosing,
@@ -691,11 +692,11 @@ function make$4(showAllButtons, _) {
                   case 6 : 
                       var onStopClose = function () {
                         return Curry._1(act, /* ReverseWithSideEffects */Block.__(6, [(function () {
-                                          return Curry._1(act, /* OpenHeight */Block.__(7, [/* None */0]));
+                                          return Curry._1(act, /* OpenHeight */Block.__(7, [undefined]));
                                         })]));
                       };
                       return /* SideEffects */Block.__(1, [(function () {
-                                    return Curry._1(act, /* CloseHeight */Block.__(5, [/* Some */[onStopClose]]));
+                                    return Curry._1(act, /* CloseHeight */Block.__(5, [onStopClose]));
                                   })]);
                   case 7 : 
                       return /* SideEffects */Block.__(1, [(function () {
@@ -724,7 +725,7 @@ function make$4(showAllButtons, _) {
                                   /* act */state[/* act */0],
                                   /* randomAnimation */state[/* randomAnimation */1],
                                   /* items : :: */[
-                                    createButton(removeFromList, /* Some */[action[0]], Belt_List.length(items)),
+                                    createButton(removeFromList, action[0], Belt_List.length(items)),
                                     items
                                   ]
                                 ]]);
@@ -736,7 +737,7 @@ function make$4(showAllButtons, _) {
                                   /* act */state[/* act */0],
                                   /* randomAnimation */state[/* randomAnimation */1],
                                   /* items */Pervasives.$at(items, /* :: */[
-                                        createButton(removeFromList$1, /* Some */[action[0]], Belt_List.length(items)),
+                                        createButton(removeFromList$1, action[0], Belt_List.length(items)),
                                         /* [] */0
                                       ])
                                 ]]);
@@ -745,7 +746,7 @@ function make$4(showAllButtons, _) {
                                   /* act */state[/* act */0],
                                   /* randomAnimation */state[/* randomAnimation */1],
                                   /* items : :: */[
-                                    createImage(/* Some */[action[0]], Belt_List.length(items)),
+                                    createImage(action[0], Belt_List.length(items)),
                                     items
                                   ]
                                 ]]);
@@ -762,18 +763,18 @@ function make$4(showAllButtons, _) {
                   case 5 : 
                       var onStop = action[0];
                       var len = Belt_List.length(items);
-                      var count = [len];
+                      var count = /* record */[/* contents */len];
                       var onClose$1 = function () {
                         count[0] = count[0] - 1 | 0;
-                        if (count[0] === 0 && onStop) {
-                          return Curry._1(onStop[0], /* () */0);
+                        if (count[0] === 0 && onStop !== undefined) {
+                          return Curry._1(onStop, /* () */0);
                         } else {
                           return 0;
                         }
                       };
                       var iter = function () {
                         return Belt_List.forEach(items, (function (item) {
-                                      return RemoteAction.send(item[/* rActionHeight */2], /* Close */Block.__(2, [/* Some */[onClose$1]]));
+                                      return RemoteAction.send(item[/* rActionHeight */2], /* Close */Block.__(2, [onClose$1]));
                                     }));
                       };
                       return /* SideEffects */Block.__(1, [iter]);
@@ -792,18 +793,18 @@ function make$4(showAllButtons, _) {
                   case 7 : 
                       var onStop$1 = action[0];
                       var len$1 = Belt_List.length(items);
-                      var count$1 = [len$1];
+                      var count$1 = /* record */[/* contents */len$1];
                       var onClose$2 = function () {
                         count$1[0] = count$1[0] - 1 | 0;
-                        if (count$1[0] === 0 && onStop$1) {
-                          return Curry._1(onStop$1[0], /* () */0);
+                        if (count$1[0] === 0 && onStop$1 !== undefined) {
+                          return Curry._1(onStop$1, /* () */0);
                         } else {
                           return 0;
                         }
                       };
                       var iter$1 = function () {
                         return Belt_List.forEach(items, (function (item) {
-                                      return RemoteAction.send(item[/* rActionHeight */2], /* Open */Block.__(0, [/* Some */[onClose$2]]));
+                                      return RemoteAction.send(item[/* rActionHeight */2], /* Open */Block.__(0, [onClose$2]));
                                     }));
                       };
                       return /* SideEffects */Block.__(1, [iter$1]);
@@ -851,7 +852,7 @@ function make$5(rAction, headNum, imageGallery, _) {
                               top: top,
                               zIndex: String(-headNum | 0)
                             }
-                          }, ReasonReact.element(/* None */0, /* None */0, make(/* Some */[headNum], /* None */0, /* array */[])));
+                          }, ReasonReact.element(undefined, undefined, make(headNum, undefined, /* array */[])));
               } else {
                 return React.createElement("div", {
                             className: "chat-head chat-head-" + String(headNum % 6),
@@ -920,10 +921,10 @@ function make$6(imageGallery, _) {
                           return Curry._1(afterChange, v);
                         };
                         var arg$1 = function (param, param$1) {
-                          return Curry._5(SpringAnimation.setOnChange, /* Some */[Spring.gentle], /* Some */[2], param, param$1, arg);
+                          return Curry._5(SpringAnimation.setOnChange, Spring.gentle, 2, param, param$1, arg);
                         };
                         return (function (eta) {
-                                    return Curry._2(arg$1(/* None */0, /* None */0), /* None */0, eta);
+                                    return Curry._2(arg$1(undefined, undefined), undefined, eta);
                                   })(isX ? control[/* animX */1] : control[/* animY */2]);
                       };
                       var isLastHead = headNum === 5;
@@ -971,7 +972,7 @@ function make$6(imageGallery, _) {
                       return createControl(/* () */0);
                     }));
               var chatHeads = Belt_Array.makeBy(6, (function (i) {
-                      return ReasonReact.element(/* Some */[gen(/* () */0)], /* None */0, make$5(Caml_array.caml_array_get(controls, i)[/* rAction */0], i, imageGallery, /* array */[]));
+                      return ReasonReact.element(gen(/* () */0), undefined, make$5(Caml_array.caml_array_get(controls, i)[/* rAction */0], i, imageGallery, /* array */[]));
                     }));
               return /* record */[
                       /* controls */controls,
@@ -1021,9 +1022,9 @@ function make$7() {
                                       })
                                   }, "Start image gallery chatheads"));
                 case 1 : 
-                    return ReasonReact.element(/* None */0, /* None */0, make$6(false, /* array */[]));
+                    return ReasonReact.element(undefined, undefined, make$6(false, /* array */[]));
                 case 2 : 
-                    return ReasonReact.element(/* None */0, /* None */0, make$6(true, /* array */[]));
+                    return ReasonReact.element(undefined, undefined, make$6(true, /* array */[]));
                 
               }
             }),
@@ -1047,8 +1048,8 @@ var ChatHeadsExampleStarter = /* module */[
 var component$8 = ReasonReact.statelessComponent("GalleryItem");
 
 function make$8($staropt$star, $staropt$star$1, child) {
-  var title = $staropt$star ? $staropt$star[0] : "Untitled";
-  var description = $staropt$star$1 ? $staropt$star$1[0] : "no description";
+  var title = $staropt$star !== undefined ? $staropt$star : "Untitled";
+  var description = $staropt$star$1 !== undefined ? $staropt$star$1 : "no description";
   var title$1 = React.createElement("div", {
         className: "header"
       }, title);
@@ -1150,19 +1151,19 @@ var GalleryContainer = /* module */[
 var component$10 = ReasonReact.statelessComponent("ComponentGallery");
 
 function make$10() {
-  var globalStateExample = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Global State Example"], /* Some */[""], ReasonReact.element(/* None */0, /* None */0, Demo.GlobalStateExample[/* make */1](/* array */[]))));
-  var localStateExample = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Local State Example"], /* Some */[""], ReasonReact.element(/* None */0, /* None */0, Demo.LocalStateExample[/* make */1](/* array */[]))));
-  var simpleTextInput = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Simple Text Input"], /* Some */["Edit the text field"], ReasonReact.element(/* None */0, /* None */0, Demo.TextInput[/* make */2](/* Some */[(function (text) {
-                        console.log("onChange:", text);
-                        return /* () */0;
-                      })], /* None */0, /* None */0, /* array */[]))));
-  var simpleSpring = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Simple Spring"], /* Some */["Click on target to toggle"], ReasonReact.element(/* None */0, /* None */0, Demo.SimpleSpring[/* make */2](/* array */[]))));
-  var animatedTextInput = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Animated Text Input"], /* Some */["Edit text, or click on target to toggle animation"], ReasonReact.element(/* None */0, /* None */0, Demo.AnimatedTextInput[/* make */3](/* array */[]))));
-  var animatedTextInputRemote = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Animated Text Input With Remote Actions"], /* Some */["Edit text, or click on target to toggle animation"], ReasonReact.element(/* None */0, /* None */0, Demo.AnimatedTextInputRemote[/* make */4](/* array */[]))));
-  var callActionsOnGrandChild = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Call actions on grandchild directly"], /* Some */[""], ReasonReact.element(/* None */0, /* None */0, Demo.Parent[/* make */1](/* array */[]))));
-  var chatHeads = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Chat Heads"], /* Some */[""], ReasonReact.element(/* None */0, /* None */0, make$7(/* array */[]))));
-  var imageGallery = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Image Gallery"], /* Some */[" Click on the image to transition to the next one. "], ReasonReact.element(/* None */0, /* None */0, make(/* None */0, /* None */0, /* array */[]))));
-  var reducerAnimation = ReasonReact.element(/* None */0, /* None */0, make$8(/* Some */["Animation Based On Reducers"], /* Some */[""], ReasonReact.element(/* None */0, /* None */0, make$4(false, /* array */[]))));
+  var globalStateExample = ReasonReact.element(undefined, undefined, make$8("Global State Example", "", ReasonReact.element(undefined, undefined, Demo.GlobalStateExample[/* make */1](/* array */[]))));
+  var localStateExample = ReasonReact.element(undefined, undefined, make$8("Local State Example", "", ReasonReact.element(undefined, undefined, Demo.LocalStateExample[/* make */1](/* array */[]))));
+  var simpleTextInput = ReasonReact.element(undefined, undefined, make$8("Simple Text Input", "Edit the text field", ReasonReact.element(undefined, undefined, Demo.TextInput[/* make */2]((function (text) {
+                      console.log("onChange:", text);
+                      return /* () */0;
+                    }), undefined, undefined, /* array */[]))));
+  var simpleSpring = ReasonReact.element(undefined, undefined, make$8("Simple Spring", "Click on target to toggle", ReasonReact.element(undefined, undefined, Demo.SimpleSpring[/* make */2](/* array */[]))));
+  var animatedTextInput = ReasonReact.element(undefined, undefined, make$8("Animated Text Input", "Edit text, or click on target to toggle animation", ReasonReact.element(undefined, undefined, Demo.AnimatedTextInput[/* make */3](/* array */[]))));
+  var animatedTextInputRemote = ReasonReact.element(undefined, undefined, make$8("Animated Text Input With Remote Actions", "Edit text, or click on target to toggle animation", ReasonReact.element(undefined, undefined, Demo.AnimatedTextInputRemote[/* make */4](/* array */[]))));
+  var callActionsOnGrandChild = ReasonReact.element(undefined, undefined, make$8("Call actions on grandchild directly", "", ReasonReact.element(undefined, undefined, Demo.Parent[/* make */1](/* array */[]))));
+  var chatHeads = ReasonReact.element(undefined, undefined, make$8("Chat Heads", "", ReasonReact.element(undefined, undefined, make$7(/* array */[]))));
+  var imageGallery = ReasonReact.element(undefined, undefined, make$8("Image Gallery", " Click on the image to transition to the next one. ", ReasonReact.element(undefined, undefined, make(undefined, undefined, /* array */[]))));
+  var reducerAnimation = ReasonReact.element(undefined, undefined, make$8("Animation Based On Reducers", "", ReasonReact.element(undefined, undefined, make$4(false, /* array */[]))));
   return /* record */[
           /* debugName */component$10[/* debugName */0],
           /* reactClassInternal */component$10[/* reactClassInternal */1],
@@ -1174,7 +1175,7 @@ function make$10() {
           /* willUpdate */component$10[/* willUpdate */7],
           /* shouldUpdate */component$10[/* shouldUpdate */8],
           /* render */(function () {
-              return ReasonReact.element(/* None */0, /* None */0, make$9(/* array */[
+              return ReasonReact.element(undefined, undefined, make$9(/* array */[
                               globalStateExample,
                               localStateExample,
                               simpleTextInput,

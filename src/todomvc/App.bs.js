@@ -66,8 +66,8 @@ function make() {
                       }
                     }));
               var todoItems = Belt_List.map(__x, (function (todo) {
-                      var editing$1 = editing ? editing[0] === todo[/* id */0] : false;
-                      return ReasonReact.element(/* Some */[todo[/* id */0]], /* None */0, TodoItem.make(todo, editing$1, (function () {
+                      var editing$1 = editing !== undefined ? editing === todo[/* id */0] : false;
+                      return ReasonReact.element(todo[/* id */0], undefined, TodoItem.make(todo, editing$1, (function () {
                                         return Curry._1(send, /* Destroy */Block.__(4, [todo]));
                                       }), (function (text) {
                                         return Curry._1(send, /* Save */Block.__(2, [
@@ -95,7 +95,7 @@ function make() {
                 footer = null;
               }
               if (exit === 1) {
-                footer = ReasonReact.element(/* None */0, /* None */0, TodoFooter.make(activeTodoCount, completedCount, state[/* nowShowing */0], (function () {
+                footer = ReasonReact.element(undefined, undefined, TodoFooter.make(activeTodoCount, completedCount, state[/* nowShowing */0], (function () {
                             return Curry._1(send, /* ClearCompleted */2);
                           }), /* array */[]));
               }
@@ -138,7 +138,7 @@ function make() {
               var todos = match !== null ? JSON.parse(match) : /* [] */0;
               return /* record */[
                       /* nowShowing */urlToShownPage(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)[/* hash */1]),
-                      /* editing : None */0,
+                      /* editing */undefined,
                       /* newTodo */"",
                       /* todos */todos
                     ];
@@ -188,7 +188,7 @@ function make() {
                   case 3 : 
                       return /* Update */Block.__(0, [/* record */[
                                   /* nowShowing */state[/* nowShowing */0],
-                                  /* editing : None */0,
+                                  /* editing */undefined,
                                   /* newTodo */state[/* newTodo */2],
                                   /* todos */state[/* todos */3]
                                 ]]);
@@ -228,7 +228,7 @@ function make() {
                       return /* UpdateWithSideEffects */Block.__(2, [
                                 /* record */[
                                   /* nowShowing */state[/* nowShowing */0],
-                                  /* editing : None */0,
+                                  /* editing */undefined,
                                   /* newTodo */state[/* newTodo */2],
                                   /* todos */todos$2
                                 ],
@@ -239,7 +239,7 @@ function make() {
                   case 3 : 
                       return /* Update */Block.__(0, [/* record */[
                                   /* nowShowing */state[/* nowShowing */0],
-                                  /* editing : Some */[action[0][/* id */0]],
+                                  /* editing */action[0][/* id */0],
                                   /* newTodo */state[/* newTodo */2],
                                   /* todos */state[/* todos */3]
                                 ]]);
@@ -331,7 +331,7 @@ var Top = /* module */[
   /* make */make
 ];
 
-ReactDOMRe.renderToElementWithClassName(ReasonReact.element(/* None */0, /* None */0, make(/* array */[])), "todoapp");
+ReactDOMRe.renderToElementWithClassName(ReasonReact.element(undefined, undefined, make(/* array */[])), "todoapp");
 
 exports.localStorageNamespace = localStorageNamespace;
 exports.saveLocally = saveLocally;

@@ -20,10 +20,10 @@ function stepper($staropt$star, speedup, $staropt$star$1, $staropt$star$2, state
   var finalValue = state[/* finalValue */2];
   var velocity = state[/* velocity */1];
   var value = state[/* value */0];
-  var secondsPerFrame = $staropt$star ? $staropt$star[0] : defaultSecondsPerFrame;
-  var precision = $staropt$star$1 ? $staropt$star$1[0] : 0.01;
-  var preset = $staropt$star$2 ? $staropt$star$2[0] : noWobble;
-  var secondsPerFrame$1 = speedup ? secondsPerFrame * speedup[0] : secondsPerFrame;
+  var secondsPerFrame = $staropt$star !== undefined ? $staropt$star : defaultSecondsPerFrame;
+  var precision = $staropt$star$1 !== undefined ? $staropt$star$1 : 0.01;
+  var preset = $staropt$star$2 !== undefined ? $staropt$star$2 : noWobble;
+  var secondsPerFrame$1 = speedup !== undefined ? secondsPerFrame * speedup : secondsPerFrame;
   var forceSpring = -preset[/* stiffness */0] * (value - finalValue);
   var forceDamper = -preset[/* damping */1] * velocity;
   var acceleration = forceSpring + forceDamper;
@@ -65,7 +65,7 @@ function test() {
     if (isFinished(state)) {
       return 0;
     } else {
-      _state = stepper(/* None */0, /* None */0, /* None */0, /* None */0, state);
+      _state = stepper(undefined, undefined, undefined, undefined, state);
       continue ;
     }
   };

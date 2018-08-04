@@ -3,6 +3,7 @@
 var Curry = require("bs-platform/lib/js/curry.js");
 var Spring = require("./Spring.bs.js");
 var Animation = require("./Animation.bs.js");
+var Js_primitive = require("bs-platform/lib/js/js_primitive.js");
 
 function create(initialValue) {
   var animation = Animation.create(/* () */0);
@@ -14,9 +15,9 @@ function create(initialValue) {
 }
 
 function setOnChange(preset, speedup, precision, $staropt$star, onChange, finalValue, a) {
-  var onStop = $staropt$star ? $staropt$star[0] : /* None */0;
+  var onStop = $staropt$star !== undefined ? Js_primitive.valFromOption($staropt$star) : undefined;
   var callback = function () {
-    a[/* state */1] = Spring.stepper(/* None */0, speedup, precision, preset, a[/* state */1]);
+    a[/* state */1] = Spring.stepper(undefined, speedup, precision, preset, a[/* state */1]);
     var isFinished = Spring.isFinished(a[/* state */1]);
     Curry._1(onChange, a[/* state */1][/* value */0]);
     if (isFinished) {
@@ -29,12 +30,12 @@ function setOnChange(preset, speedup, precision, $staropt$star, onChange, finalV
   ((function (param) {
           return Animation.setCallback(param, callback);
         })(a[/* animation */0]));
-  if (finalValue) {
+  if (finalValue !== undefined) {
     var init = a[/* state */1];
     a[/* state */1] = /* record */[
       /* value */init[/* value */0],
       /* velocity */init[/* velocity */1],
-      /* finalValue */finalValue[0]
+      /* finalValue */finalValue
     ];
     return Animation.start(a[/* animation */0]);
   } else {

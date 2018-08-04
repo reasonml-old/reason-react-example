@@ -1,34 +1,35 @@
 'use strict';
 
 var Curry = require("bs-platform/lib/js/curry.js");
+var Js_primitive = require("bs-platform/lib/js/js_primitive.js");
 
 function defaultCallback() {
-  return /* Stop */[/* None */0];
+  return /* Stop */[undefined];
 }
 
 function create() {
   return /* record */[
-          /* id : None */0,
+          /* id */undefined,
           /* callback */defaultCallback
         ];
 }
 
 function onAnimationFrame(animation, _) {
-  if (animation[/* id */0] !== /* None */0) {
+  if (animation[/* id */0] !== undefined) {
     var match = animation[/* callback */1]();
     if (match) {
       var match$1 = match[0];
-      if (match$1) {
-        animation[/* id */0] = /* None */0;
-        return Curry._1(match$1[0], /* () */0);
+      if (match$1 !== undefined) {
+        animation[/* id */0] = undefined;
+        return Curry._1(match$1, /* () */0);
       } else {
-        animation[/* id */0] = /* None */0;
+        animation[/* id */0] = undefined;
         return /* () */0;
       }
     } else {
-      animation[/* id */0] = /* Some */[requestAnimationFrame((function (param) {
-                return onAnimationFrame(animation, param);
-              }))];
+      animation[/* id */0] = Js_primitive.some(requestAnimationFrame((function (param) {
+                  return onAnimationFrame(animation, param);
+                })));
       return /* () */0;
     }
   } else {
@@ -37,17 +38,17 @@ function onAnimationFrame(animation, _) {
 }
 
 function start(animation) {
-  animation[/* id */0] = /* Some */[requestAnimationFrame((function (param) {
-            return onAnimationFrame(animation, param);
-          }))];
+  animation[/* id */0] = Js_primitive.some(requestAnimationFrame((function (param) {
+              return onAnimationFrame(animation, param);
+            })));
   return /* () */0;
 }
 
 function stop(animation) {
   var match = animation[/* id */0];
-  if (match) {
-    cancelAnimationFrame(match[0]);
-    animation[/* id */0] = /* None */0;
+  if (match !== undefined) {
+    cancelAnimationFrame(Js_primitive.valFromOption(match));
+    animation[/* id */0] = undefined;
     return /* () */0;
   } else {
     return /* () */0;
@@ -61,7 +62,7 @@ function setCallback(animation, callback) {
 }
 
 function isActive(animation) {
-  return animation[/* id */0] !== /* None */0;
+  return animation[/* id */0] !== undefined;
 }
 
 exports.create = create;

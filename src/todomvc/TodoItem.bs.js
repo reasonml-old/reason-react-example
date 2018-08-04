@@ -5,11 +5,12 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var $$String = require("bs-platform/lib/js/string.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
+var Js_primitive = require("bs-platform/lib/js/js_primitive.js");
 
 var component = ReasonReact.reducerComponent("TodoItemRe");
 
 function setEditFieldRef(r, param) {
-  param[/* state */1][/* editFieldRef */2][0] = (r == null) ? /* None */0 : [r];
+  param[/* state */1][/* editFieldRef */2][0] = (r == null) ? undefined : Js_primitive.some(r);
   return /* () */0;
 }
 
@@ -49,10 +50,10 @@ function make(todo, editing, onDestroy, onSave, onEdit, onToggle, onCancel, _) {
           /* didUpdate */(function (param) {
               var match = param[/* oldSelf */0][/* state */1][/* editing */1];
               var match$1 = param[/* newSelf */1][/* state */1][/* editFieldRef */2][0];
-              if (match || !(editing && match$1)) {
+              if (match || !(editing && match$1 !== undefined)) {
                 return /* () */0;
               } else {
-                var field = match$1[0];
+                var field = Js_primitive.valFromOption(match$1);
                 field.focus();
                 field.setSelectionRange(field.value.length, field.value.length);
                 return /* () */0;
@@ -111,7 +112,7 @@ function make(todo, editing, onDestroy, onSave, onEdit, onToggle, onCancel, _) {
               return /* record */[
                       /* editText */todo[/* title */1],
                       /* editing */editing,
-                      /* editFieldRef */[/* None */0]
+                      /* editFieldRef : record */[/* contents */undefined]
                     ];
             }),
           /* retainedProps */component[/* retainedProps */11],
