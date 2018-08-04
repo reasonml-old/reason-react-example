@@ -21,6 +21,7 @@ let make = (~message, ~extraGreeting=?, _children) => {
 type jsProps = {
   message: string,
   extraGreeting: Js.nullable(string),
+  children: array(ReasonReact.reactElement),
 };
 
 /* if **you know what you're doing** and have
@@ -29,8 +30,8 @@ type jsProps = {
 let jsComponent =
   ReasonReact.wrapReasonForJs(~component, jsProps =>
     make(
-      ~message=jsProps |. messageGet,
-      ~extraGreeting=?Js.Nullable.toOption(jsProps |. extraGreetingGet),
-      [||],
+      ~message=jsProps->messageGet,
+      ~extraGreeting=?Js.Nullable.toOption(jsProps->extraGreetingGet),
+      jsProps->childrenGet,
     )
   );

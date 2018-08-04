@@ -14,7 +14,7 @@ type action =
   | DogsFailedToFetch;
 
 module Decode = {
-  let dogs = json : array(dog) =>
+  let dogs = json: array(dog) =>
     Json.Decode.(
       json |> field("message", array(string)) |> Array.map(_, dog => dog)
     );

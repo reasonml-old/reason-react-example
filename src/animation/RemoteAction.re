@@ -6,7 +6,6 @@ let sendDefault = _action => ();
 
 let create = () => {send: sendDefault};
 
-
 /***
  * The return type of subscribe is constrained as a token
  * by the interface file. This means that only the caller of

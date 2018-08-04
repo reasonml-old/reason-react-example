@@ -12,18 +12,14 @@ module Counter1 = {
   let component = ReasonReact.statelessComponent("Counter1");
   let make = (~state, ~update, _children) => {
     ...component,
-    render: (_) =>
+    render: _ =>
       <div>
         <button
-          onClick=(
-            (_) => update(state => {...state, count1: state.count1 + 1})
-          )>
+          onClick=(_ => update(state => {...state, count1: state.count1 + 1}))>
           (ReasonReact.string("+"))
         </button>
         <button
-          onClick=(
-            (_) => update(state => {...state, count1: state.count1 - 1})
-          )>
+          onClick=(_ => update(state => {...state, count1: state.count1 - 1}))>
           (ReasonReact.string("-"))
         </button>
         (ReasonReact.string(" counter:" ++ string_of_int(state.count1)))
@@ -36,18 +32,14 @@ module Counter2 = {
   let component = ReasonReact.statelessComponent("Counter2");
   let make = (~state, ~update, _children) => {
     ...component,
-    render: (_) =>
+    render: _ =>
       <div>
         <button
-          onClick=(
-            (_) => update(state => {...state, count2: state.count2 + 1})
-          )>
+          onClick=(_ => update(state => {...state, count2: state.count2 + 1}))>
           (ReasonReact.string("+"))
         </button>
         <button
-          onClick=(
-            (_) => update(state => {...state, count2: state.count2 - 1})
-          )>
+          onClick=(_ => update(state => {...state, count2: state.count2 - 1}))>
           (ReasonReact.string("-"))
         </button>
         (ReasonReact.string(" counter:" ++ string_of_int(state.count2)))
@@ -60,12 +52,10 @@ module Toggle = {
   let component = ReasonReact.statelessComponent("Toggle");
   let make = (~state, ~update, _children) => {
     ...component,
-    render: (_) =>
+    render: _ =>
       <div>
         <button
-          onClick=(
-            (_) => update(state => {...state, toggle: ! state.toggle})
-          )>
+          onClick=(_ => update(state => {...state, toggle: !state.toggle}))>
           (ReasonReact.string("Toggle"))
         </button>
         (ReasonReact.string(" toggle:" ++ string_of_bool(state.toggle)))
@@ -107,10 +97,10 @@ module LocalCounter = {
       },
     render: ({state, send}) =>
       <div>
-        <button onClick=((_) => send(Incr))>
+        <button onClick=(_ => send(Incr))>
           (ReasonReact.string("+"))
         </button>
-        <button onClick=((_) => send(Decr))>
+        <button onClick=(_ => send(Decr))>
           (ReasonReact.string("-"))
         </button>
         (ReasonReact.string(" counter:" ++ string_of_int(state)))
@@ -128,11 +118,11 @@ module LocalToggle = {
     initialState: () => false,
     reducer: (action, state) =>
       switch (action) {
-      | Toggle => Update(! state)
+      | Toggle => Update(!state)
       },
     render: ({state, send}) =>
       <div>
-        <button onClick=((_) => send(Toggle))>
+        <button onClick=(_ => send(Toggle))>
           (ReasonReact.string("Toggle"))
         </button>
         (ReasonReact.string(" toggle:" ++ string_of_bool(state)))
@@ -144,7 +134,7 @@ module LocalStateExample = {
   let component = ReasonReact.statelessComponent("LocalStateExample");
   let make = _children => {
     ...component,
-    render: (_) =>
+    render: _ =>
       <div>
         <LocalCounter />
         <LocalCounter />
@@ -159,10 +149,8 @@ module TextInput = {
   type action =
     | Text(string);
   let component = ReasonReact.reducerComponent("TextInput");
-  let textOfEvent = e => ReactDOMRe.domElementToObj(
-                           ReactEventRe.Form.target(e),
-                         )##value;
-  let make = (~onChange=(_) => (), ~showText=x => x, ~initial="", _children) => {
+  let textOfEvent = e => ReactEvent.Form.target(e)##value;
+  let make = (~onChange=_ => (), ~showText=x => x, ~initial="", _children) => {
     ...component,
     initialState: () => initial,
     reducer: (action, _state) =>
@@ -214,13 +202,13 @@ module Spring = {
         let target = state.target == 0.0 ? 1.0 : 0.0;
         UpdateWithSideEffects(
           {...state, target},
-          ((_) => state.animation |> SpringAnimation.setFinalValue(target)),
+          (_ => state.animation |> SpringAnimation.setFinalValue(target)),
         );
       | Value(value) => Update({...state, value})
       },
     render: ({state, send}) =>
       <div>
-        <button onClick=((_) => send(Click))>
+        <button onClick=(_ => send(Click))>
           (ReasonReact.string("target: " ++ string_of_float(state.target)))
         </button>
         <div> (renderValue(state.value)) </div>
@@ -232,10 +220,7 @@ module SimpleSpring = {
   let renderValue = value =>
     ReasonReact.string(Printf.sprintf("value: %.3f", value));
   let component = ReasonReact.statelessComponent("SimpleSpring");
-  let make = _children => {
-    ...component,
-    render: (_) => <Spring renderValue />,
-  };
+  let make = _children => {...component, render: _ => <Spring renderValue />};
 };
 
 module AnimatedTextInput = {
@@ -252,10 +237,7 @@ module AnimatedTextInput = {
       initial="edit this or click target"
     />;
   let component = ReasonReact.statelessComponent("AnimatedTextInput");
-  let make = _children => {
-    ...component,
-    render: (_) => <Spring renderValue />,
-  };
+  let make = _children => {...component, render: _ => <Spring renderValue />};
 };
 
 module TextInputRemote = {
@@ -264,13 +246,11 @@ module TextInputRemote = {
     | Text(string)
     | Reset;
   let component = ReasonReact.reducerComponent("TextInputRemote");
-  let textOfEvent = e => ReactDOMRe.domElementToObj(
-                           ReactEventRe.Form.target(e),
-                         )##value;
+  let textOfEvent = e => ReactEvent.Form.target(e)##value;
   let make =
       (
         ~remoteAction,
-        ~onChange=(_) => (),
+        ~onChange=_ => (),
         ~showText=x => x,
         ~initial="",
         _children,
@@ -323,11 +303,11 @@ module AnimatedTextInputRemote = {
   let component = ReasonReact.statelessComponent("AnimatedTextInput");
   let make = _children => {
     ...component,
-    render: (_) =>
+    render: _ =>
       <div>
         <button
           onClick=(
-            (_) =>
+            _ =>
               RemoteAction.send(remoteAction, ~action=TextInputRemote.Reset)
           )>
           (ReasonReact.string("reset text"))
@@ -371,7 +351,7 @@ module Child = {
   let component = ReasonReact.statelessComponent("Child");
   let make = (~remoteAction, _) => {
     ...component,
-    render: (_) =>
+    render: _ =>
       <div>
         (ReasonReact.string("in child"))
         <GrandChild remoteAction />
@@ -381,14 +361,14 @@ module Child = {
 
 module Parent = {
   let component = ReasonReact.reducerComponent("Parent");
-  let make = (_) => {
+  let make = _ => {
     ...component,
     initialState: () => RemoteAction.create(),
     reducer: ((), _) => NoUpdate,
     render: ({state}) =>
       <div>
         <button
-          onClick=((_) => RemoteAction.send(state, ~action=GrandChild.Incr))>
+          onClick=(_ => RemoteAction.send(state, ~action=GrandChild.Incr))>
           (ReasonReact.string("in parent"))
         </button>
         <Child remoteAction=state />

@@ -1,7 +1,7 @@
 /* The new stdlib additions */
 open Belt;
 
-[@bs.val] external unsafeJsonParse : string => 'a = "JSON.parse";
+[@bs.val] external unsafeJsonParse: string => 'a = "JSON.parse";
 
 let localStorageNamespace = "reason-react-todos";
 
@@ -66,8 +66,7 @@ module Top = {
           ReasonReact.Update({...state, newTodo: "", todos});
         }
       | ClearCompleted =>
-        let todos =
-          List.keep(state.todos, todo => ! TodoItem.(todo.completed));
+        let todos = List.keep(state.todos, todo => !TodoItem.(todo.completed));
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
           (_self => saveLocally(todos)),
@@ -102,8 +101,7 @@ module Top = {
         let todos =
           List.map(state.todos, todo =>
             todo == todoToToggle ?
-              {...todo, TodoItem.completed: ! TodoItem.(todo.completed)} :
-              todo
+              {...todo, TodoItem.completed: !TodoItem.(todo.completed)} : todo
           );
         ReasonReact.UpdateWithSideEffects(
           {...state, todos},
@@ -140,7 +138,7 @@ module Top = {
         List.keep(todos, todo =>
           TodoItem.(
             switch (state.nowShowing) {
-            | ActiveTodos => ! todo.completed
+            | ActiveTodos => !todo.completed
             | CompletedTodos => todo.completed
             | AllTodos => true
             }

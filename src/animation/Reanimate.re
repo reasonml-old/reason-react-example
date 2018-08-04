@@ -11,7 +11,6 @@ module Key = {
 };
 
 module ImageTransition: {
-
   /***
    * Render function for a transition between two images.
    * phase is a value between 0.0 (first image) and 1.0 (second image).
@@ -32,7 +31,7 @@ module ImageTransition: {
   |];
   let displayWidths =
     Belt.Array.map(sizes, ((w, h)) => w * displayHeight / h);
-  let getWidth = i => displayWidths[(i + numImages) mod numImages];
+  let getWidth = i => displayWidths[((i + numImages) mod numImages)];
 
   /***
    * Interpolate width and left for 2 images, phase is between 0.0 and 1.0.
@@ -122,7 +121,7 @@ module AnimatedButton = {
     let component = ReasonReact.statelessComponent("Text");
     let make = (~text, _children) => {
       ...component,
-      render: (_) => <button> (ReasonReact.string(text)) </button>,
+      render: _ => <button> (ReasonReact.string(text)) </button>,
     };
   };
   type size =
@@ -421,7 +420,7 @@ module ReducerAnimationExample = {
             | 3 => RemoveItem
             | 4 => DecrementAllButtons
             | 5 => IncrementAllButtons
-            | _ => assert false
+            | _ => assert(false)
             };
           send(randomAction);
           Animation.Continue;
@@ -501,7 +500,7 @@ module ReducerAnimationExample = {
             );
           SideEffects(
             (
-              (_) =>
+              _ =>
                 RemoteAction.send(
                   firstItemNotClosing.rActionHeight,
                   ~action=BeginClosing(onBeginClosing, onClose),
@@ -523,7 +522,7 @@ module ReducerAnimationExample = {
             };
           };
         };
-        let iter = (_) =>
+        let iter = _ =>
           Belt.List.forEach(items, item =>
             RemoteAction.send(
               item.rActionHeight,
@@ -543,7 +542,7 @@ module ReducerAnimationExample = {
             };
           };
         };
-        let iter = (_) =>
+        let iter = _ =>
           Belt.List.forEach(items, item =>
             RemoteAction.send(
               item.rActionHeight,
@@ -554,16 +553,16 @@ module ReducerAnimationExample = {
       | ReverseWithSideEffects(performSideEffects) =>
         UpdateWithSideEffects(
           {...state, items: Belt.List.reverse(items)},
-          ((_) => performSideEffects()),
+          (_ => performSideEffects()),
         )
       | ReverseItemsAnimation =>
         let onStopClose = () =>
           act(ReverseWithSideEffects(() => act(OpenHeight(None))));
-        SideEffects(((_) => act(CloseHeight(Some(onStopClose)))));
+        SideEffects((_ => act(CloseHeight(Some(onStopClose)))));
       | ToggleRandomAnimation =>
         SideEffects(
           (
-            (_) =>
+            _ =>
               Animation.isActive(randomAnimation) ?
                 Animation.stop(randomAnimation) :
                 Animation.start(randomAnimation)
@@ -585,7 +584,7 @@ module ReducerAnimationExample = {
             )>
             (ReasonReact.string(txt))
           </div>;
-      let hide = ! showAllButtons;
+      let hide = !showAllButtons;
       <div className="componentBox">
         <div className="componentColumn">
           (ReasonReact.string("Control:"))
@@ -692,7 +691,7 @@ module ChatHead = {
 
 module ChatHeadsExample = {
   [@bs.val]
-  external addEventListener : (string, Js.t({..}) => unit) => unit =
+  external addEventListener: (string, Js.t({..}) => unit) => unit =
     "window.addEventListener";
   let numHeads = 6;
   type control = {
@@ -713,7 +712,7 @@ module ChatHeadsExample = {
   let make = (~imageGallery, _children) => {
     ...component,
     initialState: () => {
-      let controls = Belt.Array.makeBy(numHeads, (_) => createControl());
+      let controls = Belt.Array.makeBy(numHeads, _ => createControl());
       let chatHeads =
         Belt.Array.makeBy(numHeads, i =>
           <ChatHead
@@ -747,11 +746,11 @@ module ChatHeadsExample = {
         let afterChangeX = x =>
           isLastHead ?
             () :
-            controls[headNum + 1].animX |> SpringAnimation.setFinalValue(x);
+            controls[(headNum + 1)].animX |> SpringAnimation.setFinalValue(x);
         let afterChangeY = y =>
           isLastHead ?
             () :
-            controls[headNum + 1].animY |> SpringAnimation.setFinalValue(y);
+            controls[(headNum + 1)].animY |> SpringAnimation.setFinalValue(y);
         setOnChange(~isX=true, afterChangeX);
         setOnChange(~isX=false, afterChangeY);
       };

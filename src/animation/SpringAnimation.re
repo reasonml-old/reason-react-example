@@ -21,12 +21,13 @@ let setOnChange =
       ~finalValue=?,
       a,
     ) => {
-  let callback = (.) => {
-    a.state = Spring.stepper(~preset?, ~speedup?, ~precision?, a.state);
-    let isFinished = Spring.isFinished(a.state);
-    onChange(a.state.value);
-    isFinished ? Animation.Stop(onStop) : Continue;
-  };
+  let callback =
+    (.) => {
+      a.state = Spring.stepper(~preset?, ~speedup?, ~precision?, a.state);
+      let isFinished = Spring.isFinished(a.state);
+      onChange(a.state.value);
+      isFinished ? Animation.Stop(onStop) : Continue;
+    };
   a.animation |> Animation.stop;
   a.animation |> Animation.setCallback(~callback);
   switch (finalValue) {

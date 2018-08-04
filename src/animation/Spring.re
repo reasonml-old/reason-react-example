@@ -55,7 +55,7 @@ let isFinished = ({value, velocity, finalValue}) =>
 let test = () => {
   let rec iterate = state => {
     Js.log(state);
-    if (! isFinished(state)) {
+    if (!isFinished(state)) {
       iterate(stepper(state));
     };
   };
