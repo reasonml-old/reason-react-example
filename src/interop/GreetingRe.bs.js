@@ -25,13 +25,12 @@ function make(message, extraGreeting, _) {
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
           /* reducer */component[/* reducer */12],
-          /* subscriptions */component[/* subscriptions */13],
-          /* jsElementWrapped */component[/* jsElementWrapped */14]
+          /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }
 
 var jsComponent = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(jsProps.message, Js_primitive.nullable_to_opt(jsProps.extraGreeting), /* array */[]);
+        return make(jsProps.message, Js_primitive.nullable_to_opt(jsProps.extraGreeting), jsProps.children);
       }));
 
 exports.component = component;

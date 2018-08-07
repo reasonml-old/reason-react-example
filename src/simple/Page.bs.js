@@ -30,8 +30,7 @@ function make(message, _) {
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
           /* reducer */component[/* reducer */12],
-          /* subscriptions */component[/* subscriptions */13],
-          /* jsElementWrapped */component[/* jsElementWrapped */14]
+          /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }
 

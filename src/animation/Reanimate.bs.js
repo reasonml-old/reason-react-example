@@ -188,8 +188,7 @@ function make($staropt$star, $staropt$star$1, _) {
                         ]);
               }
             }),
-          /* subscriptions */component[/* subscriptions */13],
-          /* jsElementWrapped */component[/* jsElementWrapped */14]
+          /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }
 
@@ -217,8 +216,7 @@ function make$1(text, _) {
           /* initialState */component$1[/* initialState */10],
           /* retainedProps */component$1[/* retainedProps */11],
           /* reducer */component$1[/* reducer */12],
-          /* subscriptions */component$1[/* subscriptions */13],
-          /* jsElementWrapped */component$1[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$1[/* jsElementWrapped */13]
         ];
 }
 
@@ -360,8 +358,7 @@ function make$2($staropt$star, rAction, $staropt$star$1, onClose, _) {
                           ]]);
               }
             }),
-          /* subscriptions */component$2[/* subscriptions */13],
-          /* jsElementWrapped */component$2[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$2[/* jsElementWrapped */13]
         ];
 }
 
@@ -464,8 +461,7 @@ function make$3(rAction, targetHeight, children) {
                 
               }
             }),
-          /* subscriptions */component$3[/* subscriptions */13],
-          /* jsElementWrapped */component$3[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$3[/* jsElementWrapped */13]
         ];
 }
 
@@ -556,7 +552,7 @@ function make$4(showAllButtons, _) {
                         Caml_builtin_exceptions.assert_failure,
                         /* tuple */[
                           "Reanimate.re",
-                          424,
+                          423,
                           19
                         ]
                       ];
@@ -812,8 +808,7 @@ function make$4(showAllButtons, _) {
                 }
               }
             }),
-          /* subscriptions */component$4[/* subscriptions */13],
-          /* jsElementWrapped */component$4[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$4[/* jsElementWrapped */13]
         ];
 }
 
@@ -884,8 +879,7 @@ function make$5(rAction, headNum, imageGallery, _) {
                           ]]);
               }
             }),
-          /* subscriptions */component$5[/* subscriptions */13],
-          /* jsElementWrapped */component$5[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$5[/* jsElementWrapped */13]
         ];
 }
 
@@ -983,8 +977,7 @@ function make$6(imageGallery, _) {
           /* reducer */(function (_, _$1) {
               return /* NoUpdate */0;
             }),
-          /* subscriptions */component$6[/* subscriptions */13],
-          /* jsElementWrapped */component$6[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$6[/* jsElementWrapped */13]
         ];
 }
 
@@ -1035,8 +1028,7 @@ function make$7() {
           /* reducer */(function (actionIsState, _) {
               return /* Update */Block.__(0, [actionIsState]);
             }),
-          /* subscriptions */component$7[/* subscriptions */13],
-          /* jsElementWrapped */component$7[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$7[/* jsElementWrapped */13]
         ];
 }
 
@@ -1082,8 +1074,7 @@ function make$8($staropt$star, $staropt$star$1, child) {
           /* initialState */component$8[/* initialState */10],
           /* retainedProps */component$8[/* retainedProps */11],
           /* reducer */component$8[/* reducer */12],
-          /* subscriptions */component$8[/* subscriptions */13],
-          /* jsElementWrapped */component$8[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$8[/* jsElementWrapped */13]
         ];
 }
 
@@ -1135,8 +1126,7 @@ function make$9(children) {
           /* initialState */component$9[/* initialState */10],
           /* retainedProps */component$9[/* retainedProps */11],
           /* reducer */component$9[/* reducer */12],
-          /* subscriptions */component$9[/* subscriptions */13],
-          /* jsElementWrapped */component$9[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$9[/* jsElementWrapped */13]
         ];
 }
 
@@ -1191,8 +1181,7 @@ function make$10() {
           /* initialState */component$10[/* initialState */10],
           /* retainedProps */component$10[/* retainedProps */11],
           /* reducer */component$10[/* reducer */12],
-          /* subscriptions */component$10[/* subscriptions */13],
-          /* jsElementWrapped */component$10[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$10[/* jsElementWrapped */13]
         ];
 }
 

@@ -6,7 +6,7 @@ type showingState =
 let component = ReasonReact.statelessComponent("TodoFooterRe");
 
 let push = (path, event) => {
-  ReactEventRe.Mouse.preventDefault(event);
+  ReactEvent.Mouse.preventDefault(event);
   ReasonReact.Router.push("#" ++ path);
 };
 

@@ -43,7 +43,14 @@ function make() {
           /* reactClassInternal */component[/* reactClassInternal */1],
           /* handedOffState */component[/* handedOffState */2],
           /* willReceiveProps */component[/* willReceiveProps */3],
-          /* didMount */component[/* didMount */4],
+          /* didMount */(function (self) {
+              var token = ReasonReact.Router[/* watchUrl */1]((function (url) {
+                      return Curry._1(self[/* send */3], /* Navigate */Block.__(0, [urlToShownPage(url[/* hash */1])]));
+                    }));
+              return Curry._1(self[/* onUnmount */4], (function () {
+                            return ReasonReact.Router[/* unwatchUrl */2](token);
+                          }));
+            }),
           /* didUpdate */component[/* didUpdate */5],
           /* willUnmount */component[/* willUnmount */6],
           /* willUpdate */component[/* willUpdate */7],
@@ -308,20 +315,7 @@ function make() {
                 }
               }
             }),
-          /* subscriptions */(function (self) {
-              return /* :: */[
-                      /* Sub */[
-                        (function () {
-                            return ReasonReact.Router[/* watchUrl */1]((function (url) {
-                                          return Curry._1(self[/* send */3], /* Navigate */Block.__(0, [urlToShownPage(url[/* hash */1])]));
-                                        }));
-                          }),
-                        ReasonReact.Router[/* unwatchUrl */2]
-                      ],
-                      /* [] */0
-                    ];
-            }),
-          /* jsElementWrapped */component[/* jsElementWrapped */14]
+          /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }
 

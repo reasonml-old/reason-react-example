@@ -58,8 +58,7 @@ function make(state, update, _) {
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
           /* reducer */component[/* reducer */12],
-          /* subscriptions */component[/* subscriptions */13],
-          /* jsElementWrapped */component[/* jsElementWrapped */14]
+          /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }
 
@@ -107,8 +106,7 @@ function make$1(state, update, _) {
           /* initialState */component$1[/* initialState */10],
           /* retainedProps */component$1[/* retainedProps */11],
           /* reducer */component$1[/* reducer */12],
-          /* subscriptions */component$1[/* subscriptions */13],
-          /* jsElementWrapped */component$1[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$1[/* jsElementWrapped */13]
         ];
 }
 
@@ -146,8 +144,7 @@ function make$2(state, update, _) {
           /* initialState */component$2[/* initialState */10],
           /* retainedProps */component$2[/* retainedProps */11],
           /* reducer */component$2[/* reducer */12],
-          /* subscriptions */component$2[/* subscriptions */13],
-          /* jsElementWrapped */component$2[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$2[/* jsElementWrapped */13]
         ];
 }
 
@@ -182,8 +179,7 @@ function make$3() {
           /* reducer */(function (fn, state) {
               return /* Update */Block.__(0, [Curry._1(fn, state)]);
             }),
-          /* subscriptions */component$3[/* subscriptions */13],
-          /* jsElementWrapped */component$3[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$3[/* jsElementWrapped */13]
         ];
 }
 
@@ -228,8 +224,7 @@ function make$4() {
                 return /* Update */Block.__(0, [state + 1 | 0]);
               }
             }),
-          /* subscriptions */component$4[/* subscriptions */13],
-          /* jsElementWrapped */component$4[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$4[/* jsElementWrapped */13]
         ];
 }
 
@@ -266,8 +261,7 @@ function make$5() {
           /* reducer */(function (_, state) {
               return /* Update */Block.__(0, [!state]);
             }),
-          /* subscriptions */component$5[/* subscriptions */13],
-          /* jsElementWrapped */component$5[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$5[/* jsElementWrapped */13]
         ];
 }
 
@@ -295,8 +289,7 @@ function make$6() {
           /* initialState */component$6[/* initialState */10],
           /* retainedProps */component$6[/* retainedProps */11],
           /* reducer */component$6[/* reducer */12],
-          /* subscriptions */component$6[/* subscriptions */13],
-          /* jsElementWrapped */component$6[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$6[/* jsElementWrapped */13]
         ];
 }
 
@@ -347,8 +340,7 @@ function make$7($staropt$star, $staropt$star$1, $staropt$star$2, _) {
           /* reducer */(function (action, _) {
               return /* Update */Block.__(0, [action[0]]);
             }),
-          /* subscriptions */component$7[/* subscriptions */13],
-          /* jsElementWrapped */component$7[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$7[/* jsElementWrapped */13]
         ];
 }
 
@@ -426,8 +418,7 @@ function make$8(renderValue, _) {
                         ]);
               }
             }),
-          /* subscriptions */component$8[/* subscriptions */13],
-          /* jsElementWrapped */component$8[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$8[/* jsElementWrapped */13]
         ];
 }
 
@@ -470,8 +461,7 @@ function make$9() {
           /* initialState */component$9[/* initialState */10],
           /* retainedProps */component$9[/* retainedProps */11],
           /* reducer */component$9[/* reducer */12],
-          /* subscriptions */component$9[/* subscriptions */13],
-          /* jsElementWrapped */component$9[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$9[/* jsElementWrapped */13]
         ];
 }
 
@@ -516,8 +506,7 @@ function make$10() {
           /* initialState */component$10[/* initialState */10],
           /* retainedProps */component$10[/* retainedProps */11],
           /* reducer */component$10[/* reducer */12],
-          /* subscriptions */component$10[/* subscriptions */13],
-          /* jsElementWrapped */component$10[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$10[/* jsElementWrapped */13]
         ];
 }
 
@@ -583,8 +572,7 @@ function make$11(remoteAction, $staropt$star, $staropt$star$1, $staropt$star$2, 
                 return /* Update */Block.__(0, ["the text has been reset"]);
               }
             }),
-          /* subscriptions */component$11[/* subscriptions */13],
-          /* jsElementWrapped */component$11[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$11[/* jsElementWrapped */13]
         ];
 }
 
@@ -635,8 +623,7 @@ function make$12() {
           /* initialState */component$12[/* initialState */10],
           /* retainedProps */component$12[/* retainedProps */11],
           /* reducer */component$12[/* reducer */12],
-          /* subscriptions */component$12[/* subscriptions */13],
-          /* jsElementWrapped */component$12[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$12[/* jsElementWrapped */13]
         ];
 }
 
@@ -684,8 +671,7 @@ function make$13(remoteAction, _) {
                 return /* Update */Block.__(0, [state + 1 | 0]);
               }
             }),
-          /* subscriptions */component$13[/* subscriptions */13],
-          /* jsElementWrapped */component$13[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$13[/* jsElementWrapped */13]
         ];
 }
 
@@ -713,8 +699,7 @@ function make$14(remoteAction, _) {
           /* initialState */component$14[/* initialState */10],
           /* retainedProps */component$14[/* retainedProps */11],
           /* reducer */component$14[/* reducer */12],
-          /* subscriptions */component$14[/* subscriptions */13],
-          /* jsElementWrapped */component$14[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$14[/* jsElementWrapped */13]
         ];
 }
 
@@ -751,8 +736,7 @@ function make$15() {
           /* reducer */(function (_, _$1) {
               return /* NoUpdate */0;
             }),
-          /* subscriptions */component$15[/* subscriptions */13],
-          /* jsElementWrapped */component$15[/* jsElementWrapped */14]
+          /* jsElementWrapped */component$15[/* jsElementWrapped */13]
         ];
 }
 

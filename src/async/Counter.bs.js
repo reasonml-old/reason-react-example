@@ -36,8 +36,7 @@ function make() {
           /* reducer */(function (_, state) {
               return /* Update */Block.__(0, [/* record */[/* count */state[/* count */0] + 1 | 0]]);
             }),
-          /* subscriptions */component[/* subscriptions */13],
-          /* jsElementWrapped */component[/* jsElementWrapped */14]
+          /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }
 

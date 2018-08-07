@@ -122,15 +122,13 @@ module Top = {
         todos,
       };
     },
-    subscriptions: self => [
-      Sub(
-        () =>
-          ReasonReact.Router.watchUrl(url =>
-            self.send(Navigate(urlToShownPage(url.hash)))
-          ),
-        ReasonReact.Router.unwatchUrl,
-      ),
-    ],
+    didMount: self => {
+      let token =
+        ReasonReact.Router.watchUrl(url =>
+          self.send(Navigate(urlToShownPage(url.hash)))
+        );
+      self.onUnmount(() => ReasonReact.Router.unwatchUrl(token));
+    },
     /* router actions */
     render: ({state, send}) => {
       let {todos, editing} = state;
@@ -185,12 +183,10 @@ module Top = {
           <section className="main">
             <input
               className="toggle-all"
-              _type="checkbox"
+              type_="checkbox"
               onChange=(
                 event => {
-                  let checked = ReactDOMRe.domElementToObj(
-                                  ReactEventRe.Form.target(event),
-                                )##checked;
+                  let checked = ReactEvent.Form.target(event)##checked;
                   send(ToggleAll(checked));
                 }
               )
@@ -209,8 +205,8 @@ module Top = {
             value=state.newTodo
             onKeyDown=(
               event =>
-                if (ReactEventRe.Keyboard.keyCode(event) === 13) {
-                  ReactEventRe.Keyboard.preventDefault(event);
+                if (ReactEvent.Keyboard.keyCode(event) === 13) {
+                  ReactEvent.Keyboard.preventDefault(event);
                   send(NewTodoEnterKeyDown);
                 } else {
                   send(NewTodoOtherKeyDown);
@@ -218,13 +214,7 @@ module Top = {
             )
             onChange=(
               event =>
-                send(
-                  ChangeTodo(
-                    ReactDOMRe.domElementToObj(
-                      ReactEventRe.Form.target(event),
-                    )##value,
-                  ),
-                )
+                send(ChangeTodo(ReactEvent.Form.target(event)##value))
             )
             autoFocus=true
           />

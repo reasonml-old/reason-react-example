@@ -86,9 +86,9 @@ let make =
         <div className="view">
           <input
             className="toggle"
-            _type="checkbox"
+            type_="checkbox"
             checked=todo.completed
-            onChange=((_) => onToggle())
+            onChange=(_ => onToggle())
           />
           <label
             onDoubleClick=(
@@ -99,7 +99,7 @@ let make =
             )>
             (ReasonReact.string(todo.title))
           </label>
-          <button className="destroy" onClick=((_) => onDestroy()) />
+          <button className="destroy" onClick=(_ => onDestroy()) />
         </div>
         <input
           ref=(handle(setEditFieldRef))
@@ -107,15 +107,10 @@ let make =
           value=state.editText
           onBlur=(_event => send(Submit))
           onChange=(
-            event =>
-              send(
-                Change(
-                  ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event))##value,
-                ),
-              )
+            event => send(Change(ReactEvent.Form.target(event)##value))
           )
           onKeyDown=(
-            event => send(KeyDown(ReactEventRe.Keyboard.which(event)))
+            event => send(KeyDown(ReactEvent.Keyboard.which(event)))
           )
         />
       </li>;

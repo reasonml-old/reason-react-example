@@ -18,9 +18,9 @@
   "dependencies": {
     "@glennsl/bs-json": "^3.0.0",
     "bs-fetch": "^0.3.0",
-    "reason-react": "^0.4.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "reason-react": "^0.5.0",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.1"
   },

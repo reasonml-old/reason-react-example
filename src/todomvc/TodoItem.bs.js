@@ -164,8 +164,7 @@ function make(todo, editing, onDestroy, onSave, onEdit, onToggle, onCancel, _) {
                 }
               }
             }),
-          /* subscriptions */component[/* subscriptions */13],
-          /* jsElementWrapped */component[/* jsElementWrapped */14]
+          /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }
 
