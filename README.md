@@ -1,3 +1,9 @@
+# Deprecated
+
+**Please use this official [bsb ReasonReact template](https://reasonml.github.io/reason-react/docs/en/installation#bucklescript) instead.**
+
+# Old Instructions
+
 This is a repo with examples usages of [ReasonReact](https://github.com/reasonml/reason-react), whose docs are [here](https://reasonml.github.io/reason-react/).
 Have something you don't understand? Join us on [Discord](https://discord.gg/reasonml)!
 
