@@ -4,7 +4,7 @@ var React = require("react");
 var ReactDom = require("react-dom");
 var InteropExample$ReactHooks = require("./ReactJSUsingReasonReact/InteropExample.bs.js");
 var BlinkingGreeting$ReactHooks = require("./BlinkingGreeting.bs.js");
-var FetchDogPictures$ReactHooks = require("./FetchDogPictures.bs.js");
+var FetchedDogPictures$ReactHooks = require("./FetchedDogPictures.bs.js");
 var ReducerExampleFromReactJSDocs$ReactHooks = require("./ReducerExampleFromReactJSDocs.bs.js");
 
 document.body.style.fontSize = "16px";
@@ -33,14 +33,14 @@ function makeContainer(text) {
 }
 
 ReactDom.render(React.createElement(BlinkingGreeting$ReactHooks.make, {
-          children: React.createElement("div", undefined, "How are you")
-        }), makeContainer("Blinking Greeting, using useState & useEffect"));
+          children: React.createElement("div", undefined, "Hello!")
+        }), makeContainer("Blinking Greeting"));
 
-ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReactHooks.make, { }), makeContainer("ReactJS Documentation Example, using useReducer"));
+ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReactHooks.make, { }), makeContainer("Reducer Example From ReactJS Docs"));
 
-ReactDom.render(React.createElement(FetchDogPictures$ReactHooks.make, { }), makeContainer("Randomly Fetched Dogs, using useEffect & useState & promises"));
+ReactDom.render(React.createElement(FetchedDogPictures$ReactHooks.make, { }), makeContainer("Fetched Dog Pictures"));
 
-ReactDom.render(React.createElement(InteropExample$ReactHooks.make, { }), makeContainer("ReasonReact/ReactJS Communication"));
+ReactDom.render(React.createElement(InteropExample$ReactHooks.make, { }), makeContainer("Interop Example"));
 
 exports.makeContainer = makeContainer;
 /*  Not a pure module */

@@ -38,19 +38,19 @@ let makeContainer = (text) => {
 
 ReactDOMRe.render(
   <BlinkingGreeting>
-    <div> {React.string("How are you")} </div>
+    <div> {React.string("Hello!")} </div>
   </BlinkingGreeting>,
-  makeContainer("Blinking Greeting, using useState & useEffect")
+  makeContainer("Blinking Greeting")
 );
 
 ReactDOMRe.render(
   <ReducerExampleFromReactJSDocs />,
-  makeContainer("ReactJS Documentation Example, using useReducer")
+  makeContainer("Reducer Example From ReactJS Docs")
 );
 
 ReactDOMRe.render(
-  <FetchDogPictures />,
-  makeContainer("Randomly Fetched Dogs, using useEffect & useState & promises")
+  <FetchedDogPictures />,
+  makeContainer("Fetched Dog Pictures")
 );
 
 // ReactDOMRe.render(
@@ -60,6 +60,6 @@ ReactDOMRe.render(
 
 ReactDOMRe.render(
   <InteropExample />,
-  makeContainer("ReasonReact/ReactJS Communication")
+  makeContainer("Interop Example")
 );
 
