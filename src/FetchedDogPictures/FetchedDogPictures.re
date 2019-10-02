@@ -1,6 +1,14 @@
 [@bs.val] external fetch: string => Js.Promise.t('a) = "fetch";
 
-// === Actual component logic ===
+let imageStyle =
+  ReactDOMRe.Style.make(
+    ~height="120px",
+    ~borderRadius="8px",
+    ~marginRight="8px",
+    ~boxShadow="rgb(218, 218, 218) 0px 4px 4px",
+    (),
+  );
+
 type state =
   | LoadingDogs
   | ErrorFetchingDogs
@@ -37,19 +45,7 @@ let make = () => {
   | LoadedDogs(dogs) =>
     <>
       <div>
-        {Belt.Array.map(dogs, dog =>
-           <img
-             key=dog
-             src=dog
-             style={ReactDOMRe.Style.make(
-               ~height="120px",
-               ~borderRadius="8px",
-               ~marginRight="8px",
-               ~boxShadow="rgb(218, 218, 218) 0px 4px 4px",
-               (),
-             )}
-           />
-         )
+        {Belt.Array.map(dogs, dog => <img key=dog src=dog style=imageStyle />)
          ->React.array}
       </div>
     </>

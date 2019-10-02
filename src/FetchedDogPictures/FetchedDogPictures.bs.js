@@ -4,6 +4,13 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
 
+var imageStyle = {
+  height: "120px",
+  marginRight: "8px",
+  borderRadius: "8px",
+  boxShadow: "rgb(218, 218, 218) 0px 4px 4px"
+};
+
 function FetchedDogPictures(Props) {
   var match = React.useState((function () {
           return /* LoadingDogs */0;
@@ -37,12 +44,7 @@ function FetchedDogPictures(Props) {
     return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, Belt_Array.map(state[0], (function (dog) {
                           return React.createElement("img", {
                                       key: dog,
-                                      style: {
-                                        height: "120px",
-                                        marginRight: "8px",
-                                        borderRadius: "8px",
-                                        boxShadow: "rgb(218, 218, 218) 0px 4px 4px"
-                                      },
+                                      style: imageStyle,
                                       src: dog
                                     });
                         }))));
@@ -51,5 +53,6 @@ function FetchedDogPictures(Props) {
 
 var make = FetchedDogPictures;
 
+exports.imageStyle = imageStyle;
 exports.make = make;
 /* react Not a pure module */
