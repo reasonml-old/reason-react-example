@@ -2,10 +2,10 @@
 
 var React = require("react");
 var ReactDom = require("react-dom");
-var InteropExample$ReactHooks = require("./InteropExample/InteropExample.bs.js");
-var BlinkingGreeting$ReactHooks = require("./BlinkingGreeting/BlinkingGreeting.bs.js");
-var FetchedDogPictures$ReactHooks = require("./FetchedDogPictures/FetchedDogPictures.bs.js");
-var ReducerExampleFromReactJSDocs$ReactHooks = require("./ReducerExampleFromReactJSDocs/ReducerExampleFromReactJSDocs.bs.js");
+var InteropExample$ReasonReactExamples = require("./InteropExample/InteropExample.bs.js");
+var BlinkingGreeting$ReasonReactExamples = require("./BlinkingGreeting/BlinkingGreeting.bs.js");
+var FetchedDogPictures$ReasonReactExamples = require("./FetchedDogPictures/FetchedDogPictures.bs.js");
+var ReducerExampleFromReactJSDocs$ReasonReactExamples = require("./ReducerExampleFromReactJSDocs/ReducerExampleFromReactJSDocs.bs.js");
 
 document.body.style.fontSize = "16px";
 
@@ -32,15 +32,15 @@ function makeContainer(text) {
   return content;
 }
 
-ReactDom.render(React.createElement(BlinkingGreeting$ReactHooks.make, {
+ReactDom.render(React.createElement(BlinkingGreeting$ReasonReactExamples.make, {
           children: React.createElement("div", undefined, "Hello!")
         }), makeContainer("Blinking Greeting"));
 
-ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReactHooks.make, { }), makeContainer("Reducer Example From ReactJS Docs"));
+ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReasonReactExamples.make, { }), makeContainer("Reducer Example From ReactJS Docs"));
 
-ReactDom.render(React.createElement(FetchedDogPictures$ReactHooks.make, { }), makeContainer("Fetched Dog Pictures"));
+ReactDom.render(React.createElement(FetchedDogPictures$ReasonReactExamples.make, { }), makeContainer("Fetched Dog Pictures"));
 
-ReactDom.render(React.createElement(InteropExample$ReactHooks.make, { }), makeContainer("Interop Example"));
+ReactDom.render(React.createElement(InteropExample$ReasonReactExamples.make, { }), makeContainer("Interop Example"));
 
 exports.makeContainer = makeContainer;
 /*  Not a pure module */
