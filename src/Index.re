@@ -31,10 +31,10 @@ let makeContainer = (text) => {
 
 // =============
 
-ReactDOMRe.render(
-  <StatefulCounter greeting="Hi!" />,
-  makeContainer("Stateful Counter, using useState")
-);
+// ReactDOMRe.render(
+//   <StatefulCounter greeting="Hi!" />,
+//   makeContainer("Stateful Counter, using useState")
+// );
 
 ReactDOMRe.render(
   <BlinkingGreeting>
@@ -53,13 +53,13 @@ ReactDOMRe.render(
   makeContainer("Randomly Fetched Dogs, using useEffect & useState & promises")
 );
 
-ReactDOMRe.render(
-  <ButtonFromReactJS disabled=false label="ReasonReact using a ReactJS button" />,
-  makeContainer("Interop Example 1")
-);
+// ReactDOMRe.render(
+//   <ButtonFromReactJS disabled=false label="ReasonReact using a ReactJS button" />,
+//   makeContainer("ReasonReact/ReactJS Communication")
+// );
 
 ReactDOMRe.render(
   <InteropExample />,
-  makeContainer("Interop Example 2")
+  makeContainer("ReasonReact/ReactJS Communication")
 );
 

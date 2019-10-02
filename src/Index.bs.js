@@ -3,10 +3,8 @@
 var React = require("react");
 var ReactDom = require("react-dom");
 var InteropExample$ReactHooks = require("./ReactJSUsingReasonReact/InteropExample.bs.js");
-var StatefulCounter$ReactHooks = require("./StatefulCounter.bs.js");
 var BlinkingGreeting$ReactHooks = require("./BlinkingGreeting.bs.js");
 var FetchDogPictures$ReactHooks = require("./FetchDogPictures.bs.js");
-var ButtonFromReactJS$ReactHooks = require("./ReasonReactUsingReactJS/ButtonFromReactJS.bs.js");
 var ReducerExampleFromReactJSDocs$ReactHooks = require("./ReducerExampleFromReactJSDocs.bs.js");
 
 document.body.style.fontSize = "16px";
@@ -34,10 +32,6 @@ function makeContainer(text) {
   return content;
 }
 
-ReactDom.render(React.createElement(StatefulCounter$ReactHooks.make, {
-          greeting: "Hi!"
-        }), makeContainer("Stateful Counter, using useState"));
-
 ReactDom.render(React.createElement(BlinkingGreeting$ReactHooks.make, {
           children: React.createElement("div", undefined, "How are you")
         }), makeContainer("Blinking Greeting, using useState & useEffect"));
@@ -46,12 +40,7 @@ ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReactHooks.mak
 
 ReactDom.render(React.createElement(FetchDogPictures$ReactHooks.make, { }), makeContainer("Randomly Fetched Dogs, using useEffect & useState & promises"));
 
-ReactDom.render(React.createElement(ButtonFromReactJS$ReactHooks.make, {
-          disabled: false,
-          label: "ReasonReact using a ReactJS button"
-        }), makeContainer("Interop Example 1"));
-
-ReactDom.render(React.createElement(InteropExample$ReactHooks.make, { }), makeContainer("Interop Example 2"));
+ReactDom.render(React.createElement(InteropExample$ReactHooks.make, { }), makeContainer("ReasonReact/ReactJS Communication"));
 
 exports.makeContainer = makeContainer;
 /*  Not a pure module */
