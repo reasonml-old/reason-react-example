@@ -4,20 +4,23 @@ document##body##style##fontSize #= "16px";
 
 let makeContainer = (text) => {
   let container = document##createElement("div");
-  container##className #= "container";
   container##style##margin #= "24px 0px";
-  container##style##backgroundColor #= "#fafafa";
-  // container##style##border #= "1px solid #eee";
-  container##style##borderRadius #= "12px";
-  container##style##padding #= "12px";
   container##style##boxShadow #= "0px 4px 16px #dadada";
-  container##style##display #= "flex";
-  container##style##alignItems #= "center";
+  container##style##flexDirection #= "column";
 
   let title = document##createElement("div");
   title##innerText #= text
+  title##style##backgroundColor #= "rgb(242, 243, 245)"
+  title##style##borderRadius #= "12px 12px 0px 0px";
+  title##style##padding #= "12px";
+  title##style##fontWeight #= "bold";
 
   let content = document##createElement("div");
+  content##style##display #= "flex";
+  content##style##alignItems #= "center";
+  content##style##backgroundColor #= "white";
+  content##style##padding #= "12px";
+  content##style##borderRadius #= "0px 0px 12px 12px";
 
   let () = container##appendChild(title);
   let () = container##appendChild(content);
@@ -26,45 +29,37 @@ let makeContainer = (text) => {
   content
 };
 
-// let styleElement = document##createElement("style")
-// let () = document##head##appendChild(styleElement)
-// styleElement##sheet##insertRule("
-//   button {
-//     background-color: red;
-//   }
-// ")
-
 // =============
 
 ReactDOMRe.render(
   <StatefulCounter greeting="Hi!" />,
-  makeContainer("hi")
+  makeContainer("Stateful Counter, using useState")
 );
 
 ReactDOMRe.render(
   <BlinkingGreeting>
     <div> {React.string("hi")} </div>
   </BlinkingGreeting>,
-  makeContainer("hi")
+  makeContainer("Blinking Greeting, using useState & useEffect")
 );
 
 ReactDOMRe.render(
   <ReducerExampleFromReactJSDocs />,
-  makeContainer("hi")
+  makeContainer("ReactJS Documentation Example, using useReducer")
 );
 
 ReactDOMRe.render(
   <FetchDogPictures />,
-  makeContainer("hi")
+  makeContainer("Randomly Fetched Dogs, using useEffect & useState & promises")
 );
 
 ReactDOMRe.render(
   <ButtonFromReactJS disabled=false label="ReasonReact using a ReactJS button" />,
-  makeContainer("hi")
+  makeContainer("Interop Example 1")
 );
 
 ReactDOMRe.render(
   <InteropExample />,
-  makeContainer("hi")
+  makeContainer("Interop Example 2")
 );
 

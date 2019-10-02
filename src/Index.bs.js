@@ -13,17 +13,21 @@ document.body.style.fontSize = "16px";
 
 function makeContainer(text) {
   var container = document.createElement("div");
-  container.className = "container";
   container.style.margin = "24px 0px";
-  container.style.backgroundColor = "#fafafa";
-  container.style.borderRadius = "12px";
-  container.style.padding = "12px";
   container.style.boxShadow = "0px 4px 16px #dadada";
-  container.style.display = "flex";
-  container.style.alignItems = "center";
+  container.style.flexDirection = "column";
   var title = document.createElement("div");
   title.innerText = text;
+  title.style.backgroundColor = "rgb(242, 243, 245)";
+  title.style.borderRadius = "12px 12px 0px 0px";
+  title.style.padding = "12px";
+  title.style.fontWeight = "bold";
   var content = document.createElement("div");
+  content.style.display = "flex";
+  content.style.alignItems = "center";
+  content.style.backgroundColor = "white";
+  content.style.padding = "12px";
+  content.style.borderRadius = "0px 0px 12px 12px";
   container.appendChild(title);
   container.appendChild(content);
   document.body.appendChild(container);
@@ -32,22 +36,22 @@ function makeContainer(text) {
 
 ReactDom.render(React.createElement(StatefulCounter$ReactHooks.make, {
           greeting: "Hi!"
-        }), makeContainer("hi"));
+        }), makeContainer("Stateful Counter, using useState"));
 
 ReactDom.render(React.createElement(BlinkingGreeting$ReactHooks.make, {
           children: React.createElement("div", undefined, "hi")
-        }), makeContainer("hi"));
+        }), makeContainer("Blinking Greeting, using useState & useEffect"));
 
-ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReactHooks.make, { }), makeContainer("hi"));
+ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReactHooks.make, { }), makeContainer("ReactJS Documentation Example, using useReducer"));
 
-ReactDom.render(React.createElement(FetchDogPictures$ReactHooks.make, { }), makeContainer("hi"));
+ReactDom.render(React.createElement(FetchDogPictures$ReactHooks.make, { }), makeContainer("Randomly Fetched Dogs, using useEffect & useState & promises"));
 
 ReactDom.render(React.createElement(ButtonFromReactJS$ReactHooks.make, {
           disabled: false,
           label: "ReasonReact using a ReactJS button"
-        }), makeContainer("hi"));
+        }), makeContainer("Interop Example 1"));
 
-ReactDom.render(React.createElement(InteropExample$ReactHooks.make, { }), makeContainer("hi"));
+ReactDom.render(React.createElement(InteropExample$ReactHooks.make, { }), makeContainer("Interop Example 2"));
 
 exports.makeContainer = makeContainer;
 /*  Not a pure module */
