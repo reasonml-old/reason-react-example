@@ -9,7 +9,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "BuckleScript"
+    "BuckleScript",
+    "ReasonReact",
+    "reason-react"
   ],
   "author": "",
   "license": "MIT",

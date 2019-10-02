@@ -27,7 +27,7 @@ let make = () => {
       |> ignore
     );
 
-    // Returning None means we don't have
+    // TODO: Returning None means we don't have any cleanup to do before unmounting. That's not 100% true
     None;
   });
 
@@ -36,18 +36,6 @@ let make = () => {
   | LoadingDogs => <div> {React.string("Loading...")} </div>
   | LoadedDogs(dogs) =>
     <>
-      // <div style={
-      //   ReactDOMRe.Style.make(
-      //     ~marginBottom="8px",
-      //     ()
-      //   )}
-      // >
-      // Dog pictures, asynchronously loaded from https://dog.ceo
-      // (React.string("Dog pictures, asynchronously loaded from "))
-      // <a href="https://dog.ceo">
-      //   (React.string("https://dog.ceo"))
-      // </a>
-      // </div>
       <div>
         {Belt.Array.map(dogs, dog =>
            <img

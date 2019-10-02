@@ -1,3 +1,5 @@
+// TODO: explain this file
+
 [@bs.val] external document: Js.t({..}) = "document";
 
 document##body##style##fontSize #= "16px";
