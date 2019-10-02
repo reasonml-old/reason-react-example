@@ -1,8 +1,9 @@
 # ReasonReact Template & Examples
 
-ReasonReact documentation [here](https://reasonml.github.io/reason-react/).
-
-This is both a starter template for your new ReasonReact project, and also a collection of thin examples illustrating ReasonReact usage.
+This is:
+- A starter template for your new ReasonReact project.
+- A collection of thin examples illustrating ReasonReact usage.
+- Extra helper documentation for ReasonReact (full ReasonReact docs [here](https://reasonml.github.io/reason-react/))
 
 `src` contains 4 sub-folders, each an independent ReasonReact example. Feel free to delete any of them and shape this into your project!
 
