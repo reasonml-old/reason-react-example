@@ -19,7 +19,7 @@ let makeContainer = (text) => {
   content##style##display #= "flex";
   content##style##alignItems #= "center";
   content##style##backgroundColor #= "white";
-  content##style##padding #= "12px";
+  content##style##padding #= "16px";
   content##style##borderRadius #= "0px 0px 12px 12px";
 
   let () = container##appendChild(title);
@@ -38,7 +38,7 @@ ReactDOMRe.render(
 
 ReactDOMRe.render(
   <BlinkingGreeting>
-    <div> {React.string("hi")} </div>
+    <div> {React.string("How are you")} </div>
   </BlinkingGreeting>,
   makeContainer("Blinking Greeting, using useState & useEffect")
 );

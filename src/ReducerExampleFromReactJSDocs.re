@@ -21,14 +21,14 @@ let reducer = (state, action) => {
 let make = () => {
   let (state, dispatch) = React.useReducer(reducer, initialState);
   <>
-      {React.string("Count: ")}
-      {React.string(string_of_int(state.count))}
+    {React.string("Count: ")}
+    {React.string(string_of_int(state.count))}
     <button
       style={
         ReactDOMRe.Style.make(
           ~boxShadow="0 0 0px 1px #48a9dc",
           ~border="none",
-          ~borderRadius="8px 0px 0px 8px",
+          ~borderRadius="4px 0px 0px 4px",
           ~marginLeft="8px",
           ~width="24px",
           ()
@@ -40,7 +40,7 @@ let make = () => {
         ReactDOMRe.Style.make(
           ~boxShadow="0 0 0px 1px #48a9dc",
           ~border="none",
-          ~borderRadius="0px 8px 8px 0px",
+          ~borderRadius="0px 4px 4px 0px",
           ~width="24px",
           ()
         )

@@ -26,7 +26,7 @@ function makeContainer(text) {
   content.style.display = "flex";
   content.style.alignItems = "center";
   content.style.backgroundColor = "white";
-  content.style.padding = "12px";
+  content.style.padding = "16px";
   content.style.borderRadius = "0px 0px 12px 12px";
   container.appendChild(title);
   container.appendChild(content);
@@ -39,7 +39,7 @@ ReactDom.render(React.createElement(StatefulCounter$ReactHooks.make, {
         }), makeContainer("Stateful Counter, using useState"));
 
 ReactDom.render(React.createElement(BlinkingGreeting$ReactHooks.make, {
-          children: React.createElement("div", undefined, "hi")
+          children: React.createElement("div", undefined, "How are you")
         }), makeContainer("Blinking Greeting, using useState & useEffect"));
 
 ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReactHooks.make, { }), makeContainer("ReactJS Documentation Example, using useReducer"));

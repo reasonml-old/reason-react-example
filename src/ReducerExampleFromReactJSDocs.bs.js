@@ -21,7 +21,7 @@ function ReducerExampleFromReactJSDocs(Props) {
                     border: "none",
                     marginLeft: "8px",
                     width: "24px",
-                    borderRadius: "8px 0px 0px 8px",
+                    borderRadius: "4px 0px 0px 4px",
                     boxShadow: "0 0 0px 1px #48a9dc"
                   },
                   onClick: (function (_event) {
@@ -31,7 +31,7 @@ function ReducerExampleFromReactJSDocs(Props) {
                   style: {
                     border: "none",
                     width: "24px",
-                    borderRadius: "0px 8px 8px 0px",
+                    borderRadius: "0px 4px 4px 0px",
                     boxShadow: "0 0 0px 1px #48a9dc"
                   },
                   onClick: (function (_event) {
