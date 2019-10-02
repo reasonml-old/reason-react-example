@@ -34,7 +34,7 @@ let make = () => {
           ()
         )
       }
-      onClick={_event => dispatch(Increment)}>{React.string("+")}</button>
+      onClick={_event => dispatch(Decrement)}>{React.string("-")}</button>
     <button
       style={
         ReactDOMRe.Style.make(
@@ -45,6 +45,6 @@ let make = () => {
           ()
         )
       }
-      onClick={_event => dispatch(Decrement)}>{React.string("-")}</button>
+      onClick={_event => dispatch(Increment)}>{React.string("+")}</button>
   </>
 };

@@ -25,9 +25,9 @@ function ReducerExampleFromReactJSDocs(Props) {
                     boxShadow: "0 0 0px 1px #48a9dc"
                   },
                   onClick: (function (_event) {
-                      return Curry._1(dispatch, /* Increment */0);
+                      return Curry._1(dispatch, /* Decrement */1);
                     })
-                }, "+"), React.createElement("button", {
+                }, "-"), React.createElement("button", {
                   style: {
                     border: "none",
                     width: "24px",
@@ -35,9 +35,9 @@ function ReducerExampleFromReactJSDocs(Props) {
                     boxShadow: "0 0 0px 1px #48a9dc"
                   },
                   onClick: (function (_event) {
-                      return Curry._1(dispatch, /* Decrement */1);
+                      return Curry._1(dispatch, /* Increment */0);
                     })
-                }, "-"));
+                }, "+"));
 }
 
 var make = ReducerExampleFromReactJSDocs;
