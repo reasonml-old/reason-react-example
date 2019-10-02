@@ -2,10 +2,10 @@
 
 var React = require("react");
 var ReactDom = require("react-dom");
-var InteropExample$ReactHooks = require("./ReactJSUsingReasonReact/InteropExample.bs.js");
-var BlinkingGreeting$ReactHooks = require("./BlinkingGreeting.bs.js");
-var FetchedDogPictures$ReactHooks = require("./FetchedDogPictures.bs.js");
-var ReducerExampleFromReactJSDocs$ReactHooks = require("./ReducerExampleFromReactJSDocs.bs.js");
+var InteropExample$ReactHooks = require("./InteropExample/InteropExample.bs.js");
+var BlinkingGreeting$ReactHooks = require("./BlinkingGreeting/BlinkingGreeting.bs.js");
+var FetchedDogPictures$ReactHooks = require("./FetchedDogPictures/FetchedDogPictures.bs.js");
+var ReducerExampleFromReactJSDocs$ReactHooks = require("./ReducerExampleFromReactJSDocs/ReducerExampleFromReactJSDocs.bs.js");
 
 document.body.style.fontSize = "16px";
 
