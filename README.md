@@ -1,8 +1,12 @@
-# ReasonReact
+# ReasonReact Template & Examples
 
 ReasonReact documentation [here](https://reasonml.github.io/reason-react/).
 
-## Run Project
+This is both a starter template for your new ReasonReact project, and also a collection of thin examples illustrating ReasonReact usage.
+
+`src` contains 4 sub-folders, each an independent ReasonReact example. Feel free to delete any of them and shape this into your project!
+
+## Run
 
 ```sh
 npm install
@@ -13,16 +17,27 @@ npm start
 
 Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` to see the page auto-reload.
 
+# Features Used
 
-=====
-TODO: talk about these
-examples are the file names
+|                           | BlinkingGreeting | ReducerExampleFromReactJSDocs | FetchDogPictures | InteropExample |
+|---------------------------|------------------|-------------------------------|------------------|----------------|
+| No props                  |                  | ✓                             |                  |               |
+| Has props                 |                  |                               |                  | ✓             |
+| Children props            | ✓                |                               |                  |               |
+| No state                  |                  |                               |                  | ✓             |
+| Has state                 | ✓                |                               |  ✓               |               |
+| Has state with useReducer |                  | ✓                             |                  |               |
+| ReasonReact using ReactJS |                  |                               |                  | ✓             |
+| ReactJS using ReasonReact |                  |                               |                  | ✓             |
+| useEffect                 | ✓                |                               |  ✓               |               |
+| Dom attribute             | ✓                | ✓                             |                  | ✓             |
+| Styling                   | ✓                | ✓                             |  ✓               |               |
+| React.array               |                  |                               |  ✓               |               |
+
+# Build Pipeline
+
+TODO:
 
 talk about our bundle pipeline
 check index.html
-
-This is a template, feel free to delete anything you don't want
-
-contains typical patterns for your daily usage
-
-show table of features for examples
+webpack, rollup (only for prod)
