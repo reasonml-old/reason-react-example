@@ -3,16 +3,15 @@ let make = (~children) => {
   let (show, setShow) = React.useState(() => true);
 
   // TODO: explain 0
-  let blink =
-    React.useEffect0(() => {
-      let id =
-        Js.Global.setInterval(
-          () => setShow(previousShow => !previousShow),
-          1000,
-        );
+  React.useEffect0(() => {
+    let id =
+      Js.Global.setInterval(
+        () => setShow(previousShow => !previousShow),
+        1000,
+      );
 
-      Some(() => Js.Global.clearInterval(id));
-    });
+    Some(() => Js.Global.clearInterval(id));
+  });
 
   let style =
     if (show) {

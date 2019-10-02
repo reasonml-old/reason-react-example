@@ -24,7 +24,7 @@ let make = () => {
       fetch("https://dog.ceo/api/breeds/image/random/3")
       |> then_(response => response##json())
       |> then_(jsonResponse => {
-           Js.log(jsonResponse);
+           // TODO: Js.log(jsonResponse);
            setState(_previousState => LoadedDogs(jsonResponse##message));
            Js.Promise.resolve();
          })
@@ -40,14 +40,11 @@ let make = () => {
   });
 
   switch (state) {
-  | ErrorFetchingDogs => <div> {React.string("An error occurred!")} </div>
-  | LoadingDogs => <div> {React.string("Loading...")} </div>
+  | ErrorFetchingDogs => React.string("An error occurred!")
+  | LoadingDogs => React.string("Loading...")
   | LoadedDogs(dogs) =>
-    <>
-      <div>
-        {Belt.Array.map(dogs, dog => <img key=dog src=dog style=imageStyle />)
-         ->React.array}
-      </div>
-    </>
+    dogs
+    ->Belt.Array.map(dog => <img key=dog src=dog style=imageStyle />)
+    ->React.array
   };
 };

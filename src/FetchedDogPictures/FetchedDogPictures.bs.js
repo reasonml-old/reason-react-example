@@ -21,7 +21,6 @@ function FetchedDogPictures(Props) {
           fetch("https://dog.ceo/api/breeds/image/random/3").then((function (response) {
                       return response.json();
                     })).then((function (jsonResponse) {
-                    console.log(jsonResponse);
                     Curry._1(setState, (function (_previousState) {
                             return /* LoadedDogs */[jsonResponse.message];
                           }));
@@ -36,18 +35,18 @@ function FetchedDogPictures(Props) {
         }), ([]));
   if (typeof state === "number") {
     if (state !== 0) {
-      return React.createElement("div", undefined, "An error occurred!");
+      return "An error occurred!";
     } else {
-      return React.createElement("div", undefined, "Loading...");
+      return "Loading...";
     }
   } else {
-    return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, Belt_Array.map(state[0], (function (dog) {
-                          return React.createElement("img", {
-                                      key: dog,
-                                      style: imageStyle,
-                                      src: dog
-                                    });
-                        }))));
+    return Belt_Array.map(state[0], (function (dog) {
+                  return React.createElement("img", {
+                              key: dog,
+                              style: imageStyle,
+                              src: dog
+                            });
+                }));
   }
 }
 
