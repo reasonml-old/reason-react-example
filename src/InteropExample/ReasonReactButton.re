@@ -4,6 +4,6 @@
 let make = (~label) => {
   // TODO: explain camelCase
   <button ariaLabel=label>
-    (React.string(label))
-  </button>
-}
+    {React.string(label)}
+  </button>;
+};

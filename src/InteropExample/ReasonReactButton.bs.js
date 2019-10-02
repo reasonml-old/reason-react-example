@@ -2,14 +2,14 @@
 
 var React = require("react");
 
-function ReasonReactComponent(Props) {
+function ReasonReactButton(Props) {
   var label = Props.label;
   return React.createElement("button", {
               "aria-label": label
             }, label);
 }
 
-var make = ReasonReactComponent;
+var make = ReasonReactButton;
 
 exports.make = make;
 /* react Not a pure module */

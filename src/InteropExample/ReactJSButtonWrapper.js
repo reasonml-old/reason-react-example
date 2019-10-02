@@ -1,16 +1,16 @@
 var ReactDOM = require('react-dom');
 var React = require('react');
 
-var ReasonReactComponent = require('./ReasonReactComponent.bs').make;
+var ReasonReactButton = require('./ReasonReactButton.bs').make;
 
 var ReactJSComponent = function(props) {
   // We're not using JSX here, to avoid folks needing to install the related
   // React toolchains just for this example.
 
-  // <ReasonReactComponent label="ReactJS using a ReasonReact button" />
+  // <ReasonReactButton label="I'm a ReactJS component, wrapping a ReasonReact component!" />
   return React.createElement(
-    ReasonReactComponent,
-    {"label": "ReactJS using a ReasonReact button"},
+    ReasonReactButton,
+    {"label": "I'm a ReactJS component, wrapping a ReasonReact component!"},
     null,
   );
 };

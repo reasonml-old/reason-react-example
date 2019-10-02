@@ -1,8 +1,8 @@
 'use strict';
 
-var ReactJSComponent = require("./ReactJSComponent");
+var ReactJSButtonWrapper = require("./ReactJSButtonWrapper");
 
-var make = ReactJSComponent;
+var make = ReactJSButtonWrapper;
 
 exports.make = make;
 /* make Not a pure module */

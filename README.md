@@ -5,16 +5,17 @@ ReasonReact documentation [here](https://reasonml.github.io/reason-react/).
 ## Run Project
 
 ```sh
-npm run clean
 npm install
+npm run server
+# in a new tab
 npm start
 ```
 
-Suppose you have a http-server running (try `npm i -g http-server`)
+Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` to see the page auto-reload.
 
 
-Then modify whichever `.re` file in `src` and refresh the page to see the changes.
-
+=====
+TODO: talk about these
 examples are the file names
 
 talk about our bundle pipeline

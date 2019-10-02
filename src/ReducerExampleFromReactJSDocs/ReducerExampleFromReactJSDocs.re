@@ -1,6 +1,25 @@
 // This is the ReactJS documentation's useReducer example, directly ported over
 // https://reactjs.org/docs/hooks-reference.html#usereducer
 
+// A little extra we've put, because the ReactJS example has no styling
+let leftButtonStyle =
+  ReactDOMRe.Style.make(
+    ~boxShadow="0 0 0px 1px #48a9dc",
+    ~border="none",
+    ~borderRadius="4px 0px 0px 4px",
+    ~marginLeft="8px",
+    ~width="24px",
+    (),
+  );
+let rightButtonStyle =
+  ReactDOMRe.Style.make(
+    ~boxShadow="0 0 0px 1px #48a9dc",
+    ~border="none",
+    ~borderRadius="0px 4px 4px 0px",
+    ~width="24px",
+    (),
+  );
+
 // Record and variant need explicit declarations.
 type state = {count: int};
 
@@ -14,7 +33,7 @@ let reducer = (state, action) => {
   switch (action) {
   | Increment => {count: state.count + 1}
   | Decrement => {count: state.count - 1}
-  }
+  };
 };
 
 [@react.component]
@@ -23,28 +42,11 @@ let make = () => {
   <>
     {React.string("Count: ")}
     {React.string(string_of_int(state.count))}
-    <button
-      style={
-        ReactDOMRe.Style.make(
-          ~boxShadow="0 0 0px 1px #48a9dc",
-          ~border="none",
-          ~borderRadius="4px 0px 0px 4px",
-          ~marginLeft="8px",
-          ~width="24px",
-          ()
-        )
-      }
-      onClick={_event => dispatch(Decrement)}>{React.string("-")}</button>
-    <button
-      style={
-        ReactDOMRe.Style.make(
-          ~boxShadow="0 0 0px 1px #48a9dc",
-          ~border="none",
-          ~borderRadius="0px 4px 4px 0px",
-          ~width="24px",
-          ()
-        )
-      }
-      onClick={_event => dispatch(Increment)}>{React.string("+")}</button>
-  </>
+    <button style=leftButtonStyle onClick={_event => dispatch(Decrement)}>
+      {React.string("-")}
+    </button>
+    <button style=rightButtonStyle onClick={_event => dispatch(Increment)}>
+      {React.string("+")}
+    </button>
+  </>;
 };

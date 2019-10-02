@@ -14,19 +14,17 @@ let make = () => {
   React.useEffect0(() => {
     Js.Promise.(
       fetch("https://dog.ceo/api/breeds/image/random/3")
-      |> then_(response => {
-        response##json();
-      })
+      |> then_(response => response##json())
       |> then_(jsonResponse => {
-        Js.log(jsonResponse);
-        setState(_previousState => LoadedDogs(jsonResponse##message));
-        Js.Promise.resolve();
-      })
+           Js.log(jsonResponse);
+           setState(_previousState => LoadedDogs(jsonResponse##message));
+           Js.Promise.resolve();
+         })
       |> catch(_err => {
-        setState(_previousState => ErrorFetchingDogs);
-        Js.Promise.resolve();
-      })
-      |>ignore
+           setState(_previousState => ErrorFetchingDogs);
+           Js.Promise.resolve();
+         })
+      |> ignore
     );
 
     // Returning None means we don't have
@@ -34,8 +32,8 @@ let make = () => {
   });
 
   switch (state) {
-  | ErrorFetchingDogs => <div> (React.string("An error occurred!")) </div>
-  | LoadingDogs => <div> (React.string("Loading...")) </div>
+  | ErrorFetchingDogs => <div> {React.string("An error occurred!")} </div>
+  | LoadingDogs => <div> {React.string("Loading...")} </div>
   | LoadedDogs(dogs) =>
     <>
       // <div style={
@@ -45,25 +43,27 @@ let make = () => {
       //   )}
       // >
       // Dog pictures, asynchronously loaded from https://dog.ceo
-        // (React.string("Dog pictures, asynchronously loaded from "))
-        // <a href="https://dog.ceo">
-        //   (React.string("https://dog.ceo"))
-        // </a>
+      // (React.string("Dog pictures, asynchronously loaded from "))
+      // <a href="https://dog.ceo">
+      //   (React.string("https://dog.ceo"))
+      // </a>
       // </div>
       <div>
-        (
-          Belt.Array.map(dogs, dog => {
-            <img key=dog src=dog style={ReactDOMRe.Style.make(
-              ~height="120px",
-              ~borderRadius="8px",
-              ~marginRight="8px",
-              ~boxShadow="rgb(218, 218, 218) 0px 4px 4px",
-              ())} />
-          }
-          )
-          -> React.array
-        )
+        {Belt.Array.map(dogs, dog =>
+           <img
+             key=dog
+             src=dog
+             style={ReactDOMRe.Style.make(
+               ~height="120px",
+               ~borderRadius="8px",
+               ~marginRight="8px",
+               ~boxShadow="rgb(218, 218, 218) 0px 4px 4px",
+               (),
+             )}
+           />
+         )
+         ->React.array}
       </div>
     </>
-  }
+  };
 };
