@@ -41,6 +41,7 @@ let reducer = (state, action) => {
 let make = () => {
   let (state, dispatch) = React.useReducer(reducer, initialState);
 
+  // We can use a fragment here, but we don't, because we want to style the counter
   <div style={ReactDOMRe.Style.make(~display="flex", ~alignItems="center", ~justifyContent="space-between", ())}>
     <div>
       {React.string("Count: ")}
