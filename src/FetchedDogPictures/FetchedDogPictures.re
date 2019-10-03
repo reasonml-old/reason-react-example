@@ -48,13 +48,13 @@ let make = () => {
             ~width="100%",
             ~marginRight=(i === Js.Array.length(dogs) - 1 ? "0px" : "8px"),
             ~borderRadius="8px",
-            ~boxShadow="rgb(218, 218, 218) 0px 4px 4px",
+            ~boxShadow="0px 4px 16px rgb(200, 200, 200)",
             ~backgroundSize="cover",
             ~backgroundImage={j|url($dog)|j},
             ~backgroundPosition="center",
             (),
           );
-          <img key=dog style=imageStyle />
+          <div key=dog style=imageStyle />
         })
        ->React.array
      }}

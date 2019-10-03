@@ -40,6 +40,7 @@ let reducer = (state, action) => {
 [@react.component]
 let make = () => {
   let (state, dispatch) = React.useReducer(reducer, initialState);
+
   <div style={ReactDOMRe.Style.make(~display="flex", ~alignItems="center", ~justifyContent="space-between", ())}>
     <div>
       {React.string("Count: ")}

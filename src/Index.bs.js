@@ -12,8 +12,9 @@ document.body.style.fontSize = "16px";
 function makeContainer(text) {
   var container = document.createElement("div");
   container.style.margin = "12px 0px";
-  container.style.boxShadow = "0px 4px 16px #dadada";
+  container.style.boxShadow = "0px 4px 16px rgb(200, 200, 200)";
   container.style.width = "720px";
+  container.style.borderRadius = "12px";
   var title = document.createElement("div");
   title.innerText = text;
   title.style.backgroundColor = "rgb(242, 243, 245)";

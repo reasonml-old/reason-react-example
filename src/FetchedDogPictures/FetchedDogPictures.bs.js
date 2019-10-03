@@ -41,9 +41,9 @@ function FetchedDogPictures(Props) {
               width: "100%",
               backgroundSize: "cover",
               borderRadius: "8px",
-              boxShadow: "rgb(218, 218, 218) 0px 4px 4px"
+              boxShadow: "0px 4px 16px rgb(200, 200, 200)"
             };
-            return React.createElement("img", {
+            return React.createElement("div", {
                         key: dog,
                         style: imageStyle
                       });
