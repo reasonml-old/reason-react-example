@@ -5,7 +5,6 @@ var React = require("react");
 
 var leftButtonStyle = {
   border: "none",
-  color: "#48a9dc",
   width: "48px",
   borderRadius: "4px 0px 0px 4px",
   boxShadow: "0 0 0px 1px #48a9dc"
@@ -13,7 +12,6 @@ var leftButtonStyle = {
 
 var rightButtonStyle = {
   border: "none",
-  color: "#48a9dc",
   width: "48px",
   borderRadius: "0px 4px 4px 0px",
   boxShadow: "0 0 0px 1px #48a9dc"
