@@ -33,21 +33,21 @@ function FetchedDogPictures(Props) {
                 }));
           return undefined;
         }), ([]));
-  if (typeof state === "number") {
-    if (state !== 0) {
-      return "An error occurred!";
-    } else {
-      return "Loading...";
-    }
-  } else {
-    return Belt_Array.map(state[0], (function (dog) {
-                  return React.createElement("img", {
-                              key: dog,
-                              style: imageStyle,
-                              src: dog
-                            });
-                }));
-  }
+  return React.createElement("div", {
+              style: {
+                display: "flex",
+                height: "120px",
+                alignItems: "center"
+              }
+            }, typeof state === "number" ? (
+                state !== 0 ? "An error occurred!" : "Loading..."
+              ) : Belt_Array.map(state[0], (function (dog) {
+                      return React.createElement("img", {
+                                  key: dog,
+                                  style: imageStyle,
+                                  src: dog
+                                });
+                    })));
 }
 
 var make = FetchedDogPictures;

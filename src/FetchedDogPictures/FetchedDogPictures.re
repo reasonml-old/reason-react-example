@@ -39,12 +39,20 @@ let make = () => {
     None;
   });
 
-  switch (state) {
-  | ErrorFetchingDogs => React.string("An error occurred!")
-  | LoadingDogs => React.string("Loading...")
-  | LoadedDogs(dogs) =>
-    dogs
-    ->Belt.Array.map(dog => <img key=dog src=dog style=imageStyle />)
-    ->React.array
-  };
+  <div
+    style={ReactDOMRe.Style.make(
+      ~height="120px",
+      ~display="flex",
+      ~alignItems="center",
+      (),
+    )}>
+    {switch (state) {
+     | ErrorFetchingDogs => React.string("An error occurred!")
+     | LoadingDogs => React.string("Loading...")
+     | LoadedDogs(dogs) =>
+       dogs
+       ->Belt.Array.map(dog => <img key=dog src=dog style=imageStyle />)
+       ->React.array
+     }}
+  </div>;
 };
