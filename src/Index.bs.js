@@ -11,9 +11,9 @@ document.body.style.fontSize = "16px";
 
 function makeContainer(text) {
   var container = document.createElement("div");
-  container.style.margin = "24px 0px";
+  container.style.margin = "12px 0px";
   container.style.boxShadow = "0px 4px 16px #dadada";
-  container.style.flexDirection = "column";
+  container.style.width = "720px";
   var title = document.createElement("div");
   title.innerText = text;
   title.style.backgroundColor = "rgb(242, 243, 245)";
@@ -21,8 +21,6 @@ function makeContainer(text) {
   title.style.padding = "12px";
   title.style.fontWeight = "bold";
   var content = document.createElement("div");
-  content.style.display = "flex";
-  content.style.alignItems = "center";
   content.style.backgroundColor = "white";
   content.style.padding = "16px";
   content.style.borderRadius = "0px 0px 12px 12px";

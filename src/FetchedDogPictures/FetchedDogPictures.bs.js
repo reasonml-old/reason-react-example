@@ -4,13 +4,6 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
 
-var imageStyle = {
-  height: "120px",
-  marginRight: "8px",
-  borderRadius: "8px",
-  boxShadow: "rgb(218, 218, 218) 0px 4px 4px"
-};
-
 function FetchedDogPictures(Props) {
   var match = React.useState((function () {
           return /* LoadingDogs */0;
@@ -33,25 +26,39 @@ function FetchedDogPictures(Props) {
                 }));
           return undefined;
         }), ([]));
+  var tmp;
+  if (typeof state === "number") {
+    tmp = state !== 0 ? "An error occurred!" : "Loading...";
+  } else {
+    var dogs = state[0];
+    tmp = Belt_Array.mapWithIndex(dogs, (function (i, dog) {
+            var match = i === (dogs.length - 1 | 0);
+            var imageStyle = {
+              backgroundImage: "url(" + (String(dog) + ")"),
+              backgroundPosition: "center",
+              height: "120px",
+              marginRight: match ? "0px" : "8px",
+              width: "100%",
+              backgroundSize: "cover",
+              borderRadius: "8px",
+              boxShadow: "rgb(218, 218, 218) 0px 4px 4px"
+            };
+            return React.createElement("img", {
+                        key: dog,
+                        style: imageStyle
+                      });
+          }));
+  }
   return React.createElement("div", {
               style: {
                 display: "flex",
                 height: "120px",
                 alignItems: "center"
               }
-            }, typeof state === "number" ? (
-                state !== 0 ? "An error occurred!" : "Loading..."
-              ) : Belt_Array.map(state[0], (function (dog) {
-                      return React.createElement("img", {
-                                  key: dog,
-                                  style: imageStyle,
-                                  src: dog
-                                });
-                    })));
+            }, tmp);
 }
 
 var make = FetchedDogPictures;
 
-exports.imageStyle = imageStyle;
 exports.make = make;
 /* react Not a pure module */

@@ -7,9 +7,9 @@ document##body##style##fontSize #= "16px";
 // TODO: make this into a RR component too or not?
 let makeContainer = text => {
   let container = document##createElement("div");
-  container##style##margin #= "24px 0px";
+  container##style##margin #= "12px 0px";
   container##style##boxShadow #= "0px 4px 16px #dadada";
-  container##style##flexDirection #= "column";
+  container##style##width #= "720px";
 
   let title = document##createElement("div");
   title##innerText #= text;
@@ -19,8 +19,6 @@ let makeContainer = text => {
   title##style##fontWeight #= "bold";
 
   let content = document##createElement("div");
-  content##style##display #= "flex";
-  content##style##alignItems #= "center";
   content##style##backgroundColor #= "white";
   content##style##padding #= "16px";
   content##style##borderRadius #= "0px 0px 12px 12px";

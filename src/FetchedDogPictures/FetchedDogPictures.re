@@ -1,14 +1,5 @@
 [@bs.val] external fetch: string => Js.Promise.t('a) = "fetch";
 
-let imageStyle =
-  ReactDOMRe.Style.make(
-    ~height="120px",
-    ~borderRadius="8px",
-    ~marginRight="8px",
-    ~boxShadow="rgb(218, 218, 218) 0px 4px 4px",
-    (),
-  );
-
 type state =
   | LoadingDogs
   | ErrorFetchingDogs
@@ -51,7 +42,20 @@ let make = () => {
      | LoadingDogs => React.string("Loading...")
      | LoadedDogs(dogs) =>
        dogs
-       ->Belt.Array.map(dog => <img key=dog src=dog style=imageStyle />)
+       ->Belt.Array.mapWithIndex((i, dog) => {
+          let imageStyle = ReactDOMRe.Style.make(
+            ~height="120px",
+            ~width="100%",
+            ~marginRight=(i === Js.Array.length(dogs) - 1 ? "0px" : "8px"),
+            ~borderRadius="8px",
+            ~boxShadow="rgb(218, 218, 218) 0px 4px 4px",
+            ~backgroundSize="cover",
+            ~backgroundImage={j|url($dog)|j},
+            ~backgroundPosition="center",
+            (),
+          );
+          <img key=dog style=imageStyle />
+        })
        ->React.array
      }}
   </div>;

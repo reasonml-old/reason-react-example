@@ -5,15 +5,16 @@ var React = require("react");
 
 var leftButtonStyle = {
   border: "none",
-  marginLeft: "8px",
-  width: "24px",
+  color: "#48a9dc",
+  width: "48px",
   borderRadius: "4px 0px 0px 4px",
   boxShadow: "0 0 0px 1px #48a9dc"
 };
 
 var rightButtonStyle = {
   border: "none",
-  width: "24px",
+  color: "#48a9dc",
+  width: "48px",
   borderRadius: "0px 4px 4px 0px",
   boxShadow: "0 0 0px 1px #48a9dc"
 };
@@ -31,17 +32,23 @@ function reducer(state, action) {
 function ReducerExampleFromReactJSDocs(Props) {
   var match = React.useReducer(reducer, initialState);
   var dispatch = match[1];
-  return React.createElement(React.Fragment, undefined, "Count: ", String(match[0][/* count */0]), React.createElement("button", {
-                  style: leftButtonStyle,
-                  onClick: (function (_event) {
-                      return Curry._1(dispatch, /* Decrement */1);
-                    })
-                }, "-"), React.createElement("button", {
-                  style: rightButtonStyle,
-                  onClick: (function (_event) {
-                      return Curry._1(dispatch, /* Increment */0);
-                    })
-                }, "+"));
+  return React.createElement("div", {
+              style: {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between"
+              }
+            }, React.createElement("div", undefined, "Count: ", String(match[0][/* count */0])), React.createElement("div", undefined, React.createElement("button", {
+                      style: leftButtonStyle,
+                      onClick: (function (_event) {
+                          return Curry._1(dispatch, /* Decrement */1);
+                        })
+                    }, "-"), React.createElement("button", {
+                      style: rightButtonStyle,
+                      onClick: (function (_event) {
+                          return Curry._1(dispatch, /* Increment */0);
+                        })
+                    }, "+")));
 }
 
 var make = ReducerExampleFromReactJSDocs;

@@ -5,18 +5,19 @@
 let leftButtonStyle =
   ReactDOMRe.Style.make(
     ~boxShadow="0 0 0px 1px #48a9dc",
+    ~color="#48a9dc",
     ~border="none",
     ~borderRadius="4px 0px 0px 4px",
-    ~marginLeft="8px",
-    ~width="24px",
+    ~width="48px",
     (),
   );
 let rightButtonStyle =
   ReactDOMRe.Style.make(
     ~boxShadow="0 0 0px 1px #48a9dc",
+    ~color="#48a9dc",
     ~border="none",
     ~borderRadius="0px 4px 4px 0px",
-    ~width="24px",
+    ~width="48px",
     (),
   );
 
@@ -39,14 +40,18 @@ let reducer = (state, action) => {
 [@react.component]
 let make = () => {
   let (state, dispatch) = React.useReducer(reducer, initialState);
-  <>
-    {React.string("Count: ")}
-    {React.string(string_of_int(state.count))}
-    <button style=leftButtonStyle onClick={_event => dispatch(Decrement)}>
-      {React.string("-")}
-    </button>
-    <button style=rightButtonStyle onClick={_event => dispatch(Increment)}>
-      {React.string("+")}
-    </button>
-  </>;
+  <div style={ReactDOMRe.Style.make(~display="flex", ~alignItems="center", ~justifyContent="space-between", ())}>
+    <div>
+      {React.string("Count: ")}
+      {React.string(string_of_int(state.count))}
+    </div>
+    <div>
+      <button style=leftButtonStyle onClick={_event => dispatch(Decrement)}>
+        {React.string("-")}
+      </button>
+      <button style=rightButtonStyle onClick={_event => dispatch(Increment)}>
+        {React.string("+")}
+      </button>
+    </div>
+  </div>;
 };

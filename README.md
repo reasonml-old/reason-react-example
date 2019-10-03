@@ -30,9 +30,9 @@ Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` 
 | Has state with useReducer |                  | ✓                             |                  |               |
 | ReasonReact using ReactJS |                  |                               |                  | ✓             |
 | ReactJS using ReasonReact |                  |                               |                  | ✓             |
-| useEffect                 | ✓                |                               |  ✓               |               |
-| Dom attribute             | ✓                | ✓                             |                  | ✓             |
-| Styling                   | ✓                | ✓                             |  ✓               | ✓            |
+| useEffect                 | ✓                |                               |  ✓              |                |
+| Dom attribute             | ✓                | ✓                             |                 | ✓             |
+| Styling                   | ✓                | ✓                             |  ✓              | ✓             |
 | React.array               |                  |                               |  ✓               |               |
 
 # Build Pipeline
