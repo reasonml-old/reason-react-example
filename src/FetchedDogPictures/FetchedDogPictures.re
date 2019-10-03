@@ -35,6 +35,7 @@ let make = () => {
       ~height="120px",
       ~display="flex",
       ~alignItems="center",
+      ~justifyContent="center",
       (),
     )}>
     {switch (state) {

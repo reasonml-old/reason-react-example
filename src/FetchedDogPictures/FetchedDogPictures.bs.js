@@ -53,7 +53,8 @@ function FetchedDogPictures(Props) {
               style: {
                 display: "flex",
                 height: "120px",
-                alignItems: "center"
+                alignItems: "center",
+                justifyContent: "center"
               }
             }, tmp);
 }
