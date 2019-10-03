@@ -2,13 +2,8 @@
 
 var React = require("react");
 
-var style = {
-  backgroundColor: "rgba(0, 0, 0, 0.05)",
-  padding: "12px",
-  borderRadius: "4px"
-};
-
 function ReasonReactButton(Props) {
+  var style = Props.style;
   return React.createElement("div", {
               style: style
             }, "This is a ReasonReact card");
@@ -16,6 +11,5 @@ function ReasonReactButton(Props) {
 
 var make = ReasonReactButton;
 
-exports.style = style;
 exports.make = make;
 /* react Not a pure module */

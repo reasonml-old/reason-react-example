@@ -32,7 +32,7 @@ Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` 
 | ReactJS using ReasonReact |                  |                               |                  | ✓             |
 | useEffect                 | ✓                |                               |  ✓               |               |
 | Dom attribute             | ✓                | ✓                             |                  | ✓             |
-| Styling                   | ✓                | ✓                             |  ✓               |               |
+| Styling                   | ✓                | ✓                             |  ✓               | ✓            |
 | React.array               |                  |                               |  ✓               |               |
 
 # Build Pipeline
