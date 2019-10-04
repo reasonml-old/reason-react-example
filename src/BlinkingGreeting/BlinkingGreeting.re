@@ -2,7 +2,8 @@
 let make = (~children) => {
   let (show, setShow) = React.useState(() => true);
 
-  // TODO: explain 0
+  // Notice that instead of `useEffect`, we have `useEffect0`. See
+  // reasonml.github.io/reason-react/docs/en/components#hooks for more info
   React.useEffect0(() => {
     let id =
       Js.Global.setInterval(
