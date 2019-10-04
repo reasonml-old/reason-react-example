@@ -2,14 +2,14 @@
 
 var React = require("react");
 
-function ReasonReactButton(Props) {
+function ReasonReactCard(Props) {
   var style = Props.style;
   return React.createElement("div", {
               style: style
             }, "This is a ReasonReact card");
 }
 
-var make = ReasonReactButton;
+var make = ReasonReactCard;
 
 exports.make = make;
 /* react Not a pure module */

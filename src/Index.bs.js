@@ -2,11 +2,11 @@
 
 var React = require("react");
 var ReactDom = require("react-dom");
-var InteropExample$ReasonReactExamples = require("./InteropExample/InteropExample.bs.js");
+var Interop$ReasonReactExamples = require("./Interop/Interop.bs.js");
 var BlinkingGreeting$ReasonReactExamples = require("./BlinkingGreeting/BlinkingGreeting.bs.js");
 var ExampleContainer$ReasonReactExamples = require("./ExampleContainer.bs.js");
 var FetchedDogPictures$ReasonReactExamples = require("./FetchedDogPictures/FetchedDogPictures.bs.js");
-var ReducerExampleFromReactJSDocs$ReasonReactExamples = require("./ReducerExampleFromReactJSDocs/ReducerExampleFromReactJSDocs.bs.js");
+var ReducerFromReactJSDocs$ReasonReactExamples = require("./ReducerFromReactJSDocs/ReducerFromReactJSDocs.bs.js");
 
 var style = document.createElement("style");
 
@@ -24,14 +24,14 @@ ReactDom.render(React.createElement(React.Fragment, undefined, React.createEleme
                     children: "Hello!"
                   })
             }), React.createElement(ExampleContainer$ReasonReactExamples.make, {
-              title: "Reducer Example From ReactJS Docs",
-              children: React.createElement(ReducerExampleFromReactJSDocs$ReasonReactExamples.make, { })
+              title: "Reducer From ReactJS Docs",
+              children: React.createElement(ReducerFromReactJSDocs$ReasonReactExamples.make, { })
             }), React.createElement(ExampleContainer$ReasonReactExamples.make, {
               title: "Fetched Dog Pictures",
               children: React.createElement(FetchedDogPictures$ReasonReactExamples.make, { })
             }), React.createElement(ExampleContainer$ReasonReactExamples.make, {
-              title: "Interop Example",
-              children: React.createElement(InteropExample$ReasonReactExamples.make, { })
+              title: "Interop",
+              children: React.createElement(Interop$ReasonReactExamples.make, { })
             })), container);
 
 exports.style = style;

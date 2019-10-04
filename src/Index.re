@@ -14,11 +14,11 @@ ReactDOMRe.render(
     <ExampleContainer title="Blinking Greeting">
       <BlinkingGreeting> {React.string("Hello!")} </BlinkingGreeting>
     </ExampleContainer>
-    <ExampleContainer title="Reducer Example From ReactJS Docs">
-      <ReducerExampleFromReactJSDocs />
+    <ExampleContainer title="Reducer From ReactJS Docs">
+      <ReducerFromReactJSDocs />
     </ExampleContainer>
     <ExampleContainer title="Fetched Dog Pictures"> <FetchedDogPictures /> </ExampleContainer>
-    <ExampleContainer title="Interop Example"> <InteropExample /> </ExampleContainer>
+    <ExampleContainer title="Interop"> <Interop /> </ExampleContainer>
   </>,
   container,
 );
