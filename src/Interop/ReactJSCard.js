@@ -1,3 +1,9 @@
+// In this Interop example folder, we have:
+// - A ReasonReact component, ReasonReactCard.re
+// - Used by a ReactJS component, ReactJSCard.js (this file)
+// - ReactJSCard can be used by ReasonReact, through bindings in Interop.re
+// - Interop.re is used by Index.re
+
 var ReactDOM = require('react-dom');
 var React = require('react');
 
