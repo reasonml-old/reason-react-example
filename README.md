@@ -16,7 +16,9 @@ npm run server
 npm start
 ```
 
-Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` to see the page auto-reload. **You don't need any bundler when you're developing!**
+Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` to see the page auto-reload. **You don't need any bundler when you're developing**!
+
+**How come we don't need any bundler during development**? We highly encourage you to open up `index.html` to check for yourself!
 
 # Features Used
 
@@ -35,11 +37,10 @@ Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` 
 | Styling                   | ✓                | ✓                      |  ✓              | ✓       |
 | React.array               |                  |                        |  ✓               |         |
 
-# Build Pipeline
+# Bundle for Production
 
-Bundle for production
-
-We've included a convenience `UNUSED_webpack.config.js`, in case you want to ship your project to production.
+We've included a convenience `UNUSED_webpack.config.js`, in case you want to ship your project to production. You can remove that in favor of other bundlers, e.g. Rollup.
+We've also provided a barebone indexProduction.html, to serve your bundle.
 
 ```sh
 npm install webpack webpack-cli
@@ -49,7 +50,3 @@ mv UNUSED_webpack.config.js webpack.config.js
 ./node_modules/.bin/webpack
 open indexProduction.html
 ```
-
-talk about our bundle pipeline
-check index.html
-webpack, rollup (only for prod)

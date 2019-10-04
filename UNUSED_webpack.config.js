@@ -10,7 +10,7 @@ module.exports = {
   // you didn't know this
   mode: 'production',
   output: {
-    path: path.join(__dirname, "webpackOutput"),
+    path: path.join(__dirname, "bundleOutput"),
     filename: '[name].js',
   },
 };
