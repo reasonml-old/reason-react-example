@@ -4,17 +4,13 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 
 var leftButtonStyle = {
-  border: "none",
   width: "48px",
-  borderRadius: "4px 0px 0px 4px",
-  boxShadow: "0 0 0px 1px #48a9dc"
+  borderRadius: "4px 0px 0px 4px"
 };
 
 var rightButtonStyle = {
-  border: "none",
   width: "48px",
-  borderRadius: "0px 4px 4px 0px",
-  boxShadow: "0 0 0px 1px #48a9dc"
+  borderRadius: "0px 4px 4px 0px"
 };
 
 var initialState = /* record */[/* count */0];

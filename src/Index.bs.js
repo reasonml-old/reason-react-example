@@ -7,7 +7,13 @@ var BlinkingGreeting$ReasonReactExamples = require("./BlinkingGreeting/BlinkingG
 var FetchedDogPictures$ReasonReactExamples = require("./FetchedDogPictures/FetchedDogPictures.bs.js");
 var ReducerExampleFromReactJSDocs$ReasonReactExamples = require("./ReducerExampleFromReactJSDocs/ReducerExampleFromReactJSDocs.bs.js");
 
-document.body.style.fontSize = "16px";
+var reasonReactBlue = "#48a9dc";
+
+var style = document.createElement("style");
+
+document.head.appendChild(style);
+
+style.innerHTML = "\n  body {\n    background-color: rgb(224, 226, 229);\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n  }\n  button {\n    background-color: white;\n    color: " + (String(reasonReactBlue) + (";\n    box-shadow: 0 0 0 1px " + (String(reasonReactBlue) + (";\n    border: none;\n    padding: 8px;\n    font-size: 16px;\n  }\n  button:active {\n    background-color: " + (String(reasonReactBlue) + ";\n    color: white;\n  }\n")))));
 
 function makeContainer(text) {
   var container = document.createElement("div");
@@ -15,6 +21,7 @@ function makeContainer(text) {
   container.style.boxShadow = "0px 4px 16px rgb(200, 200, 200)";
   container.style.width = "720px";
   container.style.borderRadius = "12px";
+  container.style.fontFamily = "sans-serif";
   var title = document.createElement("div");
   title.innerText = text;
   title.style.backgroundColor = "rgb(242, 243, 245)";
@@ -32,7 +39,7 @@ function makeContainer(text) {
 }
 
 ReactDom.render(React.createElement(BlinkingGreeting$ReasonReactExamples.make, {
-          children: React.createElement("div", undefined, "Hello!")
+          children: "Hello!"
         }), makeContainer("Blinking Greeting"));
 
 ReactDom.render(React.createElement(ReducerExampleFromReactJSDocs$ReasonReactExamples.make, { }), makeContainer("Reducer Example From ReactJS Docs"));
@@ -41,5 +48,7 @@ ReactDom.render(React.createElement(FetchedDogPictures$ReasonReactExamples.make,
 
 ReactDom.render(React.createElement(InteropExample$ReasonReactExamples.make, { }), makeContainer("Interop Example"));
 
+exports.reasonReactBlue = reasonReactBlue;
+exports.style = style;
 exports.makeContainer = makeContainer;
-/*  Not a pure module */
+/* style Not a pure module */

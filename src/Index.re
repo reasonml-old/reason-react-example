@@ -2,7 +2,30 @@
 
 [@bs.val] external document: Js.t({..}) = "document";
 
-document##body##style##fontSize #= "16px";
+let reasonReactBlue = "#48a9dc";
+
+let style = document##createElement("style");
+document##head##appendChild(style);
+style##innerHTML #= {j|
+  body {
+    background-color: rgb(224, 226, 229);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  button {
+    background-color: white;
+    color: $reasonReactBlue;
+    box-shadow: 0 0 0 1px $reasonReactBlue;
+    border: none;
+    padding: 8px;
+    font-size: 16px;
+  }
+  button:active {
+    background-color: $reasonReactBlue;
+    color: white;
+  }
+|j};
 
 // TODO: make this into a RR component too or not?
 let makeContainer = text => {
@@ -11,6 +34,7 @@ let makeContainer = text => {
   container##style##boxShadow #= "0px 4px 16px rgb(200, 200, 200)";
   container##style##width #= "720px";
   container##style##borderRadius #= "12px";
+  container##style##fontFamily #= "sans-serif";
 
   let title = document##createElement("div");
   title##innerText #= text;
@@ -35,7 +59,7 @@ let makeContainer = text => {
 
 ReactDOMRe.render(
   <BlinkingGreeting>
-    <div> {React.string("Hello!")} </div>
+    {React.string("Hello!")}
   </BlinkingGreeting>,
   makeContainer("Blinking Greeting"),
 );

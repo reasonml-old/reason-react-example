@@ -4,16 +4,12 @@
 // A little extra we've put, because the ReactJS example has no styling
 let leftButtonStyle =
   ReactDOMRe.Style.make(
-    ~boxShadow="0 0 0px 1px #48a9dc",
-    ~border="none",
     ~borderRadius="4px 0px 0px 4px",
     ~width="48px",
     (),
   );
 let rightButtonStyle =
   ReactDOMRe.Style.make(
-    ~boxShadow="0 0 0px 1px #48a9dc",
-    ~border="none",
     ~borderRadius="0px 4px 4px 0px",
     ~width="48px",
     (),
