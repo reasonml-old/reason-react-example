@@ -24,7 +24,7 @@ function FetchedDogPictures(Props) {
                         }));
                   return Promise.resolve(/* () */0);
                 }));
-          return undefined;
+          return ;
         }), ([]));
   var tmp;
   if (typeof state === "number") {
