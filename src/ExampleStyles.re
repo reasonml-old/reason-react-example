@@ -1,8 +1,10 @@
-// TODO: explain this file
-
 let reasonReactBlue = "#48a9dc";
 
-let globalStyle = {j|
+// The {j|...|j} feature is just string interpolation, from
+// bucklescript.github.io/docs/en/interop-cheatsheet#string-unicode-interpolation
+// This allows us to conveniently write CSS, together with variables, by
+// constructing a string
+let style = {j|
   body {
     background-color: rgb(224, 226, 229);
     display: flex;
@@ -40,11 +42,3 @@ let globalStyle = {j|
     border-radius: 0px 0px 12px 12px;
   }
 |j};
-
-[@react.component]
-let make = (~title, ~children) => {
-  <div className="container">
-    <div className="containerTitle"> {React.string(title)} </div>
-    <div className="containerContent"> children </div>
-  </div>;
-};
