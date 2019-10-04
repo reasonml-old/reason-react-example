@@ -1,9 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: {
-    index: './src/Index.bs.js',
-  },
+  entry: './src/Index.bs.js',
   // If you ever want to use webpack during development, change 'production'
   // to 'development' as per webpack documentation. Again, you don't have to
   // use webpack or any other bundler during development! Recheck README if
@@ -11,6 +9,6 @@ module.exports = {
   mode: 'production',
   output: {
     path: path.join(__dirname, "bundleOutput"),
-    filename: '[name].js',
+    filename: 'index.js',
   },
 };
