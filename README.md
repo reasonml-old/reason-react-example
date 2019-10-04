@@ -24,18 +24,18 @@ Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` 
 
 |                           | BlinkingGreeting | ReducerExampleFromReactJSDocs | FetchDogPictures | InteropExample |
 |---------------------------|------------------|-------------------------------|------------------|----------------|
-| No props                  |                  | ✓                             |                  |               |
-| Has props                 |                  |                               |                  | ✓             |
-| Children props            | ✓                |                               |                  |               |
-| No state                  |                  |                               |                  | ✓             |
-| Has state                 | ✓                |                               |  ✓               |               |
-| Has state with useReducer |                  | ✓                             |                  |               |
-| ReasonReact using ReactJS |                  |                               |                  | ✓             |
-| ReactJS using ReasonReact |                  |                               |                  | ✓             |
-| useEffect                 | ✓                |                               |  ✓              |                |
-| Dom attribute             | ✓                | ✓                             |                 | ✓             |
-| Styling                   | ✓                | ✓                             |  ✓              | ✓             |
-| React.array               |                  |                               |  ✓               |               |
+| No props                  |                  | ✓                             |                  |                |
+| Has props                 |                  |                               |                  | ✓              |
+| Children props            | ✓                |                               |                  |                |
+| No state                  |                  |                               |                  | ✓              |
+| Has state                 | ✓                |                               |  ✓               |                |
+| Has state with useReducer |                  | ✓                             |                  |                |
+| ReasonReact using ReactJS |                  |                               |                  | ✓              |
+| ReactJS using ReasonReact |                  |                               |                  | ✓              |
+| useEffect                 | ✓                |                               |  ✓              |                 |
+| Dom attribute             | ✓                | ✓                             |                 | ✓              |
+| Styling                   | ✓                | ✓                             |  ✓              | ✓              |
+| React.array               |                  |                               |  ✓               |                |
 
 # Build Pipeline
 
