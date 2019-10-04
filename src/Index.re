@@ -42,6 +42,6 @@ ReactDOMRe.render(
 );
 
 ReactDOMRe.render(
-  <Interop />,
-  makeContainer("Interop"),
+  <ReasonUsingJSUsingReason />,
+  makeContainer("Reason Using JS Using Reason"),
 );

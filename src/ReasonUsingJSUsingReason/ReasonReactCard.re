@@ -1,8 +1,8 @@
 // In this Interop example folder, we have:
 // - A ReasonReact component, ReasonReactCard.re (this file)
 // - Used by a ReactJS component, ReactJSCard.js
-// - ReactJSCard can be used by ReasonReact, through bindings in Interop.re
-// - Interop.re is used by Index.re
+// - ReactJSCard.js can be used by ReasonReact, through bindings in ReasonUsingJSUsingReason.re
+// - ReasonUsingJSUsingReason.re is used by Index.re
 
 [@react.component]
 let make = (~style) => {

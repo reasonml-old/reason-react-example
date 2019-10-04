@@ -2,11 +2,11 @@
 
 var React = require("react");
 var ReactDom = require("react-dom");
-var Interop$ReasonReactExamples = require("./Interop/Interop.bs.js");
 var ExampleStyles$ReasonReactExamples = require("./ExampleStyles.bs.js");
 var BlinkingGreeting$ReasonReactExamples = require("./BlinkingGreeting/BlinkingGreeting.bs.js");
 var FetchedDogPictures$ReasonReactExamples = require("./FetchedDogPictures/FetchedDogPictures.bs.js");
 var ReducerFromReactJSDocs$ReasonReactExamples = require("./ReducerFromReactJSDocs/ReducerFromReactJSDocs.bs.js");
+var ReasonUsingJSUsingReason$ReasonReactExamples = require("./ReasonUsingJSUsingReason/ReasonUsingJSUsingReason.bs.js");
 
 var style = document.createElement("style");
 
@@ -36,7 +36,7 @@ ReactDom.render(React.createElement(ReducerFromReactJSDocs$ReasonReactExamples.m
 
 ReactDom.render(React.createElement(FetchedDogPictures$ReasonReactExamples.make, { }), makeContainer("Fetched Dog Pictures"));
 
-ReactDom.render(React.createElement(Interop$ReasonReactExamples.make, { }), makeContainer("Interop"));
+ReactDom.render(React.createElement(ReasonUsingJSUsingReason$ReasonReactExamples.make, { }), makeContainer("Reason Using JS Using Reason"));
 
 exports.style = style;
 exports.makeContainer = makeContainer;
